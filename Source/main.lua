@@ -37,18 +37,70 @@ tilesets["overworld"] = overworldTiles
 tileInfo["overworld"] = {3}
 objs = {}
 
-local cameraHorizBuffer <const> = -6
-local cameraVertBuffer <const> = -3
+isCrankUp = false
+isMenuUp = false
+menuShowTimer = 0
+menuHideTimer = 0
+
+local cameraHorizBuffer <const> = 6
+local cameraVertBuffer <const> = 3
 camWidth = 400/40
 camHeight = 240/40
 
+playerRenderPosX = 200
+playerRenderPosY = 80
+playerDestRenderPosX = playerRenderPosX
+playerDestRenderPosY = playerRenderPosY
+
 function hardSetupCameraOffsets()
-	cameraOffsetGridX = (playerX + cameraHorizBuffer)
-	cameraOffsetGridY = (playerY + cameraVertBuffer)
+	print(playerX)
+	print(playerY)
+	cameraOffsetGridX = math.max(0, math.min(mapWidth - camWidth, playerX - cameraHorizBuffer))
+	cameraOffsetGridY = math.max(0, math.min(mapHeight - camHeight, playerY - cameraVertBuffer))
 	cameraOffsetX = cameraOffsetGridX * -40
 	cameraOffsetY = cameraOffsetGridY * -40
 	cameraDestOffsetX = cameraOffsetX
 	cameraDestOffsetY = cameraOffsetY
+	if (playerX < cameraHorizBuffer) then
+		playerDestRenderPosX = (playerX-1) * 40
+	elseif playerX > (mapWidth - (camWidth - cameraHorizBuffer)) then
+		playerDestRenderPosX = (playerX - mapWidth + (camWidth) - 1) * 40
+	else
+		playerDestRenderPosX = (cameraHorizBuffer - 1) * 40
+	end
+	playerRenderPosX = playerDestRenderPosX
+
+	if (playerY < cameraVertBuffer) then
+		playerDestRenderPosY = (playerY - 1) * 40
+	elseif playerY > (mapHeight - (camHeight - cameraVertBuffer)) then
+		playerDestRenderPosY = (playerY - mapHeight + (camHeight) - 1) * 40
+	else
+		playerDestRenderPosY = (cameraVertBuffer- 1) * 40
+	end
+	playerRenderPosY = playerDestRenderPosY
+end
+
+function setupCameraOffset()
+	if (playerX < cameraHorizBuffer or (playerX == cameraHorizBuffer and playerFacing == 1)) then
+		playerDestRenderPosX = (playerX-1) * 40
+	elseif playerX > (mapWidth - (camWidth - cameraHorizBuffer)) or (playerX == (mapWidth - (camWidth - cameraHorizBuffer)) and playerFacing == 3) then
+		playerDestRenderPosX = (playerX - mapWidth + (camWidth) - 1) * 40
+	else
+		cameraOffsetGridX = (playerX - cameraHorizBuffer)
+		cameraDestOffsetX = cameraOffsetGridX * -40
+	end
+
+
+	if (playerY < cameraVertBuffer or (playerY == cameraVertBuffer and playerFacing == 2)) then
+		playerDestRenderPosY = (playerY - 1) * 40
+	elseif playerY > (mapHeight - (camHeight - cameraVertBuffer)) or (playerY == (mapHeight - (camHeight - cameraVertBuffer)) and playerFacing == 0) then
+		playerDestRenderPosY = (playerY - mapHeight + (camHeight) - 1) * 40
+	else
+		cameraOffsetGridY = (playerY - cameraVertBuffer)
+		cameraDestOffsetY = cameraOffsetGridY * -40
+	end
+
+	movingCam = true
 end
 
 function setPlayerFacing(facing)
@@ -63,8 +115,6 @@ function setPlayerFacing(facing)
 		playerImg = guyImgW
 	end
 end
-
-loadMap("testtown", 1)
 
 -- VARIABLES THAT ALWAYS IMPORTANT
 playerCreatures = {}
@@ -141,6 +191,14 @@ end
 
 function initialize()
 	gfx.setLineWidth(lineThickness)
+	loadMap("testtown", 1)
+end
+
+function updateInMenu()
+	if playdate.isCrankDocked() and isCrankUp then
+		isCrankUp = false
+		closeMenu()
+	end
 end
 
 function playdate.update()
@@ -170,6 +228,12 @@ function playdate.update()
 
 			if (movingCam) then
 				updateCameraOffset()
+			elseif (menuShowTimer > 0) then
+				updateMenuShowTimer()
+			elseif (menuHideTimer > 0) then
+				updateMenuHideTimer()
+			elseif (isMenuUp) then
+				updateInMenu()
 			else
 				checkMovement()
 			end
@@ -178,6 +242,21 @@ function playdate.update()
 		render()
 	end
 end
+
+function updateMenuShowTimer()
+	menuShowTimer -= 1
+	if (menuShowTimer == 0) then
+		isMenuUp = true
+	end
+end
+
+function updateMenuHideTimer()
+	menuHideTimer -= 1
+	if (menuHideTimer == 0) then
+		isMenuUp = false
+	end
+end
+
 
 local textBoxOuterBuffer <const> = 10
 local textBoxPosY <const> = 120
@@ -197,7 +276,18 @@ function render()
 		v:render()
 	end
 
-	playerImg:draw(200, 80)
+	playerImg:draw(playerRenderPosX, playerRenderPosY)
+
+	if menuShowTimer > 0 then
+		gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
+		gfx.fillCircleAtPoint(400, 120, 115 * playdate.math.lerp(0, 1, (10-menuShowTimer)/10))
+	elseif menuHideTimer > 0 then
+		gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
+		gfx.fillCircleAtPoint(400, 120, 115 * playdate.math.lerp(0, 1, menuHideTimer/10))
+	elseif isMenuUp then
+		gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
+		gfx.fillCircleAtPoint(400, 120, 115)
+	end
 
 	if textBoxShown then
 		gfx.drawRoundRect(textBoxOuterBuffer, textBoxPosY, textBoxWidth, textBoxHeight, textBoxOutlineSize)
@@ -225,15 +315,13 @@ function canMoveThere(x, y)
 	return true
 end
 
-function setupCameraOffset()
-	cameraOffsetGridX = (playerX + cameraHorizBuffer)
-	cameraOffsetGridY = (playerY + cameraVertBuffer)
-	cameraDestOffsetX = cameraOffsetGridX * -40
-	cameraDestOffsetY = cameraOffsetGridY * -40
-	movingCam = true
-end
+
 
 local cameraMoveSpeed <const> = 5
+
+function openMenu()
+	menuShowTimer = 10
+end
 
 function checkMovement() 
 	if (playdate.buttonIsPressed(playdate.kButtonUp)) then
@@ -272,6 +360,14 @@ function checkMovement()
 			end
 		end
 	end
+	if not playdate.isCrankDocked() and not isCrankUp then
+		isCrankUp = true
+		openMenu()
+	end
+end
+
+function closeMenu()
+	menuHideTimer = 10
 end
 
 function playerMoveBy(x, y)
@@ -296,41 +392,83 @@ function getPlayerPointCoord()
 end
 
 function updateCameraOffset()
-	if (cameraOffsetX > cameraDestOffsetX) then
-		cameraOffsetX -= cameraMoveSpeed
-		if (cameraOffsetX < cameraDestOffsetX) then
-			cameraOffsetX = cameraDestOffsetX
-		end
-	elseif (cameraOffsetX < cameraDestOffsetX) then
-		cameraOffsetX += cameraMoveSpeed
+	if playerRenderPosX == playerDestRenderPosX and playerRenderPosY == playerDestRenderPosY then
 		if (cameraOffsetX > cameraDestOffsetX) then
-			cameraOffsetX = cameraDestOffsetX
-		end
-	end
-	if (cameraOffsetY > cameraDestOffsetY) then
-		cameraOffsetY -= cameraMoveSpeed
-		if (cameraOffsetY < cameraDestOffsetY) then
-			cameraOffsetY = cameraDestOffsetY
-		end
-	elseif (cameraOffsetY < cameraDestOffsetY) then
-		cameraOffsetY += cameraMoveSpeed
-		if (cameraOffsetY > cameraDestOffsetY) then
-			cameraOffsetY = cameraDestOffsetY
-		end
-	end
-	if (cameraOffsetX == cameraDestOffsetX and cameraOffsetY == cameraDestOffsetY) then
-		movingCam = false
-		allowImmediateMovementCheck = true
-		for k, v in ipairs(objs) do
-			if v.posX == playerX and v.posY == playerY then
-				v:onOverlap()
-				if not v:allowImmediateMovementAfterStep() then
-					allowImmediateMovementCheck = false
-				end
+			cameraOffsetX -= cameraMoveSpeed
+			if (cameraOffsetX < cameraDestOffsetX) then
+				cameraOffsetX = cameraDestOffsetX
+			end
+		elseif (cameraOffsetX < cameraDestOffsetX) then
+			cameraOffsetX += cameraMoveSpeed
+			if (cameraOffsetX > cameraDestOffsetX) then
+				cameraOffsetX = cameraDestOffsetX
 			end
 		end
-		if allowImmediateMovementCheck then
-			checkMovement()
+		if (cameraOffsetY > cameraDestOffsetY) then
+			cameraOffsetY -= cameraMoveSpeed
+			if (cameraOffsetY < cameraDestOffsetY) then
+				cameraOffsetY = cameraDestOffsetY
+			end
+		elseif (cameraOffsetY < cameraDestOffsetY) then
+			cameraOffsetY += cameraMoveSpeed
+			if (cameraOffsetY > cameraDestOffsetY) then
+				cameraOffsetY = cameraDestOffsetY
+			end
+		end
+		if (cameraOffsetX == cameraDestOffsetX and cameraOffsetY == cameraDestOffsetY) then
+			movingCam = false
+			allowImmediateMovementCheck = true
+			for k, v in ipairs(objs) do
+				if v.posX == playerX and v.posY == playerY then
+					v:onOverlap()
+					if not v:allowImmediateMovementAfterStep() then
+						allowImmediateMovementCheck = false
+					end
+				end
+			end
+			if allowImmediateMovementCheck then
+				checkMovement()
+			end
+		end
+	end
+
+	if playerRenderPosX ~= playerDestRenderPosX or playerRenderPosY ~= playerDestRenderPosY then
+		if (playerRenderPosX > playerDestRenderPosX) then
+			playerRenderPosX -= cameraMoveSpeed
+			if (playerRenderPosX < playerDestRenderPosX) then
+				playerRenderPosX = playerDestRenderPosX
+			end
+		elseif playerRenderPosX < playerDestRenderPosX then
+			playerRenderPosX += cameraMoveSpeed
+			if (playerRenderPosX > playerDestRenderPosX) then
+				playerRenderPosX = playerDestRenderPosX
+			end
+		end
+		if (playerRenderPosY > playerDestRenderPosY) then
+			playerRenderPosY -= cameraMoveSpeed
+			if (playerRenderPosY < playerDestRenderPosY) then
+				playerRenderPosY = playerDestRenderPosY
+			end
+		elseif playerRenderPosY < playerDestRenderPosY then
+			playerRenderPosY += cameraMoveSpeed
+			if (playerRenderPosY > playerDestRenderPosY) then
+				playerRenderPosY = playerDestRenderPosY
+			end
+		end
+		if (playerRenderPosX == playerDestRenderPosX and playerRenderPosY == playerDestRenderPosY) then
+			movingCam = false
+			allowImmediateMovementCheck = true
+			for k, v in ipairs(objs) do
+				if v.posX == playerX and v.posY == playerY then
+					v:onOverlap()
+					if not v:allowImmediateMovementAfterStep() then
+						allowImmediateMovementCheck = false
+					end
+				end
+			end
+			if allowImmediateMovementCheck then
+				checkMovement()
+			end
 		end
 	end
 end

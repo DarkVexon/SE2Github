@@ -1,9 +1,0 @@
-name=Super Effective
-author=Vex
-description=Choose the right move for each foe!
-bundleID=com.vex.supereffective
-version=0.1
-buildNumber=1
-imagePath=img/startup
-pdxversion=20100
-buildtime=757981982
