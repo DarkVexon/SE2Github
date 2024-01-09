@@ -12,8 +12,10 @@ import "gameobject"
 import "gamescript"
 import "textscript"
 import "motionscript"
+import "mapchangescript"
 import "npcs"
 import "maps"
+import "monster"
 
 -- CORE --
 local gridSize <const> = 40
@@ -27,6 +29,7 @@ guyImgN = gfx.image.new("img/guy-n")
 guyImgE = gfx.image.new("img/guy-e")
 guyImgS = gfx.image.new("img/guy-s")
 guyImgW = gfx.image.new("img/guy-w")
+globalBack = gfx.image.new("img/globalBack")
 
 tilesets = {}
 tileInfo = {}
@@ -39,8 +42,8 @@ objs = {}
 
 isCrankUp = false
 isMenuUp = false
-menuShowTimer = 0
-menuHideTimer = 0
+menuTimer = 0
+showingMenu = false
 
 local cameraHorizBuffer <const> = 6
 local cameraVertBuffer <const> = 3
@@ -52,9 +55,14 @@ playerRenderPosY = 80
 playerDestRenderPosX = playerRenderPosX
 playerDestRenderPosY = playerRenderPosY
 
+menuItems = {"Creatures", "Creaturedex", "Bag", "ID"}
+menuIcons = {}
+menuIcons["Creatures"] = gfx.image.new("img/creaturesMenuIcon")
+menuIcons["Creaturedex"] = gfx.image.new("img/creaturedexMenuIcon")
+menuIcons["Bag"] = gfx.image.new("img/bagMenuIcon")
+menuIcons["ID"] = gfx.image.new("img/idCardMenuIcon")
+
 function hardSetupCameraOffsets()
-	print(playerX)
-	print(playerY)
 	cameraOffsetGridX = math.max(0, math.min(mapWidth - camWidth, playerX - cameraHorizBuffer))
 	cameraOffsetGridY = math.max(0, math.min(mapHeight - camHeight, playerY - cameraVertBuffer))
 	cameraOffsetX = cameraOffsetGridX * -40
@@ -117,23 +125,20 @@ function setPlayerFacing(facing)
 end
 
 -- VARIABLES THAT ALWAYS IMPORTANT
-playerCreatures = {}
-playerBag = {}
-
-
-
-
+playerMonsters = {randomEncounterMonster("Palpillar"), randomEncounterMonster("Palpillar"), randomEncounterMonster("Palpillar")}
+playerItems = {}
 
 movingCam = false
 
 textBoxText = ""
 textBoxShown = false
 textBoxScrollDone = false
-textBoxTime = 0
 textBoxTotalTime = 0
-local textBoxTimePerLetter <const> = 2
 fadeOutTimer = 0
 fadeInTimer = 0
+fadeDest = 0
+-- 1: Map
+-- 2: Monsters Screen
 
 local lineThickness <const> = 2
 
@@ -153,7 +158,6 @@ function showTextBox(text)
 	textBoxDisplayedText = ""
 	textBoxShown = true
 	textBoxScrollDone = false
-	textBoxTime = 0
 	textBoxLetterIndex = 0
 end
 
@@ -172,15 +176,15 @@ function updateTextBox()
 			textBoxDisplayedText = textBoxText
 			textBoxScrollDone = true
 		else
+			local numLettersToAdd
 			if playdate.buttonIsPressed(playdate.kButtonA) then
-				textBoxTime += 2
+				numLettersToAdd = 2
 			else
-				textBoxTime += 1
+				numLettersToAdd = 1
 			end
-			if textBoxTime >= textBoxTimePerLetter then
+			for i=1, numLettersToAdd do
 				textBoxDisplayedText = textBoxDisplayedText .. string.sub(textBoxText, textBoxLetterIndex, textBoxLetterIndex)
 				textBoxLetterIndex += 1
-				textBoxTime = 0
 				if textBoxLetterIndex > #textBoxText then
 					textBoxScrollDone = true
 				end
@@ -194,10 +198,189 @@ function initialize()
 	loadMap("testtown", 1)
 end
 
+local textBoxOuterBuffer <const> = 10
+local textBoxPosY <const> = 120
+boxOutlineSize = 2
+local textBoxTextBufferSize <const> = 4
+local textBoxWidth <const> = 400 - (textBoxOuterBuffer * 2)
+local textBoxHeight <const> = 240 - textBoxPosY - (textBoxOuterBuffer * 2)
+
+menuIdx = 1
+menuAngle = 0
+local baseMenuItemOffset <const> = 180
+local menuDistBetween <const> = (180/3)
+local menuCrankDistBetween <const> = menuDistBetween/2
+local offsetPerMenuItem <const> = menuDistBetween * -1
+menuAngleToNext = 0
+menuAngleToPrev = 0
+local menuMaxAngle <const> = #menuItems * menuDistBetween - 35
+local menuCircRadius <const> = 115
+local numMenuPaddingFrames <const> = 5
+menuPaddingFrames = 0
+
+function resetMenu()
+	menuAngle = menuDistBetween * (menuIdx-1)
+	menuAngleToNext = 0
+	menuAngleToPrev = 0
+	menuPaddingFrames = 0
+end
+
+curScreen = 0
+-- 0: main gameplay
+-- 1: monster screen
+
+
+monsterScreenSelectionIdx = 1
+
+function openMonsterScreen()
+	curScreen = 1
+	monsterScreenSelectionIdx = 1
+end
+
+function openMainScreen()
+	curScreen = 0
+end
+
 function updateInMenu()
+	--print("next: " .. menuCrankDistBetween - menuAngleToNext)
+	--print("prev: " .. menuCrankDistBetween - menuAngleToPrev)
+	local change = playdate.getCrankChange() / 2
+	if (change ~= 0) then
+		--print("change: " .. change)
+		menuPaddingFrames = numMenuPaddingFrames
+		menuAngle += change
+		if menuIdx < #menuItems and not (change < 0 and menuIdx == 1) then
+			menuAngleToNext += change
+		end
+		if menuIdx > 1 and not (change > 0 and menuIdx == #menuItems) then
+			menuAngleToPrev -= change
+		end
+		if (menuAngle < 0) then
+			menuAngle = 0
+		end
+		if menuAngle > menuMaxAngle then
+			menuAngle = menuMaxAngle
+		end
+		if (menuAngleToNext >= menuCrankDistBetween) then
+			if (menuIdx < #menuItems) then
+				--print("moved next")
+				menuIdx += 1
+				menuAngleToNext = 0
+				menuAngleToPrev = 0
+			end
+		elseif menuAngleToPrev >= menuCrankDistBetween then
+			if menuIdx > 1 then
+				--print("moved prev")
+				menuIdx -= 1
+				menuAngleToNext = 0
+				menuAngleToPrev = 0
+			end
+		end
+	else
+		if menuPaddingFrames > 0 then
+			menuPaddingFrames -= 1
+		else
+			local destAngle = menuDistBetween * (menuIdx-1)
+			if (menuAngle > destAngle) then
+				menuAngle -= 2
+				menuAngleToNext -= 2
+				menuAngleToPrev += 2
+				if (menuAngle <= destAngle) then
+					menuAngle = destAngle
+					menuAngleToNext = 0
+					menuAngleToPrev = 0
+				end
+			elseif menuAngle < menuDistBetween * (menuIdx-1) then
+				menuAngle += 2
+				menuAngleToNext += 2
+				menuAngleToPrev -= 2
+				if menuAngle >= destAngle then
+					menuAngle = destAngle
+					menuAngleToNext = 0
+					menuAngleToPrev = 0
+				end
+			end
+		end
+	end
 	if playdate.isCrankDocked() and isCrankUp then
 		isCrankUp = false
 		closeMenu()
+	end
+	if playdate.buttonJustPressed(playdate.kButtonA) then
+		local target = menuItems[menuIdx]
+		if target == "Creatures" then
+			fadeOutTimer = 15
+			fadeDest = 2
+		end
+	end
+end
+
+function onEndFadeOut()
+	if fadeDest == 0 then
+		openMainScreen()
+	elseif fadeDest == 1 then
+		loadMap(nextMap, nextTransloc)
+	elseif fadeDest == 2 then
+		openMonsterScreen()
+	end
+
+	transitionImg = gfx.image.new(400, 240)
+end
+
+function moveVertInPartyView()
+	if monsterScreenSelectionIdx == 1 then
+		if #playerMonsters >= 3 then
+			monsterScreenSelectionIdx = 3
+		else
+			monsterScreeNSelectionIdx = 2
+		end
+	elseif monsterScreenSelectionIdx == 2 then
+		if #playerMonsters >= 4 then
+			monsterScreenSelectionIdx = 4
+		else
+			monsterScreenSelectionIdx = 3
+		end
+	elseif monsterScreenSelectionIdx == 3 then
+		monsterScreenSelectionIdx = 1
+	elseif monsterScreenSelectionIdx == 4 then
+		monsterScreenSelectionIdx = 2
+	end
+end
+
+function moveHorizInPartyView()
+	if monsterScreenSelectionIdx == 1 then
+		if #playerMonsters >= 2 then
+			monsterScreenSelectionIdx = 2
+		end
+	elseif monsterScreenSelectionIdx == 2 then
+		monsterScreenSelectionIdx = 1
+	elseif monsterScreenSelectionIdx == 3 then
+		if #playerMonsters >= 4 then
+			monsterScreenSelectionIdx = 4
+		else
+			monsterScreenSelectionIdx = 2
+		end
+	elseif monsterScreenSelectionIdx == 4 then
+		monsterScreenSelectionIdx = 3
+	end
+end
+
+function updatePartyViewMenu()
+	if playdate.buttonJustPressed(playdate.kButtonB) then
+		fadeOutTimer = 15
+		fadeDest = 0
+	end
+	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		moveVertInPartyView()
+	elseif playdate.buttonJustPressed(playdate.kButtonRight) then
+		moveHorizInPartyView()
+	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		moveVertInPartyView()
+	elseif playdate.buttonJustPressed(playdate.kButtonLeft) then
+		moveHorizInPartyView()
+	end
+	if (playdate.buttonJustPressed(playdate.kButtonUp) or playdate.buttonJustPressed(playdate.kButtonRight) or playdate.buttonJustPressed(playdate.kButtonDown) or playdate.buttonJustPressed(playdate.kButtonLeft)) then
+		print(monsterScreenSelectionIdx)
 	end
 end
 
@@ -206,8 +389,7 @@ function playdate.update()
 		if fadeOutTimer > 0 then
 			fadeOutTimer -= 1
 			if fadeOutTimer == 0 then
-				loadMap(nextMap, nextTransloc)
-				transitionImg = gfx.image.new(400, 240)
+				onEndFadeOut()
 				gfx.pushContext(transitionImg)
 				render()
 				gfx.popContext()
@@ -219,90 +401,155 @@ function playdate.update()
 
 		renderFade()
 	else
-		if (textBoxShown) then
-			updateTextBox()
-		else
-			for i, v in ipairs(objs) do
-				v:update()
-			end
-
-			if (movingCam) then
-				updateCameraOffset()
-			elseif (menuShowTimer > 0) then
-				updateMenuShowTimer()
-			elseif (menuHideTimer > 0) then
-				updateMenuHideTimer()
-			elseif (isMenuUp) then
-				updateInMenu()
+		if curScreen == 0 then
+			if (textBoxShown) then
+				updateTextBox()
 			else
-				checkMovement()
+				for i, v in ipairs(objs) do
+					v:update()
+				end
+
+				if (movingCam) then
+					updateCameraOffset()
+				elseif (menuTimer > 0) then
+					updateMenuTimer()
+				elseif (isMenuUp) then
+					updateInMenu()
+				else
+					checkMovement()
+				end
 			end
+		elseif curScreen == 1 then
+			updatePartyViewMenu()
 		end
 
 		render()
 	end
 end
 
-function updateMenuShowTimer()
-	menuShowTimer -= 1
-	if (menuShowTimer == 0) then
-		isMenuUp = true
+
+function updateMenuTimer()
+	menuTimer -= 1
+	if (menuTimer == 0) then
+		isMenuUp = showingMenu
 	end
 end
 
-function updateMenuHideTimer()
-	menuHideTimer -= 1
-	if (menuHideTimer == 0) then
-		isMenuUp = false
+function drawMenu()
+	local circRadius
+	if menuTimer > 0 then
+		if showingMenu then
+			circRadius = menuCircRadius * playdate.math.lerp(0, 1, (10-menuTimer)/10)
+		else
+			circRadius = menuCircRadius * playdate.math.lerp(0, 1, menuTimer/10)
+		end
+	else
+		circRadius = menuCircRadius
 	end
+	gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
+	gfx.fillCircleAtPoint(400, 120, circRadius)
+
+	for i=menuIdx-2, menuIdx+2 do
+		if i > 0 and i <= #menuItems then
+			local destinationIndex = i-1
+			local destDegrees = destinationIndex * offsetPerMenuItem + baseMenuItemOffset + menuAngle
+			local destRads = toRadians(destDegrees)
+			local menuIconDestX = circRadius * math.cos(destRads) + 400
+			local menuIconDestY = circRadius * math.sin(destRads) + 120
+			menuIcons[menuItems[i]]:draw(menuIconDestX - 33, menuIconDestY - 33)
+		end
+	end
+	gfx.setColor(gfx.kColorBlack)
 end
 
+local monsterMenuOuterBuffer <const> = 3
+local backBtnWidth, backBtnHeight = globalBack:getSize()
+local globalBackX <const> = 400 - backBtnWidth - 1
+local globalBackY <const> = 240 - backBtnHeight - 1
 
-local textBoxOuterBuffer <const> = 10
-local textBoxPosY <const> = 120
-local textBoxOutlineSize <const> = 2
-local textBoxTextBufferSize <const> = 4
-local textBoxWidth <const> = 400 - (textBoxOuterBuffer * 2)
-local textBoxHeight <const> = 240 - textBoxPosY - (textBoxOuterBuffer * 2)
+function drawBackButton()
+	globalBack:draw(globalBackX, globalBackY)
+end
+
+local monsterInfoBoxWidth <const> = 195
+local monsterInfoBoxHeight <const> = 110
+
+local healthBarWidth <const> = 50
+local healthBarHeight <const> = 10
+local healthBarSquish <const> = 4
+
+local hpText <const> = gfx.imageWithText("HP:", 100, 50)
+local hpTextWidth, hpTextHeight = hpText:getSize()
+
+function drawHealthBar(x, y, health, max)
+	hpText:draw(x, y)
+	gfx.fillRoundRect(x + hpTextWidth + healthBarSquish, y + hpTextHeight/6, healthBarWidth, healthBarHeight, healthBarSquish)
+	gfx.setColor(gfx.kColorWhite)
+	gfx.fillRoundRect(x + (healthBarSquish/2) + hpTextWidth+ healthBarSquish, y + (healthBarSquish/2)+ hpTextHeight/6, (healthBarWidth * playdate.math.lerp(0, 1, health/max)) - healthBarSquish, healthBarHeight - healthBarSquish, healthBarSquish)
+	gfx.setColor(gfx.kColorBlack)
+	gfx.drawText(health .. "/" .. max, x + hpTextWidth + healthBarSquish, y + hpTextHeight)
+end
+
+function drawMonsterInfoBox(monster, x, y, selected)
+	if selected then
+		drawSelectedRect(x, y, monsterInfoBoxWidth, monsterInfoBoxHeight)
+	else
+		drawNiceRect(x, y, monsterInfoBoxWidth, monsterInfoBoxHeight)
+	end
+	if monster ~= nil then
+		monster.img:draw(x+5, y+5)
+		gfx.drawText(monster.name, x + 110, y + 5)
+		gfx.drawText("LV. " .. monster.level, x + 125, y+25)
+		drawHealthBar(x + 105, y + 50, monster.curHp, monster.maxHp)
+	end
+
+end
+
+function drawMonsterMenu()
+	local index = 1
+	for y=0, 1 do
+		for x=0, 1 do
+			drawMonsterInfoBox(playerMonsters[index],  monsterMenuOuterBuffer  + (x * (monsterInfoBoxWidth +  monsterMenuOuterBuffer )),  monsterMenuOuterBuffer  + (y * (monsterInfoBoxHeight +  monsterMenuOuterBuffer )), monsterScreenSelectionIdx == index)
+			index += 1
+		end
+	end
+
+	drawBackButton()
+end
 
 function render()
 	gfx.clear()
 
+	if curScreen == 0 then
+		overworldTiles:draw(cameraOffsetX, cameraOffsetY)
 
-
-	overworldTiles:draw(cameraOffsetX, cameraOffsetY)
-
-	for i, v in ipairs(objs) do
-		v:render()
-	end
-
-	playerImg:draw(playerRenderPosX, playerRenderPosY)
-
-	if menuShowTimer > 0 then
-		gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
-		gfx.fillCircleAtPoint(400, 120, 115 * playdate.math.lerp(0, 1, (10-menuShowTimer)/10))
-	elseif menuHideTimer > 0 then
-		gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
-		gfx.fillCircleAtPoint(400, 120, 115 * playdate.math.lerp(0, 1, menuHideTimer/10))
-	elseif isMenuUp then
-		gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
-		gfx.fillCircleAtPoint(400, 120, 115)
-	end
-
-	if textBoxShown then
-		gfx.drawRoundRect(textBoxOuterBuffer, textBoxPosY, textBoxWidth, textBoxHeight, textBoxOutlineSize)
-		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRoundRect(textBoxOuterBuffer + 1, textBoxPosY + 1, textBoxWidth - 2, textBoxHeight - 2, textBoxOutlineSize)
-		gfx.setColor(gfx.kColorBlack)
-		gfx.drawTextInRect(textBoxDisplayedText, textBoxOuterBuffer + textBoxTextBufferSize, textBoxPosY + textBoxTextBufferSize, textBoxWidth - (textBoxTextBufferSize*2), textBoxHeight - (textBoxTextBufferSize*2))
-		
-		if textBoxScrollDone then
-			gfx.fillTriangle(400 - (textBoxOuterBuffer * 4), textBoxPosY + (textBoxOuterBuffer * 8), 400 - (textBoxOuterBuffer * 3), textBoxPosY + (textBoxOuterBuffer * 8), 400 - (textBoxOuterBuffer * 3.5), textBoxPosY + (textBoxOuterBuffer * 9))
+		for i, v in ipairs(objs) do
+			v:render()
 		end
+
+		playerImg:draw(playerRenderPosX, playerRenderPosY)
+
+		if menuTimer > 0 or isMenuUp then
+			drawMenu()
+		end
+
+		if textBoxShown then
+			drawNiceRect(textBoxOuterBuffer, textBoxPosY, textBoxWidth, textBoxHeight)
+			gfx.drawTextInRect(textBoxDisplayedText, textBoxOuterBuffer + textBoxTextBufferSize, textBoxPosY + textBoxTextBufferSize, textBoxWidth - (textBoxTextBufferSize*2), textBoxHeight - (textBoxTextBufferSize*2))
+			
+			if textBoxScrollDone then
+				gfx.fillTriangle(400 - (textBoxOuterBuffer * 4), textBoxPosY + (textBoxOuterBuffer * 8), 400 - (textBoxOuterBuffer * 3), textBoxPosY + (textBoxOuterBuffer * 8), 400 - (textBoxOuterBuffer * 3.5), textBoxPosY + (textBoxOuterBuffer * 9))
+			end
+		end
+	elseif curScreen == 1 then
+		drawMonsterMenu()
 	end
 end
 
 function canMoveThere(x, y) 
+	if x < 1 or y < 1 or x > mapWidth or y > mapHeight then
+		return false
+	end
 	local result = overworldTiles:getTileAtPosition(x, y)
 	if (contains(impassables, result)) then
 		return false
@@ -315,12 +562,12 @@ function canMoveThere(x, y)
 	return true
 end
 
-
-
 local cameraMoveSpeed <const> = 5
 
 function openMenu()
-	menuShowTimer = 10
+	menuTimer = 10
+	showingMenu = true
+	resetMenu()
 end
 
 function checkMovement() 
@@ -367,7 +614,8 @@ function checkMovement()
 end
 
 function closeMenu()
-	menuHideTimer = 10
+	menuTimer = 10
+	showingMenu = false
 end
 
 function playerMoveBy(x, y)

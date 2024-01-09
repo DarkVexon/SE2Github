@@ -11,9 +11,8 @@ function Door:canMoveHere()
 end
 
 function Door:onOverlap()
-	fadeOutTimer = 15
-	nextMap = self.targetMap
-	nextTransloc = self.targetTransloc
+	table.insert(scriptStack, MapChangeScript(self.targetMap, self.targetTransloc))
+	nextScript()
 end
 
 function Door:allowImmediateMovementAfterStep()

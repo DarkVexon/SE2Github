@@ -52,7 +52,7 @@ function GameObject:update()
 end
 
 function GameObject:render()
-	if (cameraOffsetGridX <= self.posX and cameraOffsetGridX + camWidth >= self.posX and cameraOffsetGridY <= self.posY and cameraOffsetGridY + camHeight >= self.posY) then
+	if (cameraOffsetGridX <= self.posX+1 and cameraOffsetGridX + camWidth >= self.posX-1 and cameraOffsetGridY <= self.posY+1 and cameraOffsetGridY + camHeight >= self.posY-1) then
 		self.img:draw(self.visX + cameraOffsetX, self.visY + cameraOffsetY)
 	end
 end
