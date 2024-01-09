@@ -5,5 +5,5 @@ function ToughMark:init()
 end
 
 function ToughMark:applyToStats(stats)
-	stats[1] = stats[1] * 1.2
+	stats[3] = stats[3] * 1.2
 end

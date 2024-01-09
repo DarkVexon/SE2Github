@@ -41,6 +41,7 @@ function Monster:init(data)
 	self.img = monsterImgs[self.species]
 	self.name = data["name"]
 	self.level = data["level"]
+	self.exp = data["exp"]
 	self.nature = data["nature"]
 	self.mark = data["mark"]
 	self.item = data["item"]
@@ -90,12 +91,18 @@ end
 
 function Monster:loadSpeciesData()
 	self.types = monsterInfo[self.species]["types"]
-	self.ability = monsterInfo[self.species]["ability"]
+	self.ability = getAbilityByName(monsterInfo[self.species]["ability"])
 	local hp, attack, defense, speed = getStats(self.species, self.level, self.nature, self.mark)
 	self.maxHp = hp
 	self.attack = attack
 	self.defense = defense
 	self.speed = speed
+end
+
+function xpNeededForLevel(xpCurve, level)
+	if xpCurve == "normal" then
+		return level^3
+	end
 end
 
 function randomEncounterMonster(species)
@@ -104,8 +111,13 @@ function randomEncounterMonster(species)
 	monsterData["species"] = species
 	monsterData["name"] = monsterInfo[species]["speciesName"]
 	monsterData["level"] = math.random(8, 11)
+	monsterData["exp"] = 0
 	monsterData["nature"] = randomKey(natures)
-	monsterData["mark"] = nil
+	if math.random(0, 10) == 0 then
+		monsterData["mark"] = getMarkByName(randomKey(marks))
+	else
+		monsterData["mark"] = nil
+	end
 	monsterData["item"] = nil
 	monsterData["curHp"] = nil
 	monsterData["curStatus"] = nil

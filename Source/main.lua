@@ -22,6 +22,8 @@ import "monster"
 import "type"
 import "monstermark"
 import "toughmark"
+import "ability"
+import "lovebugability"
 
 -- CORE --
 local gridSize <const> = 40
@@ -60,8 +62,10 @@ playerRenderPosY = 80
 playerDestRenderPosX = playerRenderPosX
 playerDestRenderPosY = playerRenderPosY
 
-menuItems = {"Creatures", "Creaturedex", "Bag", "ID"}
+menuItems = {"Save", "Creatures", "Creaturedex", "Bag", "ID"}
+local menuStartIndex <const> = 2
 menuIcons = {}
+menuIcons["Save"] = gfx.image.new("img/saveMenuIcon")
 menuIcons["Creatures"] = gfx.image.new("img/creaturesMenuIcon")
 menuIcons["Creaturedex"] = gfx.image.new("img/creaturedexMenuIcon")
 menuIcons["Bag"] = gfx.image.new("img/bagMenuIcon")
@@ -211,7 +215,7 @@ local textBoxTextBufferSize <const> = 4
 local textBoxWidth <const> = 400 - (textBoxOuterBuffer * 2)
 local textBoxHeight <const> = 240 - textBoxPosY - (textBoxOuterBuffer * 2)
 
-menuIdx = 1
+menuIdx = menuStartIndex
 menuAngle = 0
 local baseMenuItemOffset <const> = 180
 local menuDistBetween <const> = (180/3)
@@ -256,7 +260,7 @@ function updateInMenu()
 		--print("change: " .. change)
 		menuPaddingFrames = numMenuPaddingFrames
 		menuAngle += change
-		if menuIdx < #menuItems and not (change < 0 and menuIdx == 1) then
+		if menuIdx <  #menuItems and not (change < 0 and menuIdx == 1) then
 			menuAngleToNext += change
 		end
 		if menuIdx > 1 and not (change > 0 and menuIdx == #menuItems) then
@@ -466,7 +470,7 @@ function drawMenu()
 	gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
 	gfx.fillCircleAtPoint(400, 120, circRadius)
 
-	for i=menuIdx-2, menuIdx+2 do
+	for i=menuIdx-3, menuIdx+3 do
 		if i > 0 and i <= #menuItems then
 			local destinationIndex = i-1
 			local destDegrees = destinationIndex * offsetPerMenuItem + baseMenuItemOffset + menuAngle
@@ -498,12 +502,18 @@ local healthBarSquish <const> = 4
 local hpText <const> = gfx.imageWithText("HP:", 100, 50)
 local hpTextWidth, hpTextHeight = hpText:getSize()
 
+function drawBar(x, y, width, height, cur, max)
+	gfx.fillRoundRect(x + healthBarSquish, y, width, height, healthBarSquish)
+	if (cur > 0) then
+		gfx.setColor(gfx.kColorWhite)
+		gfx.fillRoundRect(x + (healthBarSquish/2) + healthBarSquish, y + (healthBarSquish/2), (healthBarWidth * playdate.math.lerp(0, 1, cur/max)) - healthBarSquish, healthBarHeight - healthBarSquish, healthBarSquish)
+		gfx.setColor(gfx.kColorBlack)
+	end
+end
+
 function drawHealthBar(x, y, health, max)
 	hpText:draw(x, y)
-	gfx.fillRoundRect(x + hpTextWidth + healthBarSquish, y + hpTextHeight/6, healthBarWidth, healthBarHeight, healthBarSquish)
-	gfx.setColor(gfx.kColorWhite)
-	gfx.fillRoundRect(x + (healthBarSquish/2) + hpTextWidth+ healthBarSquish, y + (healthBarSquish/2)+ hpTextHeight/6, (healthBarWidth * playdate.math.lerp(0, 1, health/max)) - healthBarSquish, healthBarHeight - healthBarSquish, healthBarSquish)
-	gfx.setColor(gfx.kColorBlack)
+	drawBar(x + hpTextWidth, y + hpTextHeight/6, healthBarWidth, healthBarHeight, health, max)
 	gfx.drawText(health .. "/" .. max, x + hpTextWidth + healthBarSquish, y + hpTextHeight)
 end
 
@@ -543,21 +553,36 @@ local singleViewNameDrawY <const> = 10
 local singleViewLevelDrawX <const> = 125
 local singleViewLevelDrawY <const> = 30
 
+local singleViewLevelBarDrawX <const> = 175
+local singleViewLevelBarDrawY <const> = 30
+local singleViewLevelBarWidth <const> = 50
+local singleViewLevelBarHeight <const> = 15
+
 local singleViewHealthDrawX <const> = 125
 local singleViewHealthDrawY <const> = 50
 
-local singleViewTypesDrawX <const> = 225
+local singleViewTypesDrawX <const> = 250
 local singleViewTypesDrawY <const> = 30
 
 local singleViewStatsDrawX <const> = 10
 local singleViewStatsDrawY <const> = 125
 local singleViewSpaceBetweenStatsVert <const> = 25
 
-local singleViewNatureDrawX <const> = 230
+local singleViewNatureDrawX <const> = 245
 local singleViewNatureDrawY <const> = 65
 
 local singleViewMarkDrawX <const> = 125
+local singleViewMarkImgWidth <const> = 60
+local singleViewMarkDistBetweenImgAndExplanation = 5
 local singleViewMarkDrawY <const> = 90
+
+local singleViewAbilityDrawX <const> = 90
+local singleViewAbilityDrawY <const> = 115
+local singleViewAbilityBoxWidth <const> = 400 - singleViewAbilityDrawX - textBoxOuterBuffer
+local singleViewAbilityBoxHeight <const> = 40
+
+local singleViewMovesWordDrawX <const> = 200
+local singleViewMovesWordDrawY <const> = 150
 
 function drawSingleMonsterView()
 	singleViewMonster.img:draw(singleViewImgDrawX, singleViewImgDrawY)
@@ -567,6 +592,7 @@ function drawSingleMonsterView()
 	end
 	gfx.drawText(nameDisplay, singleViewNameDrawX, singleViewNameDrawY)
 	gfx.drawText("LV. " .. singleViewMonster.level, singleViewLevelDrawX, singleViewLevelDrawY)
+	drawBar(singleViewLevelBarDrawX, singleViewLevelBarDrawY, singleViewLevelBarWidth, singleViewLevelBarHeight, singleViewMonster.exp, xpNeededForLevel(monsterInfo[singleViewMonster.speciesName]["lvlspeed"], singleViewMonster.level+1))
 	drawHealthBar(singleViewHealthDrawX, singleViewHealthDrawY, singleViewMonster.curHp, singleViewMonster.maxHp)
 	renderTypesHoriz(singleViewMonster.types, singleViewTypesDrawX, singleViewTypesDrawY)
 
@@ -577,9 +603,15 @@ function drawSingleMonsterView()
 	gfx.drawText("Acts " .. string.lower(singleViewMonster.nature) .. ".", singleViewNatureDrawX, singleViewNatureDrawY)
 
 	if singleViewMonster.mark ~= nil then
-		gfx.drawText(singleViewMonster.mark.name .. ": " .. singleViewMonster.mark.description, singleViewMarkDrawX, singleViewMarkDrawY)
+		singleViewMonster.mark.img:draw(singleViewMarkDrawX, singleViewMarkDrawY)
+		gfx.drawText(singleViewMonster.mark.name .. ": " .. singleViewMonster.mark.description, singleViewMarkDrawX + singleViewMarkImgWidth + singleViewMarkDistBetweenImgAndExplanation, singleViewMarkDrawY)
 	end
 	
+	gfx.drawTextInRect(singleViewMonster.ability.name .. ": " .. singleViewMonster.ability.description, singleViewAbilityDrawX, singleViewAbilityDrawY, singleViewAbilityBoxWidth, singleViewAbilityBoxHeight)
+
+	for i=1, 4 do
+
+	end
 
 	drawBackButton()
 end

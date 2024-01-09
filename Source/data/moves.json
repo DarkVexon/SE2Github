@@ -1,149 +1,33 @@
 {
-	"1": [
-		"Fireball",
-		"Pyroclasm",
-		"Torch",
-		"Flame",
-		"Magma",
-		"Candles",
-		"Overheat",
-		"Pyro Ball",
-		"Sizzle",
-		"Will-o-Wisp",
-		"Inferno",
-		"Heat Wave",
-		"Phoenix",
-		"Flare"
-	],
-	"2": [
-		"Bubbles",
-		"Dive",
-		"Surf's Up",
-		"Splash",
-		"Waterfall",
-		"Whirlpool",
-		"Cast Line",
-		"Hydro Blast"
-	],
-	"3": [
-		"Spores",
-		"Vines",
-		"Seedlings",
-		"Treesmack",
-		"Solar Beam",
-		"Floral Flip"
-	],
-	"4": [
-		"Sylmbit",
-		"Cluster",
-		"Inversion",
-		"Brain Clash",
-		"Eerielook",
-		"Super Nova"
-	],
-	"5": [
-		"Mecha-Punch",
-		"Robo-Fist",
-		"Thunderbolt",
-		"Overheat",
-		"Compute",
-		"Reprogram",
-		"Shutdown",
-		"Bit Flip"
-	],
-	"6": [
-		"Frighten",
-		"Astonish",
-		"Jumpscare",
-		"Nightmare",
-		"Imprison",
-		"Doom Gaze"
-	],
-	"7": [
-		"Dragon Breath",
-		"Scale Shot",
-		"Wyrmgaze",
-		"Shimmerscale",
-		"Rampage",
-		"Wing Rush"
-	],
-	"8": [
-		"Icebreath",
-		"Bitter Cold",
-		"Chill",
-		"Ice",
-		"Freeze Up",
-		"Snowplow",
-		"Avalanche",
-		"Icy Tomb"
-	],
-	"9": [
-		"Wizardry",
-		"Pizzaz",
-		"Hex",
-		"Polymorph",
-		"Dazzle",
-		"Alakazam",
-		"Wandistry"
-	],
-	"10": [
-		"Bugbites",
-		"Flitterflap",
-		"Stinger",
-		"Swarm",
-		"Infestation"
-	],
-	"11": [
-		"Rock Throw",
-		"Earthquake",
-		"Stone Surge",
-		"Crush",
-		"Earthen Rage"
-	],
-	"12": [
-		"Blowout",
-		"Hurricane",
-		"Wing Slice",
-		"Peck",
-		"Airwaves",
-		"Flight"
-	],
-	"13": [
-		"Venomize",
-		"Noxious",
-		"PoisonPunch",
-		"Mox Tox",
-		"Stinger",
-		"Sludge",
-		"Slime",
-		"Garbage Wave",
-		"Oil Slick",
-		"Ooze"
-	],
-	"14": [
-		"Shimmer",
-		"Impress",
-		"Parade",
-		"Glimmer",
-		"Brilliance",
-		"Kiss of Death",
-		"Heart Attack"
-	],
-	"15": [
-		"Slash",
-		"Shield Up",
-		"Shield Bash",
-		"Holy Light",
-		"Determination",
-		"Dragonslayer",
-		"Prayer"
-	],
-	"16": [
-		"nom nom nom",
-		"omnim omnim",
-		"chomp chomp",
-		"bite nom nom",
-		"yum yum yum",
-		"eat eat eat"
-	]
+  "Nibble": 
+  {
+    "moveName": "Nibble",
+    "type": "bug",
+    "showPower": 1,
+    "basePower": 20,
+    "description": "A weak biting attack."
+  },
+  "Love Tap":
+  {
+    "moveName": "Love Tap",
+    "type": "love",
+    "showPower": 1,
+    "basePower": 20,
+    "description": "The user playfully strikes with a hand or tail."
+  },
+  "Infest":
+  {
+    "moveName": "Infest",
+    "type": "bug",
+    "showPower": 0,
+    "description": "Infestation causes the target to lose 10% max HP each turn."
+  },
+  "Emote Strike":
+  {
+    "moveName": "Emote Strike",
+    "type": "love",
+    "showPower": 1,
+    "basePower": 50,
+    "description": "By seeing the foe's emotions, the user strikes a weakpoint."
+  }
 }

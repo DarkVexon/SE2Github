@@ -7,6 +7,12 @@
     "stats": [220, 75, 115, 100],
     "lvlspeed": "normal",
     "grantedExp": 40,
-    "catchDifficulty": 40
+    "catchDifficulty": 40,
+    "learnset": {
+      "1": "Nibble",
+      "1": "Love Tap",
+      "7": "Infest",
+      "10": "Emote Strike"
+    }
   }
 }
