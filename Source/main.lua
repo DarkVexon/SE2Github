@@ -7,6 +7,9 @@ import "CoreLibs/math"
 gfx = playdate.graphics
 sfx = playdate.sound
 
+gameFont = gfx.font.new("font/Sasser Slab/Sasser-Slab-Bold")
+gfx.setFont(gameFont)
+
 import "helpers"
 import "gameobject"
 import "gamescript"
@@ -16,6 +19,7 @@ import "mapchangescript"
 import "npcs"
 import "maps"
 import "monster"
+import "type"
 
 -- CORE --
 local gridSize <const> = 40
@@ -23,8 +27,7 @@ local gridWidth <const> = 400/40
 local gridHeight <const> = 240/40
 
 -- STUFF THAT ALWAYS IMPORTANT
-gameFont = gfx.font.new("font/Sasser Slab/Sasser-Slab-Bold")
-gfx.setFont(gameFont)
+
 guyImgN = gfx.image.new("img/guy-n")
 guyImgE = gfx.image.new("img/guy-e")
 guyImgS = gfx.image.new("img/guy-s")
@@ -139,6 +142,7 @@ fadeInTimer = 0
 fadeDest = 0
 -- 1: Map
 -- 2: Monsters Screen
+-- 3: Individual Monster Screen
 
 local lineThickness <const> = 2
 
@@ -228,6 +232,7 @@ end
 curScreen = 0
 -- 0: main gameplay
 -- 1: monster screen
+-- 2: individual monster screen
 
 
 monsterScreenSelectionIdx = 1
@@ -315,6 +320,11 @@ function updateInMenu()
 	end
 end
 
+function openSingleMonsterView()
+	curScreen = 2
+	monsterSingleViewSelection = 1
+end
+
 function onEndFadeOut()
 	if fadeDest == 0 then
 		openMainScreen()
@@ -322,9 +332,9 @@ function onEndFadeOut()
 		loadMap(nextMap, nextTransloc)
 	elseif fadeDest == 2 then
 		openMonsterScreen()
+	elseif fadeDest == 3 then
+		openSingleMonsterView()
 	end
-
-	transitionImg = gfx.image.new(400, 240)
 end
 
 function moveVertInPartyView()
@@ -332,7 +342,7 @@ function moveVertInPartyView()
 		if #playerMonsters >= 3 then
 			monsterScreenSelectionIdx = 3
 		else
-			monsterScreeNSelectionIdx = 2
+			monsterScreenSelectionIdx = 2
 		end
 	elseif monsterScreenSelectionIdx == 2 then
 		if #playerMonsters >= 4 then
@@ -379,8 +389,10 @@ function updatePartyViewMenu()
 	elseif playdate.buttonJustPressed(playdate.kButtonLeft) then
 		moveHorizInPartyView()
 	end
-	if (playdate.buttonJustPressed(playdate.kButtonUp) or playdate.buttonJustPressed(playdate.kButtonRight) or playdate.buttonJustPressed(playdate.kButtonDown) or playdate.buttonJustPressed(playdate.kButtonLeft)) then
-		print(monsterScreenSelectionIdx)
+	if playdate.buttonJustPressed(playdate.kButtonA) then
+		singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
+		fadeOutTimer = 15
+		fadeDest = 3
 	end
 end
 
@@ -390,6 +402,7 @@ function playdate.update()
 			fadeOutTimer -= 1
 			if fadeOutTimer == 0 then
 				onEndFadeOut()
+				transitionImg = gfx.image.new(400, 240)
 				gfx.pushContext(transitionImg)
 				render()
 				gfx.popContext()
@@ -421,6 +434,8 @@ function playdate.update()
 			end
 		elseif curScreen == 1 then
 			updatePartyViewMenu()
+		elseif curScreen == 2 then
+			updateSingleMonsterViewMenu()
 		end
 
 		render()
@@ -517,6 +532,68 @@ function drawMonsterMenu()
 	drawBackButton()
 end
 
+local singleViewImgDrawX <const> = 10
+local singleViewImgDrawY <const> = 10
+
+local singleViewNameDrawX <const> = 125
+local singleViewNameDrawY <const> = 10
+
+local singleViewLevelDrawX <const> = 125
+local singleViewLevelDrawY <const> = 30
+
+local singleViewHealthDrawX <const> = 125
+local singleViewHealthDrawY <const> = 50
+
+local singleViewTypesDrawX <const> = 225
+local singleViewTypesDrawY <const> = 30
+
+local singleViewStatsDrawX <const> = 10
+local singleViewStatsDrawY <const> = 125
+local singleViewSpaceBetweenStatsVert <const> = 30
+
+local singleViewNatureDrawX <const> = 230
+local singleViewNatureDrawY <const> = 60
+
+function drawSingleMonsterView()
+	singleViewMonster.img:draw(singleViewImgDrawX, singleViewImgDrawY)
+	local nameDisplay = singleViewMonster.name
+	if singleViewMonster.hasNickname then
+		nameDisplay = nameDisplay .. " (" .. singleViewMonster.speciesName .. ")"
+	end
+	gfx.drawText(nameDisplay, singleViewNameDrawX, singleViewNameDrawY)
+	gfx.drawText("LV. " .. singleViewMonster.level, singleViewLevelDrawX, singleViewLevelDrawY)
+	drawHealthBar(singleViewHealthDrawX, singleViewHealthDrawY, singleViewMonster.curHp, singleViewMonster.maxHp)
+	renderTypesHoriz(singleViewMonster.types, singleViewTypesDrawX, singleViewTypesDrawY)
+
+	gfx.drawText("ATK: " .. singleViewMonster.attack, singleViewStatsDrawX, singleViewStatsDrawY)
+	gfx.drawText("DEF: " .. singleViewMonster.defense, singleViewStatsDrawX, singleViewStatsDrawY + (singleViewSpaceBetweenStatsVert))
+	gfx.drawText("SPD: " .. singleViewMonster.speed, singleViewStatsDrawX, singleViewStatsDrawY + (singleViewSpaceBetweenStatsVert*2))
+
+	gfx.drawText("Acts " .. string.lower(singleViewMonster.nature) .. ".", singleViewNatureDrawX, singleViewNatureDrawY)
+
+	drawBackButton()
+end
+
+function updateSingleMonsterViewMenu()
+	if playdate.buttonJustPressed(playdate.kButtonB) then
+		fadeOutTimer = 15
+		fadeDest = 2
+	end
+	if playdate.buttonJustPressed(playdate.kButtonLeft) then
+		monsterScreenSelectionIdx -= 1
+		if monsterScreenSelectionIdx < 1 then
+			monsterScreenSelectionIdx = #playerMonsters
+		end
+		singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
+	elseif playdate.buttonJustPressed(playdate.kButtonRight) then
+		monsterScreenSelectionIdx += 1
+		if monsterScreenSelectionIdx > #playerMonsters then
+			monsterScreenSelectionIdx = 1
+		end
+		singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
+	end
+end
+
 function render()
 	gfx.clear()
 
@@ -543,6 +620,8 @@ function render()
 		end
 	elseif curScreen == 1 then
 		drawMonsterMenu()
+	elseif curScreen == 2 then
+		drawSingleMonsterView()
 	end
 end
 

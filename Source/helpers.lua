@@ -16,9 +16,22 @@ function containsKey(key)
 	return false
 end
 
-function clear(table)
-	for k, v in pairs(table) do
-		table[k] = nil
+function getTableKeys(inputTable)
+	keys = {}
+	for k, v in pairs(inputTable) do
+		table.insert(keys, k)
+	end
+	return keys
+end
+
+function randomKey(inputTable)
+	local keys = getTableKeys(inputTable)
+	return keys[math.random(#keys)]
+end
+
+function clear(inputTable)
+	for k, v in pairs(inputTable) do
+		inputTable[k] = nil
 	end
 end
 

@@ -4,22 +4,56 @@ monsterInfo = json.decodeFile("data/monsters.json")
 
 monsterImgs = {}
 for k, v in pairs(monsterInfo) do
-	monsterImgs[k] = gfx.image.new("img/monster/" .. k .. ".png")
+	monsterImgs[k] = gfx.image.new("img/monster/" .. k)
 end
+
+local natureMultPerPoint <const> = 0.2
+
+natures = {
+	["Lucky"] = {1, 1, 1, 1},
+	["Bored"] = {0, 0, 0, 0},
+	["Happy"] = {0, 0, 0, 0},
+	["Curious"] = {0, 0, 0, 0},
+	["Thoughtful"] = {0, 0, 0, 0},
+	["Cute"] = {0, 0, 0, 0},
+	["Rude"] = {0, 0, 0, 0},
+	["Wiggly"] = {0, 0, 0, 0},
+	["Playful"] = {0, 0, 0, 0},
+	["Caring"] = {1, -1, 0, 0},
+	["Quiet"] = {1, 0, -1, 0},
+	["Sleepy"] = {1, 0, 0, -1},
+	["Angsty"] = {-1, 1, 0, 0},
+	["Reckless"] = {0, 1, -1, 0},
+	["Precise"] = {0, 1, 0, -1},
+	["Shy"] = {-1, 0, 1, 0},
+	["Hungry"] = {0, -1, 1, 0},
+	["Smart"] = {0, 0, 1, -1},
+	["Impulsive"] = {-1, 0, 0, 1},
+	["Evil"] = {0, -1, 0, 1},
+	["Crazed"] = {0, 0, -1, 1},
+	["Unlucky"] = {-1, -1, -1, -1}
+}
 
 function Monster:init(data)
 	self.randomnum = data["randomNum"]
 	self.species = data["species"]
+	self.speciesName = monsterInfo[self.species]["speciesName"]
 	self.img = monsterImgs[self.species]
 	self.name = data["name"]
+	self.hasNickname = data["hasNickname"]
 	self.level = data["level"]
 	self.nature = data["nature"]
 	self.mark = data["mark"]
 	self.item = data["item"]
-	self.curHp = data["curHp"]
 	self.curStatus = data["curStatus"]
 
 	self:loadSpeciesData()
+
+	if (data["curHp"] == nil) then
+		self.curHp = self.maxHp
+	else
+		self.curHp = data["curHp"]
+	end
 end
 
 function hpFromLevelFunc(base, level)
@@ -32,12 +66,19 @@ end
 
 function getStats(species, level, nature, mark)
 	local stats = monsterInfo[species]["stats"]
-	local hp, attack, defense, speed
-	hp = hpFromLevelFunc(stats[1], level)
-	attack = otherStatFromLevelFunc(stats[2], level)
-	defense = otherStatFromLevelFunc(stats[3], level)
-	speed = otherStatFromLevelFunc(stats[4], level)
-	return hp, attack, defense, speed
+	local results = {
+		hpFromLevelFunc(stats[1], level), 
+		otherStatFromLevelFunc(stats[2], level), 
+		otherStatFromLevelFunc(stats[3], level), 
+		otherStatFromLevelFunc(stats[4], level)
+	}
+	local natureModifiers = natures[nature]
+
+	for i=1, 4 do
+		local nextMod = natureModifiers[i] * natureMultPerPoint
+		results[i] = results[i] + math.floor(results[i] * nextMod)
+	end
+	return results[1], results[2], results[3], results[4]
 end
 
 function Monster:loadSpeciesData()
@@ -55,11 +96,12 @@ function randomEncounterMonster(species)
 	monsterData["randomNum"] = math.random(1, 10000)
 	monsterData["species"] = species
 	monsterData["name"] = monsterInfo[species]["speciesName"]
+	monsterData["hasNickname"] = false
 	monsterData["level"] = 10
-	monsterData["nature"] = "Bored"
+	monsterData["nature"] = randomKey(natures)
 	monsterData["mark"] = "Tough"
 	monsterData["item"] = nil
-	monsterData["curHp"] = 31
+	monsterData["curHp"] = nil
 	monsterData["curStatus"] = nil
 	return Monster(monsterData)
 end
