@@ -24,6 +24,7 @@ import "monstermark"
 import "toughmark"
 import "ability"
 import "lovebugability"
+import "move"
 
 -- CORE --
 local gridSize <const> = 40
@@ -489,14 +490,14 @@ local globalBackX <const> = 400 - backBtnWidth - 1
 local globalBackY <const> = 240 - backBtnHeight - 1
 
 function drawBackButton()
-	globalBack:draw(globalBackX, globalBackY)
+	globalBack:drawIgnoringOffset(globalBackX, globalBackY)
 end
 
 local monsterInfoBoxWidth <const> = 195
 local monsterInfoBoxHeight <const> = 110
 
-local healthBarWidth <const> = 50
-local healthBarHeight <const> = 12
+local partyMenuHealthBarWidth <const> = 50
+local partyMenuHealthBarHeight <const> = 12
 local healthBarSquish <const> = 4
 
 local hpText <const> = gfx.imageWithText("HP:", 100, 50)
@@ -506,14 +507,14 @@ function drawBar(x, y, width, height, cur, max)
 	gfx.fillRoundRect(x + healthBarSquish, y, width, height, healthBarSquish)
 	if (cur > 0) then
 		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRoundRect(x + (healthBarSquish/2) + healthBarSquish, y + (healthBarSquish/2), (healthBarWidth * playdate.math.lerp(0, 1, cur/max)) - healthBarSquish, healthBarHeight - healthBarSquish, healthBarSquish)
+		gfx.fillRoundRect(x + (healthBarSquish/2) + healthBarSquish, y + (healthBarSquish/2), (width * playdate.math.lerp(0, 1, cur/max)) - healthBarSquish, height - healthBarSquish, healthBarSquish)
 		gfx.setColor(gfx.kColorBlack)
 	end
 end
 
-function drawHealthBar(x, y, health, max)
+function drawHealthBar(x, y, width, height, health, max)
 	hpText:draw(x, y)
-	drawBar(x + hpTextWidth, y + hpTextHeight/6, healthBarWidth, healthBarHeight, health, max)
+	drawBar(x + hpTextWidth, y + hpTextHeight/6, width, height, health, max)
 	gfx.drawText(health .. "/" .. max, x + hpTextWidth + healthBarSquish, y + hpTextHeight)
 end
 
@@ -527,7 +528,7 @@ function drawMonsterInfoBox(monster, x, y, selected)
 		monster.img:draw(x+5, y+5)
 		gfx.drawText(monster.name, x + 110, y + 5)
 		gfx.drawText("LV. " .. monster.level, x + 125, y+25)
-		drawHealthBar(x + 105, y + 50, monster.curHp, monster.maxHp)
+		drawHealthBar(x + 105, y + 50, partyMenuHealthBarWidth, partyMenuHealthBarHeight, monster.curHp, monster.maxHp)
 	end
 
 end
@@ -544,6 +545,8 @@ function drawMonsterMenu()
 	drawBackButton()
 end
 
+singleViewScrollAmt = 0
+
 local singleViewImgDrawX <const> = 10
 local singleViewImgDrawY <const> = 10
 
@@ -554,15 +557,17 @@ local singleViewLevelDrawX <const> = 125
 local singleViewLevelDrawY <const> = 30
 
 local singleViewLevelBarDrawX <const> = 175
-local singleViewLevelBarDrawY <const> = 30
-local singleViewLevelBarWidth <const> = 50
-local singleViewLevelBarHeight <const> = 15
+local singleViewLevelBarDrawY <const> = 32
+local singleViewLevelBarWidth <const> = 60
+local singleViewLevelBarHeight <const> = 12
 
 local singleViewHealthDrawX <const> = 125
 local singleViewHealthDrawY <const> = 50
+local singleViewHealthBarWidth <const> = 80
+local singleViewHealthBarHeight <const> = 12
 
 local singleViewTypesDrawX <const> = 250
-local singleViewTypesDrawY <const> = 30
+local singleViewTypesDrawY <const> = 35
 
 local singleViewStatsDrawX <const> = 10
 local singleViewStatsDrawY <const> = 125
@@ -581,8 +586,25 @@ local singleViewAbilityDrawY <const> = 115
 local singleViewAbilityBoxWidth <const> = 400 - singleViewAbilityDrawX - textBoxOuterBuffer
 local singleViewAbilityBoxHeight <const> = 40
 
-local singleViewMovesWordDrawX <const> = 200
-local singleViewMovesWordDrawY <const> = 150
+local singleViewMovesDrawX <const> = 95
+local singleViewMovesDrawY <const> = 155
+
+local singleViewSingleMoveWidth <const> = 275
+local singleViewSingleMoveHeight <const> = 30
+local singleViewSingleMoveDistBetween <const> = 5
+
+function drawSingleMonsterViewMove(x, y, move)
+	drawNiceRect(x, y, singleViewSingleMoveWidth, singleViewSingleMoveHeight)
+	if move ~= nil then
+		renderType(move.type, x + 3, y + 3)
+		gfx.drawText(move.name, x + 10 + 60, y + 7)
+		if move.basePower ~= nil then
+			gfx.drawText(move.basePower, x + 225, y + 7)
+		else
+			gfx.drawText("N/A", x + 225, y + 7)
+		end
+	end
+end
 
 function drawSingleMonsterView()
 	singleViewMonster.img:draw(singleViewImgDrawX, singleViewImgDrawY)
@@ -593,7 +615,7 @@ function drawSingleMonsterView()
 	gfx.drawText(nameDisplay, singleViewNameDrawX, singleViewNameDrawY)
 	gfx.drawText("LV. " .. singleViewMonster.level, singleViewLevelDrawX, singleViewLevelDrawY)
 	drawBar(singleViewLevelBarDrawX, singleViewLevelBarDrawY, singleViewLevelBarWidth, singleViewLevelBarHeight, singleViewMonster.exp, xpNeededForLevel(monsterInfo[singleViewMonster.speciesName]["lvlspeed"], singleViewMonster.level+1))
-	drawHealthBar(singleViewHealthDrawX, singleViewHealthDrawY, singleViewMonster.curHp, singleViewMonster.maxHp)
+	drawHealthBar(singleViewHealthDrawX, singleViewHealthDrawY, singleViewHealthBarWidth, singleViewHealthBarHeight, singleViewMonster.curHp, singleViewMonster.maxHp)
 	renderTypesHoriz(singleViewMonster.types, singleViewTypesDrawX, singleViewTypesDrawY)
 
 	gfx.drawText("ATK: " .. singleViewMonster.attack, singleViewStatsDrawX, singleViewStatsDrawY)
@@ -610,13 +632,26 @@ function drawSingleMonsterView()
 	gfx.drawTextInRect(singleViewMonster.ability.name .. ": " .. singleViewMonster.ability.description, singleViewAbilityDrawX, singleViewAbilityDrawY, singleViewAbilityBoxWidth, singleViewAbilityBoxHeight)
 
 	for i=1, 4 do
-
+		drawSingleMonsterViewMove(singleViewMovesDrawX, singleViewMovesDrawY + ((i-1)*singleViewSingleMoveHeight + (i-1) * singleViewSingleMoveDistBetween), singleViewMonster.moves[i])
 	end
 
 	drawBackButton()
 end
 
+local singleViewScreenEndScrollAmt <const> = 60
+
 function updateSingleMonsterViewMenu()
+	local change, accel = playdate.getCrankChange()
+	if change ~= 0 then
+		singleViewScrollAmt += change
+		if singleViewScrollAmt < 0 then
+			singleViewScrollAmt = 0
+		end
+		if singleViewScrollAmt > singleViewScreenEndScrollAmt then
+			singleViewScrollAmt = singleViewScreenEndScrollAmt
+		end
+		gfx.setDrawOffset(0, -singleViewScrollAmt)
+	end
 	if playdate.buttonJustPressed(playdate.kButtonB) then
 		fadeOutTimer = 15
 		fadeDest = 2

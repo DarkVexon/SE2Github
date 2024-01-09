@@ -1,5 +1,5 @@
 local typeImgWidth <const> = 60
-local typeImgHeight <const> = 30
+local typeImgHeight <const> = 24
 local typeImgBevel <const> = 5
 local typeBetweenBufferHoriz <const> = 8
 local typeBetweenBufferVert <const> = 5
@@ -28,7 +28,7 @@ function generateTypeImg(type)
 	gfx.pushContext(newImg)
 	gfx.fillRoundRect(0, 0, typeImgWidth, typeImgHeight, typeImgBevel)
 	gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
-	gfx.drawTextAligned(string.upper(type), typeImgWidth / 2, typeImgHeight / 4, kTextAlignment.center)
+	gfx.drawTextAligned(string.upper(type), typeImgWidth / 2, typeImgHeight/6, kTextAlignment.center)
 	gfx.popContext()
 	gfx.setImageDrawMode(gfx.kDrawModeCopy)
 	return newImg

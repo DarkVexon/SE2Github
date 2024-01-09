@@ -3,7 +3,6 @@
   {
     "moveName": "Nibble",
     "type": "bug",
-    "showPower": 1,
     "basePower": 20,
     "description": "A weak biting attack."
   },
@@ -11,7 +10,6 @@
   {
     "moveName": "Love Tap",
     "type": "love",
-    "showPower": 1,
     "basePower": 20,
     "description": "The user playfully strikes with a hand or tail."
   },
@@ -19,14 +17,12 @@
   {
     "moveName": "Infest",
     "type": "bug",
-    "showPower": 0,
     "description": "Infestation causes the target to lose 10% max HP each turn."
   },
   "Emote Strike":
   {
     "moveName": "Emote Strike",
     "type": "love",
-    "showPower": 1,
     "basePower": 50,
     "description": "By seeing the foe's emotions, the user strikes a weakpoint."
   }

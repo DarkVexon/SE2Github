@@ -10,9 +10,9 @@
     "catchDifficulty": 40,
     "learnset": {
       "1": "Nibble",
-      "1": "Love Tap",
+      "2": "Love Tap",
       "7": "Infest",
-      "10": "Emote Strike"
+      "11": "Emote Strike"
     }
   }
 }

@@ -1,7 +1,11 @@
 class('MonsterMove').extends()
 
-moveInfo = 
+moveInfo = json.decodeFile("data/moves.json")
 
 function MonsterMove:init(name)
-	self.name = name
+	local targetMoveInfo = moveInfo[name]
+	self.name = targetMoveInfo["moveName"]
+	self.type = targetMoveInfo["type"]
+	self.basePower = targetMoveInfo["basePower"]
+	self.description = targetMoveInfo["description"]
 end

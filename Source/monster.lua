@@ -42,6 +42,7 @@ function Monster:init(data)
 	self.name = data["name"]
 	self.level = data["level"]
 	self.exp = data["exp"]
+	self.moves = data["moves"]
 	self.nature = data["nature"]
 	self.mark = data["mark"]
 	self.item = data["item"]
@@ -105,12 +106,27 @@ function xpNeededForLevel(xpCurve, level)
 	end
 end
 
+function getMostRecentFourMovesAtLevel(species, level)
+	local moves = {}
+	local targetMonsterLearnset = monsterInfo[species]["learnset"]
+	for k, v in pairs(targetMonsterLearnset) do
+		if tonumber(k) <= level then
+			if #moves == 4 then
+				table.remove(moves, 0)
+			end
+			table.insert(moves, MonsterMove(v))
+		end
+	end
+	return moves
+end
+
 function randomEncounterMonster(species)
 	local monsterData = {}
 	monsterData["randomNum"] = math.random(1, 10000)
 	monsterData["species"] = species
 	monsterData["name"] = monsterInfo[species]["speciesName"]
 	monsterData["level"] = math.random(8, 11)
+	monsterData["moves"] = getMostRecentFourMovesAtLevel(species, monsterData["level"])
 	monsterData["exp"] = 0
 	monsterData["nature"] = randomKey(natures)
 	if math.random(0, 10) == 0 then
