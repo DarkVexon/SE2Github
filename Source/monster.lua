@@ -39,9 +39,17 @@ function Monster:init(data)
 	self.species = data["species"]
 	self.speciesName = monsterInfo[self.species]["speciesName"]
 	self.img = monsterImgs[self.species]
-	self.name = data["name"]
+	if data["name"] == nil then
+		self.name = self.speciesName
+	else
+		self.name = data["name"]
+	end
 	self.level = data["level"]
-	self.exp = data["exp"]
+	if data["exp"] == nil then
+		self.exp = 0
+	else
+		self.exp = data["exp"]
+	end
 	self.moves = data["moves"]
 	self.nature = data["nature"]
 	self.mark = data["mark"]

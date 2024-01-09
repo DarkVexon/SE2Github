@@ -16,6 +16,10 @@ function containsKey(key)
 	return false
 end
 
+function startsWith (string, start)
+	return string.sub(string, 1, #start) == start
+end
+
 function getTableKeys(inputTable)
 	keys = {}
 	for k, v in pairs(inputTable) do

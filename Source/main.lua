@@ -135,7 +135,7 @@ function setPlayerFacing(facing)
 end
 
 -- VARIABLES THAT ALWAYS IMPORTANT
-playerMonsters = {randomEncounterMonster("Palpillar"), randomEncounterMonster("Palpillar"), randomEncounterMonster("Palpillar")}
+playerMonsters = {randomEncounterMonster("Palpillar")}
 playerItems = {}
 
 movingCam = false
@@ -150,6 +150,7 @@ fadeDest = 0
 -- 1: Map
 -- 2: Monsters Screen
 -- 3: Individual Monster Screen
+-- 4: Combat Screen
 
 local lineThickness <const> = 2
 
@@ -240,6 +241,7 @@ curScreen = 0
 -- 0: main gameplay
 -- 1: monster screen
 -- 2: individual monster screen
+-- 3: combat screen
 
 
 monsterScreenSelectionIdx = 1
@@ -261,7 +263,10 @@ function updateInMenu()
 		--print("change: " .. change)
 		menuPaddingFrames = numMenuPaddingFrames
 		menuAngle += change
-		if menuIdx <  #menuItems and not (change < 0 and menuIdx == 1) then
+		if menuAngle > menuDistBetween * (#menuItems-1) then
+			menuAngle = menuDistBetween * (#menuItems-1)
+		end
+		if menuIdx < #menuItems and not (change < 0 and menuIdx == 1) then
 			menuAngleToNext += change
 		end
 		if menuIdx > 1 and not (change > 0 and menuIdx == #menuItems) then
@@ -330,6 +335,25 @@ end
 function openSingleMonsterView()
 	curScreen = 2
 	monsterSingleViewSelection = 1
+	singleViewScrollAmt = 0
+end
+
+local enemyMonsterStartX <const> = 400
+local enemyMonsterEndX <const> = 275
+local enemyMonsterY <const> = 75
+
+local playerImgWidth <const> = 100
+local playerImgStartX <const> = 50
+local playerImgEndX <const> = -playerImgWidth
+
+local playerMonsterX <const> = 25
+local playerMonsterY <const> = 275
+
+function beginCombat()
+	curScreen = 4
+	enemyMonsterPosX = enemyMonsterStartX
+	enemyMonsterPosY = enemyMonsterY
+
 end
 
 function onEndFadeOut()
@@ -341,6 +365,8 @@ function onEndFadeOut()
 		openMonsterScreen()
 	elseif fadeDest == 3 then
 		openSingleMonsterView()
+	elseif fadeDest == 4 then
+		beginCombat()
 	end
 end
 
@@ -348,7 +374,7 @@ function moveVertInPartyView()
 	if monsterScreenSelectionIdx == 1 then
 		if #playerMonsters >= 3 then
 			monsterScreenSelectionIdx = 3
-		else
+		elseif #playerMonsters >= 2 then
 			monsterScreenSelectionIdx = 2
 		end
 	elseif monsterScreenSelectionIdx == 2 then
@@ -403,6 +429,8 @@ function updatePartyViewMenu()
 	end
 end
 
+skipNextRender = false
+
 function playdate.update()
 	if (fadeOutTimer > 0 or fadeInTimer > 0) then
 		if fadeOutTimer > 0 then
@@ -445,7 +473,11 @@ function playdate.update()
 			updateSingleMonsterViewMenu()
 		end
 
-		render()
+		if skipNextRender then
+			skipNextRender = false
+		else
+			render()
+		end
 	end
 end
 
@@ -653,6 +685,8 @@ function updateSingleMonsterViewMenu()
 		gfx.setDrawOffset(0, -singleViewScrollAmt)
 	end
 	if playdate.buttonJustPressed(playdate.kButtonB) then
+		gfx.setDrawOffset(0, 0)
+		skipNextRender = true
 		fadeOutTimer = 15
 		fadeDest = 2
 	end

@@ -12,7 +12,8 @@
 "width": 10,
 "npcs":
 	[
-		["door", 4, 6, "testtown", 1]
+		["door", 4, 6, "testtown", 1],
+		["signpost", 5, 4, "nothing"]
 	],
 "translocs":
 	[

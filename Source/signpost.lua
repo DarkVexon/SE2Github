@@ -6,7 +6,7 @@ function Signpost:init(x, y, text)
 end
 
 function Signpost:onInteract()
-	table.insert(scriptStack, TextScript("hello there 1. my name is SIGNPOSTY. nice to meet you! this is a long message to test just how much text fits into the text box. ok now press a"))
-	table.insert(scriptStack, TextScript("hello there 2! this is a SECOND text box"))
+	table.insert(scriptStack, TextScript("I, SIGNPOSTY, will do the honor of facing you in the world's first MONSTER BATTLE!"))
+	table.insert(scriptStack, EnterCombatScript("signposty"))
 	nextScript()
 end
