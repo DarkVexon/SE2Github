@@ -20,6 +20,8 @@ import "npcs"
 import "maps"
 import "monster"
 import "type"
+import "monstermark"
+import "toughmark"
 
 -- CORE --
 local gridSize <const> = 40
@@ -490,7 +492,7 @@ local monsterInfoBoxWidth <const> = 195
 local monsterInfoBoxHeight <const> = 110
 
 local healthBarWidth <const> = 50
-local healthBarHeight <const> = 10
+local healthBarHeight <const> = 12
 local healthBarSquish <const> = 4
 
 local hpText <const> = gfx.imageWithText("HP:", 100, 50)
@@ -549,15 +551,18 @@ local singleViewTypesDrawY <const> = 30
 
 local singleViewStatsDrawX <const> = 10
 local singleViewStatsDrawY <const> = 125
-local singleViewSpaceBetweenStatsVert <const> = 30
+local singleViewSpaceBetweenStatsVert <const> = 25
 
 local singleViewNatureDrawX <const> = 230
-local singleViewNatureDrawY <const> = 60
+local singleViewNatureDrawY <const> = 65
+
+local singleViewMarkDrawX <const> = 125
+local singleViewMarkDrawY <const> = 90
 
 function drawSingleMonsterView()
 	singleViewMonster.img:draw(singleViewImgDrawX, singleViewImgDrawY)
 	local nameDisplay = singleViewMonster.name
-	if singleViewMonster.hasNickname then
+	if singleViewMonster.name ~= singleViewMonster.speciesName then
 		nameDisplay = nameDisplay .. " (" .. singleViewMonster.speciesName .. ")"
 	end
 	gfx.drawText(nameDisplay, singleViewNameDrawX, singleViewNameDrawY)
@@ -570,6 +575,11 @@ function drawSingleMonsterView()
 	gfx.drawText("SPD: " .. singleViewMonster.speed, singleViewStatsDrawX, singleViewStatsDrawY + (singleViewSpaceBetweenStatsVert*2))
 
 	gfx.drawText("Acts " .. string.lower(singleViewMonster.nature) .. ".", singleViewNatureDrawX, singleViewNatureDrawY)
+
+	if singleViewMonster.mark ~= nil then
+		gfx.drawText(singleViewMonster.mark.name .. ": " .. singleViewMonster.mark.description, singleViewMarkDrawX, singleViewMarkDrawY)
+	end
+	
 
 	drawBackButton()
 end

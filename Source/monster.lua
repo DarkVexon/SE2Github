@@ -40,7 +40,6 @@ function Monster:init(data)
 	self.speciesName = monsterInfo[self.species]["speciesName"]
 	self.img = monsterImgs[self.species]
 	self.name = data["name"]
-	self.hasNickname = data["hasNickname"]
 	self.level = data["level"]
 	self.nature = data["nature"]
 	self.mark = data["mark"]
@@ -72,11 +71,19 @@ function getStats(species, level, nature, mark)
 		otherStatFromLevelFunc(stats[3], level), 
 		otherStatFromLevelFunc(stats[4], level)
 	}
-	local natureModifiers = natures[nature]
 
+	local natureModifiers = natures[nature]
 	for i=1, 4 do
 		local nextMod = natureModifiers[i] * natureMultPerPoint
-		results[i] = results[i] + math.floor(results[i] * nextMod)
+		results[i] = results[i] + results[i] * nextMod
+	end
+
+	if mark ~= nil then
+		mark:applyToStats(results)
+	end
+
+	for k, v in pairs(results) do
+		results[k] = math.floor(results[k])
 	end
 	return results[1], results[2], results[3], results[4]
 end
@@ -96,10 +103,9 @@ function randomEncounterMonster(species)
 	monsterData["randomNum"] = math.random(1, 10000)
 	monsterData["species"] = species
 	monsterData["name"] = monsterInfo[species]["speciesName"]
-	monsterData["hasNickname"] = false
-	monsterData["level"] = 10
+	monsterData["level"] = math.random(8, 11)
 	monsterData["nature"] = randomKey(natures)
-	monsterData["mark"] = "Tough"
+	monsterData["mark"] = nil
 	monsterData["item"] = nil
 	monsterData["curHp"] = nil
 	monsterData["curStatus"] = nil
