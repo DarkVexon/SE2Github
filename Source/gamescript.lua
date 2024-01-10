@@ -1,16 +1,11 @@
 class('GameScript').extends()
 
-function GameScript:init()
-
+function GameScript:init(func)
+	self.func = func
 end
 
 function GameScript:execute()
-
+	self.func()
 end
 
-function runScripts(scripts)
-	for i, v in ipairs(scripts) do
-		table.insert(scriptStack, v)
-	end
-	nextScript()
-end
+-- SCRIPTS

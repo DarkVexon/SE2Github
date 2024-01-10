@@ -1,5 +1,5 @@
-local typeImgWidth <const> = 60
-local typeImgHeight <const> = 24
+local typeImgWidth <const> = 66
+local typeImgHeight <const> = 22
 local typeImgBevel <const> = 5
 local typeBetweenBufferHoriz <const> = 8
 local typeBetweenBufferVert <const> = 5
@@ -8,18 +8,18 @@ types = {
 	["fire"] = {"plant", "tech", "ice", "bug"},
 	["water"] = {"fire", "tech", "stone"},
 	["plant"] = {"water", "stone"},
-	["alien"] = {"alien", "tech", "dragon", "knight"},
+	["alien"] = {"alien", "tech", "drake", "knight"},
 	["tech"] = {"water", "fear", "magic", "poison", "love"},
 	["fear"] = {"fear", "magic", "love"},
-	["dragon"] = {"fire", "dragon", "wind"},
-	["ice"] = {"water", "plant", "dragon", "wind"},
+	["drake"] = {"fire", "drake", "wind"},
+	["ice"] = {"water", "plant", "drake", "wind"},
 	["magic"] = {"tech", "poison", "knight"},
 	["bug"] = {"plant", "magic", "poison"},
 	["stone"] = {"fire", "ice", "wind", "poison", "teeth"},
 	["wind"] = {"plant", "bug", "knight"},
 	["poison"] = {"plant", "love", "teeth"},
 	["love"] = {"alien", "fear", "ice", "knight"},
-	["knight"] = {"fear", "dragon", "stone", "knight"},
+	["knight"] = {"fear", "drake", "stone", "knight"},
 	["teeth"] = {"alien", "ice", "bug", "love"}
 }
 

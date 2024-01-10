@@ -2,7 +2,7 @@
   "Nibble": 
   {
     "moveName": "Nibble",
-    "type": "bug",
+    "type": "teeth",
     "basePower": 20,
     "description": "A weak biting attack."
   },
@@ -23,7 +23,21 @@
   {
     "moveName": "Emote Strike",
     "type": "love",
-    "basePower": 50,
+    "basePower": 40,
     "description": "By seeing the foe's emotions, the user strikes a weakpoint."
+  },
+  "Drakebreath":
+  {
+    "moveName": "Dragonbreath",
+    "type": "drake",
+    "basePower": 60,
+    "description": "Drakes can breath sparkling, incandescent flame."
+  },
+  "2X-Strike":
+  {
+    "moveName": "2X-Strike",
+    "type": "tech",
+    "basePower": 25,
+    "description": "Hits twice."
   }
 }

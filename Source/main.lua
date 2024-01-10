@@ -13,9 +13,8 @@ gfx.setFont(gameFont)
 import "helpers"
 import "gameobject"
 import "gamescript"
-import "textscript"
-import "motionscript"
-import "mapchangescript"
+import "oneparamscript"
+import "twoparamscript"
 import "npcs"
 import "maps"
 import "monster"
@@ -24,6 +23,7 @@ import "monstermark"
 import "toughmark"
 import "ability"
 import "lovebugability"
+import "backforsecondsability"
 import "move"
 
 -- CORE --
@@ -135,7 +135,7 @@ function setPlayerFacing(facing)
 end
 
 -- VARIABLES THAT ALWAYS IMPORTANT
-playerMonsters = {randomEncounterMonster("Palpillar")}
+playerMonsters = {randomEncounterMonster("Palpillar"), randomEncounterMonster("Dubldraker")}
 playerItems = {}
 
 movingCam = false
@@ -165,12 +165,19 @@ function nextScript()
 	end
 end
 
+textBoxTimer = 0
+
 function showTextBox(text)
 	textBoxText = text
 	textBoxDisplayedText = ""
 	textBoxShown = true
 	textBoxScrollDone = false
 	textBoxLetterIndex = 0
+end
+
+function showTimedTextBox(text, time)
+	showTextBox(text)
+	textBoxTimer = time
 end
 
 function hideTextBox()
@@ -180,8 +187,15 @@ end
 
 function updateTextBox()
 	if textBoxScrollDone then
-		if playdate.buttonJustPressed(playdate.kButtonA) then
-			hideTextBox()
+		if textBoxTimer > 0 then
+			textBoxTimer -= 1
+			if textBoxTimer == 0 then
+				hideTextBox()
+			end
+		else
+			if playdate.buttonJustPressed(playdate.kButtonA) then
+				hideTextBox()
+			end
 		end
 	else
 		if playdate.buttonJustPressed(playdate.kButtonB) then
@@ -211,11 +225,11 @@ function initialize()
 end
 
 local textBoxOuterBuffer <const> = 10
-local textBoxPosY <const> = 120
+local textBoxPosY <const> = 165
 boxOutlineSize = 2
 local textBoxTextBufferSize <const> = 4
 local textBoxWidth <const> = 400 - (textBoxOuterBuffer * 2)
-local textBoxHeight <const> = 240 - textBoxPosY - (textBoxOuterBuffer * 2)
+local textBoxHeight <const> = 240 - textBoxPosY - (textBoxOuterBuffer)
 
 menuIdx = menuStartIndex
 menuAngle = 0
@@ -338,22 +352,103 @@ function openSingleMonsterView()
 	singleViewScrollAmt = 0
 end
 
-local enemyMonsterStartX <const> = 400
+local enemyMonsterStartX <const> = -100
 local enemyMonsterEndX <const> = 275
-local enemyMonsterY <const> = 75
+local enemyMonsterY <const> = 25
 
 local playerImgWidth <const> = 100
-local playerImgStartX <const> = 50
-local playerImgEndX <const> = -playerImgWidth
+local playerImgStartX1 <const> = 400
+local playerImgEndX1 <const> = 25
+local playerImgEndX2 <const> = -playerImgWidth
 
+local playerMonsterStartX <const> = -100
 local playerMonsterX <const> = 25
-local playerMonsterY <const> = 275
+local playerMonsterY <const> = 95
+
+combatIntroAnimTimers = {40, 30, 20}
+
+playerCombatImg = gfx.image.new("img/combatPlayer")
+
+function getNextMonster(combat)
+	if startsWith(combat, "WildEncounter") then
+		return randomEncounterMonster(string.sub(combat, 14, string.len(combat)))
+	end
+end
 
 function beginCombat()
-	curScreen = 4
+	curScreen = 3
+	combatIntroPhase = 1
+	enemyMonster = getNextMonster(curCombat)
 	enemyMonsterPosX = enemyMonsterStartX
 	enemyMonsterPosY = enemyMonsterY
+	playerMonster = playerMonsters[1]
+	playerMonsterPosX = playerMonsterStartX
+	playerMonsterPosY = playerMonsterY
+	playerImgPosX = playerImgStartX1
+	combatIntroAnimTimer = combatIntroAnimTimers[combatIntroPhase]
+end
 
+function updateInCombat()
+	if combatIntroPhase == 1 then
+		combatIntroAnimTimer -= 1
+		enemyMonsterPosX = playdate.math.lerp(enemyMonsterStartX, enemyMonsterEndX, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
+		playerImgPosX = playdate.math.lerp(playerImgStartX1, playerImgEndX1, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
+		if combatIntroAnimTimer == 0 then
+			table.insert(scriptStack, OneParamScript(textScript, "You encounter a " .. enemyMonster.name .. "!"))
+			table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 2))
+			nextScript()
+		end
+	elseif combatIntroPhase == 2 then
+		combatIntroAnimTimer -= 1
+		playerImgPosX = playdate.math.lerp(playerImgEndX1, playerImgEndX2, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
+		if combatIntroAnimTimer == 0 then
+			table.insert(scriptStack, TwoParamScript(timedTextScript, "Go, " .. playerMonsters[1].name .. "!", 30))
+			table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 3))
+			nextScript()
+		end
+	elseif combatIntroPhase == 3 then
+		combatIntroAnimTimer -= 1
+		playerMonsterPosX = playdate.math.lerp(playerMonsterStartX, playerMonsterX, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
+		if combatIntroAnimTimer == 0 then
+			table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 4))
+			nextScript()
+		end
+	end
+end
+
+local enemyMonsterPanelDrawX <const> = 150
+local enemyMonsterPanelDrawY <const> = 15
+
+local playerMonsterPanelDrawX <const> = 135
+local playerMonsterPanelDrawY <const> = 110
+
+local monsterPanelHpBarWidth <const> = 80
+local monsterPanelHpBarHeight <const> = 12
+
+function drawCombatMonsterData(x, y, monster)
+	gfx.drawText(monster.name, x, y)
+	gfx.drawText("LV. " .. monster.level, x + 15, y + 20)
+	drawHealthBar(x + 10, y + 40, monsterPanelHpBarWidth, monsterPanelHpBarHeight, monster.curHp, monster.maxHp)
+end
+
+function drawInCombat()
+	if combatIntroPhase == 1 then
+		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
+		playerCombatImg:draw(playerImgPosX, 65)
+	elseif combatIntroPhase == 2 then
+		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
+		drawCombatMonsterData(enemyMonsterPanelDrawX, enemyMonsterPanelDrawY, enemyMonster)
+		playerCombatImg:draw(playerImgPosX, 65)
+	elseif combatIntroPhase == 3 then
+		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
+		drawCombatMonsterData(enemyMonsterPanelDrawX, enemyMonsterPanelDrawY, enemyMonster)
+		playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
+	elseif combatIntroPhase == 4 then
+		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
+		drawCombatMonsterData(enemyMonsterPanelDrawX, enemyMonsterPanelDrawY, enemyMonster)
+		playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
+		drawCombatMonsterData(playerMonsterPanelDrawX, playerMonsterPanelDrawY, playerMonster)
+	end
 end
 
 function onEndFadeOut()
@@ -471,6 +566,12 @@ function playdate.update()
 			updatePartyViewMenu()
 		elseif curScreen == 2 then
 			updateSingleMonsterViewMenu()
+		elseif curScreen == 3 then
+			if (textBoxShown) then
+				updateTextBox()
+			else
+				updateInCombat()
+			end
 		end
 
 		if skipNextRender then
@@ -629,11 +730,11 @@ function drawSingleMonsterViewMove(x, y, move)
 	drawNiceRect(x, y, singleViewSingleMoveWidth, singleViewSingleMoveHeight)
 	if move ~= nil then
 		renderType(move.type, x + 3, y + 3)
-		gfx.drawText(move.name, x + 10 + 60, y + 7)
+		gfx.drawText(move.name, x + 10 + 70, y + 7)
 		if move.basePower ~= nil then
-			gfx.drawText(move.basePower, x + 225, y + 7)
+			gfx.drawText(move.basePower, x + 230, y + 7)
 		else
-			gfx.drawText("N/A", x + 225, y + 7)
+			gfx.drawText("N/A", x + 230, y + 7)
 		end
 	end
 end
@@ -705,6 +806,15 @@ function updateSingleMonsterViewMenu()
 	end
 end
 
+function drawTextBox()
+	drawNiceRect(textBoxOuterBuffer, textBoxPosY, textBoxWidth, textBoxHeight)
+	gfx.drawTextInRect(textBoxDisplayedText, textBoxOuterBuffer + textBoxTextBufferSize, textBoxPosY + textBoxTextBufferSize, textBoxWidth - (textBoxTextBufferSize*2), textBoxHeight - (textBoxTextBufferSize*2))
+	
+	if textBoxScrollDone and textBoxTimer == 0 then
+		gfx.fillTriangle(400 - (textBoxOuterBuffer * 4), textBoxPosY + (textBoxOuterBuffer * 4), 400 - (textBoxOuterBuffer * 3), textBoxPosY + (textBoxOuterBuffer * 4), 400 - (textBoxOuterBuffer * 3.5), textBoxPosY + (textBoxOuterBuffer * 5))
+	end
+end
+
 function render()
 	gfx.clear()
 
@@ -722,17 +832,18 @@ function render()
 		end
 
 		if textBoxShown then
-			drawNiceRect(textBoxOuterBuffer, textBoxPosY, textBoxWidth, textBoxHeight)
-			gfx.drawTextInRect(textBoxDisplayedText, textBoxOuterBuffer + textBoxTextBufferSize, textBoxPosY + textBoxTextBufferSize, textBoxWidth - (textBoxTextBufferSize*2), textBoxHeight - (textBoxTextBufferSize*2))
-			
-			if textBoxScrollDone then
-				gfx.fillTriangle(400 - (textBoxOuterBuffer * 4), textBoxPosY + (textBoxOuterBuffer * 8), 400 - (textBoxOuterBuffer * 3), textBoxPosY + (textBoxOuterBuffer * 8), 400 - (textBoxOuterBuffer * 3.5), textBoxPosY + (textBoxOuterBuffer * 9))
-			end
+			drawTextBox()
 		end
 	elseif curScreen == 1 then
 		drawMonsterMenu()
 	elseif curScreen == 2 then
 		drawSingleMonsterView()
+	elseif curScreen == 3 then
+		drawInCombat()
+
+		if textBoxShown then
+			drawTextBox()
+		end
 	end
 end
 

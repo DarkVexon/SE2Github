@@ -14,5 +14,20 @@
       "7": "Infest",
       "11": "Emote Strike"
     }
+  },
+  "Dubldraker":
+  {
+    "speciesName": "Dubldraker",
+    "types": ["drake", "teeth"],
+    "ability": "Back for Seconds",
+    "stats": [250, 125, 125, 75],
+    "lvlspeed": "normal",
+    "grantedExp": 70,
+    "catchDifficulty": 10,
+    "learnset": {
+      "1": "Nibble",
+      "2": "Drakebreath",
+      "3": "2X-Strike"
+    }
   }
 }

@@ -16,8 +16,8 @@ function containsKey(key)
 	return false
 end
 
-function startsWith (string, start)
-	return string.sub(string, 1, #start) == start
+function startsWith (test, start)
+	return string.sub(test, 1, #start) == start
 end
 
 function getTableKeys(inputTable)
