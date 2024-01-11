@@ -5,6 +5,5 @@ function Nibble:init()
 end
 
 function Nibble:use(owner, target)
-	Nibble.super.use(self, owner, target)
 	addScript(DamageScript(self:calculateDamage(owner, target), target))
 end

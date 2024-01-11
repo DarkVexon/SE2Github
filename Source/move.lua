@@ -41,7 +41,7 @@ function MonsterMove:calculateDamage(owner, target)
 end
 
 function MonsterMove:use(owner, target)
-	addScript(OneParamScript(textScript, owner.name .. " used " .. self.name .. "!"))
+	
 end
 
 -- import

@@ -378,7 +378,7 @@ local playerMonsterStartX <const> = -100
 local playerMonsterX <const> = 15
 local playerMonsterY <const> = 85
 
-combatIntroAnimTimers = {40, 12, 20}
+combatIntroAnimTimers = {40, 12, 15}
 
 playerCombatImg = gfx.image.new("img/combatPlayer")
 
@@ -530,15 +530,50 @@ function updateCombatChoicePhase()
 					combatSubmenuChosen = 0
 					tissueTimer = tissueShowHideTimer
 					swapToExecution = true
-					playerMonster:useMove(playerMonster.moves[tissueSelectionIdx], enemyMonster)
-					enemyIncomingMove = enemyMonster:chooseMove()
-					addScript(GameScript(
-						function()
-							enemyMonster:useMove(enemyIncomingMove, playerMonster)
-							nextScript()
-						end
+					if playerMonster.speed > enemyMonster.speed then
+						playerMonster:useMove(playerMonster.moves[tissueSelectionIdx], enemyMonster)
+						enemyIncomingMove = enemyMonster:chooseMove()
+						addScript(GameScript(
+							function()
+								enemyMonster:useMove(enemyIncomingMove, playerMonster)
+								nextScript()
+							end
+							)
 						)
-					)
+					elseif enemyMonster.speed > playerMonster.speed then
+						playerIncomingMove = playerMonster.moves[tissueSelectionIdx]
+						enemyMonster:useMove(enemyMonster:chooseMove(), playerMonster)
+						addScript(GameScript(
+							function()
+								playerMonster:useMove(playerIncomingMove, enemyMonster)
+								nextScript()
+							end
+							)
+						)
+					else
+						if math.random(0, 1) == 0 then
+							playerMonster:useMove(playerMonster.moves[tissueSelectionIdx], enemyMonster)
+							enemyIncomingMove = enemyMonster:chooseMove()
+							addScript(GameScript(
+								function()
+									enemyMonster:useMove(enemyIncomingMove, playerMonster)
+									nextScript()
+								end
+								)
+							)
+						else
+							playerIncomingMove = playerMonster.moves[tissueSelectionIdx]
+							enemyMonster:useMove(enemyMonster:chooseMove(), playerMonster)
+							addScript(GameScript(
+								function()
+									playerMonster:useMove(playerIncomingMove, enemyMonster)
+									nextScript()
+								end
+								)
+							)
+						end
+					end
+
 				end
 				if playdate.buttonJustPressed(playdate.kButtonB) then
 					combatPrevSubmenu = combatSubmenuChosen
@@ -759,9 +794,9 @@ local combatMoveInfoPanelDescHeight <const> = 45
 
 function drawFullMoveInfo(move, x, y)
 	renderType(move.type, x, y + 8)
-	gfx.drawTextInRect(move.description, x + 70, y, combatMoveInfoPanelDescWidth, combatMoveInfoPanelDescHeight)
+	gfx.drawTextInRect(move.description, x + typeImgWidth + 5, y, combatMoveInfoPanelDescWidth, combatMoveInfoPanelDescHeight)
 	if move.basePower ~= nil then
-		gfx.drawText("" .. move.basePower, x + 70 + combatMoveInfoPanelDescWidth +3, y + 10)
+		gfx.drawText("" .. move.basePower, x + typeImgWidth + 5 + combatMoveInfoPanelDescWidth - 8, y + 12)
 	end
 end
 
@@ -822,13 +857,15 @@ function drawInCombat()
 	end
 end
 
+bobTime = 0
+
 function drawCombatTextBox()
 	drawCombatBottomBg()
 
 	gfx.drawTextInRect(textBoxDisplayedText, textBoxOuterBuffer + textBoxTextBufferSize, combatTextBoxPosY + textBoxTextBufferSize, textBoxWidth - (textBoxTextBufferSize*2), combatTextBoxHeight - (textBoxTextBufferSize*2))
 	
 	if textBoxScrollDone and textBoxTimer == 0 then
-		gfx.fillTriangle(400 - (textBoxOuterBuffer * 4), textBoxPosY + (textBoxOuterBuffer * 4), 400 - (textBoxOuterBuffer * 3), textBoxPosY + (textBoxOuterBuffer * 4), 400 - (textBoxOuterBuffer * 3.5), textBoxPosY + (textBoxOuterBuffer * 5))
+		downFacingTriangle(400 - (textBoxOuterBuffer * 2), textBoxPosY + (textBoxOuterBuffer * 6) + (math.sin(bobTime * 3)), 10)
 	end
 end
 
@@ -906,7 +943,13 @@ function updateOverworld()
 	end
 end
 
+function updateNonGameplayRelated()
+	bobTime += 0.15
+end
+
 function playdate.update()
+	updateNonGameplayRelated()
+
 	if (fadeOutTimer > 0 or fadeInTimer > 0) then
 		if fadeOutTimer > 0 then
 			fadeOutTimer -= 1
@@ -1171,7 +1214,7 @@ local singleViewHealthDrawY <const> = 50
 local singleViewHealthBarWidth <const> = 80
 local singleViewHealthBarHeight <const> = 12
 
-local singleViewTypesDrawX <const> = 250
+local singleViewTypesDrawX <const> = 245
 local singleViewTypesDrawY <const> = 35
 
 local singleViewStatsDrawX <const> = 10
@@ -1283,7 +1326,7 @@ function drawTextBox()
 	gfx.drawTextInRect(textBoxDisplayedText, textBoxOuterBuffer + textBoxTextBufferSize, textBoxPosY + textBoxTextBufferSize, textBoxWidth - (textBoxTextBufferSize*2), textBoxHeight - (textBoxTextBufferSize*2))
 	
 	if textBoxScrollDone and textBoxTimer == 0 and not followTextBoxWithPopup then
-		gfx.fillTriangle(400 - (textBoxOuterBuffer * 4), textBoxPosY + (textBoxOuterBuffer * 4), 400 - (textBoxOuterBuffer * 3), textBoxPosY + (textBoxOuterBuffer * 4), 400 - (textBoxOuterBuffer * 3.5), textBoxPosY + (textBoxOuterBuffer * 5))
+		downFacingTriangle(400 - (textBoxOuterBuffer * 3), textBoxPosY + (textBoxOuterBuffer * 5)+ (math.sin(bobTime * 3)), 10)
 	end
 end
 

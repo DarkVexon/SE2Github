@@ -73,6 +73,14 @@ function drawNiceRect(x, y, width, height)
 	gfx.setColor(gfx.kColorBlack)
 end
 
+function rightFacingTriangle(x, y, size)
+	gfx.fillTriangle(x, y, x + size, y + size/2, x, y + size)
+end
+
+function downFacingTriangle(x, y, size)
+	gfx.fillTriangle(x, y, x + size, y, x + size/2, y + size)
+end
+
 local selectionBorderFillAmt <const> = 8
 
 function drawSelectedRect(x, y, width, height)

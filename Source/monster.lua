@@ -149,6 +149,11 @@ function randomEncounterMonster(species)
 end
 
 function Monster:useMove(move, target)
+	local outputText = self.name .. " used " .. move.name .. "!"
+	if self == enemyMonster then
+		outputText = "The opposing " .. outputText
+	end
+	addScript(OneParamScript(textScript, outputText))
 	move:use(self, target)
 end
 

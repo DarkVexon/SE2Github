@@ -1,4 +1,3 @@
-local typeImgWidth <const> = 66
 local typeImgHeight <const> = 22
 local typeImgBevel <const> = 5
 local typeBetweenBufferHoriz <const> = 8
@@ -22,6 +21,8 @@ types = {
 	"knight",
 	"teeth"
 }
+
+typeImgWidth = widthOfWidest(types) + 10
 
 dealsDoubleTo = {
 	["fire"] = {"plant"},
