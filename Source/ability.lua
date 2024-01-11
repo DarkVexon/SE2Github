@@ -1,14 +1,14 @@
 class('MonsterAbility').extends()
 
-abilities = {
-	["Lovebug"] = "Reduces enemy ATK by 10% when hit.",
-	["Back for Seconds"] = "Attacks hit again for 30% damage."
-}
+abilityInfo = json.decodeFile("data/abilities.json")
 
 function MonsterAbility:init(name)
-	self.name = name
-	self.description = abilities[self.name]
+	local data = abilityInfo[name]
+	self.name = data["abilityName"]
+	self.description = data["description"]
 end
+
+-- HOOKS
 
 -- IMPORTS
 import "lovebugability"
@@ -16,7 +16,7 @@ import "backforsecondsability"
 
 function getAbilityByName(name)
 	if name == "Lovebug" then
-		return LovebugAbility()
+		return Lovebug()
 	elseif name == "Back for Seconds" then
 		return BackForSeconds()
 	end

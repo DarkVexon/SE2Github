@@ -1,0 +1,12 @@
+{
+  "Lovebug": 
+  {
+    "abilityName": "Lovebug",
+    "description": "Reduces enemy ATK by 10% when hit."
+  },
+  "Back for Seconds":
+  {
+    "abilityName": "Back for Seconds",
+    "description": "Attacks hit again for 30% damage."
+  }
+}

@@ -66,6 +66,14 @@ function widthOfWidest(strings)
 	return widest
 end
 
+function fromRightEdge(bevel)
+	return 400 - bevel*2
+end
+
+function fromBot(bevel)
+	return 240 - bevel*2
+end
+
 function drawNiceRect(x, y, width, height)
 	gfx.drawRoundRect(x, y, width, height, boxOutlineSize)
 	gfx.setColor(gfx.kColorWhite)
@@ -90,4 +98,22 @@ function drawSelectedRect(x, y, width, height)
 	gfx.setColor(gfx.kColorWhite)
 	gfx.fillRoundRect(x + (boxOutlineSize/2) + selectionBorderFillAmt, y + (boxOutlineSize/2) + selectionBorderFillAmt, width - boxOutlineSize - (selectionBorderFillAmt*2), height - boxOutlineSize- (selectionBorderFillAmt*2), boxOutlineSize)
 	gfx.setColor(gfx.kColorBlack)
+end
+
+local hpText <const> = gfx.imageWithText("HP:", 100, 50)
+local hpTextWidth, hpTextHeight = hpText:getSize()
+
+function drawBar(x, y, width, height, cur, max)
+	gfx.fillRoundRect(x + healthBarSquish, y, width, height, healthBarSquish)
+	if (cur > 0) then
+		gfx.setColor(gfx.kColorWhite)
+		gfx.fillRoundRect(x + (healthBarSquish/2) + healthBarSquish, y + (healthBarSquish/2), (width * playdate.math.lerp(0, 1, cur/max)) - healthBarSquish, height - healthBarSquish, healthBarSquish)
+		gfx.setColor(gfx.kColorBlack)
+	end
+end
+
+function drawHealthBar(x, y, width, height, health, max)
+	hpText:draw(x, y)
+	drawBar(x + hpTextWidth, y + hpTextHeight/6, width, height, health, max)
+	gfx.drawText(health .. "/" .. max, x + hpTextWidth + healthBarSquish, y + hpTextHeight)
 end

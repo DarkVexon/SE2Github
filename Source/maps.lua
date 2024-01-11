@@ -1,3 +1,11 @@
+tilesets = {}
+tileInfo = {}
+overworldTiles = gfx.tilemap.new()
+overworldTable = gfx.imagetable.new("img/overworld-table-40-40")
+overworldTiles:setImageTable(overworldTable)
+tilesets["overworld"] = overworldTiles
+tileInfo["overworld"] = {3}
+
 function loadMap(map, transloc)
 	local mapResult = json.decodeFile("maps/" .. map .. ".json")
 	local tilesToUse = mapResult["tiles"]
