@@ -27,8 +27,7 @@ function textScript(text)
 end
 
 function combatScript(combatID) 
-	fadeOutTimer = 15
-	fadeDest = 4
+	startFade(beginCombat)
 	curCombat = combatID
 end
 
@@ -50,4 +49,11 @@ function moveScript(moves)
 			objs[k]:moveBy(v[1], v[2])
 		end
 	end
+end
+
+function swapMonsterScript(newMonster)
+	newMonster.dispHp = newMonster.curHp
+	playerMonster = newMonster
+	playerMonsterPosX = PLAYER_MONSTER_X
+	nextScript()
 end

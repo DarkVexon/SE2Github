@@ -155,12 +155,27 @@ function Monster:useMove(move, target)
 	end
 	addScript(OneParamScript(textScript, outputText))
 	move:use(self, target)
+	nextScript()
 end
 
 function Monster:takeDamage(amount)
 	self.curHp -= amount
 	if self.curHp <= 0 then
 		self.curHp = 0
+	end
+	addScript(StartAnimScript(LoseHpAnim(self)))
+	if self.curHp == 0 then
+		addScript(OneParamScript(textScript, self.name .. " is KOed!"))
+		addScript(StartAnimScript(FaintAnim(self ~= playerMonster)))
+		if self == playerMonster then
+			if remainingMonsters(playerMonsters) > 0 then
+				promptForLastResort()
+			else
+				exitBattleViaLoss()
+			end
+		else
+
+		end
 	end
 end
 

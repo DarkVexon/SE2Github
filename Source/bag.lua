@@ -54,8 +54,7 @@ function updateBagViewScreen()
 	if playdate.buttonJustPressed(playdate.kButtonLeft) or playdate.buttonJustPressed(playdate.kButtonRight) then
 		switchBagTab()
 	end
-	if playdate.buttonJustPressed(playdate.kButtonB ) then
-		fadeOutTimer = 15
-		fadeDest = 0
+	if playdate.buttonJustPressed(playdate.kButtonB) then
+		startFade(openMainScreen)
 	end
 end

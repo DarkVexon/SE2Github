@@ -39,7 +39,7 @@ local playerImgEndX1 <const> = 25
 local playerImgEndX2 <const> = -playerImgWidth
 
 local playerMonsterStartX <const> = -100
-local playerMonsterX <const> = 15
+PLAYER_MONSTER_X = 15
 local playerMonsterY <const> = 85
 
 local postKOChoices <const> = {"Swap", "Flee"}
@@ -48,7 +48,6 @@ combatIntroAnimTimers = {40, 12, 15}
 
 playerCombatImg = gfx.image.new("img/combat/combatPlayer")
 
-
 combatSubmenuChosen = 0
 combatPrevSubmenu = -1
 tissueTimer = 0
@@ -56,7 +55,7 @@ tissueMenuShown = false
 
 combatMenuChoiceY = combatMenuOptionsStartY
 combatInfoPanY = 240
-movesExecuting = false
+turnExecuting = false
 
 function getNextMonster(combat)
 	if startsWith(combat, "WildEncounter") then
@@ -88,9 +87,161 @@ function moveVertInCombatChoice()
 	end
 end
 
+-- UPDATE COMBAT TURN EXECUTION
+-- If something in combat causes ANY delay,
+-- we get BACK to the script queue here.
+-- Additionally, the "global buffer" allows
+-- for a little extra time before script resume.
 
+local AFTER_ANIM_CONCLUDE_WAIT <const> = 10
+curAnim = nil
 
+function updateCombatTurnExecution()
+	if globalBuffer > 0 then
+		globalBuffer -= 1
+		if globalBuffer == 0 then
+			nextScript()
+		end
+	else
+		if curAnim ~= nil then
+			curAnim:update()
+			if curAnim.isDone then
+				curAnim = nil
+				globalBuffer = AFTER_ANIM_CONCLUDE_WAIT
+			end
+		end
+	end
+end
 
+-- COMBAT PHASES
+-- [choices]
+-- Save player choice and enemy choice.
+--> 0. ENEMY MAKES DECISIONS
+--> 1. PLAYER SWITCH MONSTER
+--> 2. ENEMY SWITCH MONSTER
+--> 3. PLAYER USE ITEM
+--> 4. ENEMY USE ITEM
+--> 5. FASTER USE MOVE
+--> 6. SLOWER USE MOVE
+--> 7. PLAYER END TURN
+--> 8. ENEMY END TURN
+--> 9. END ROUND
+
+-- COMBAT PHASE SKIPS
+-- If you are KOd:
+--    Swap into next monster, THEN...
+--         Immediate phase 7.
+-- If enemy is KOd:
+--    Swap into next monster, THEN...
+--         Immediate phase 7.
+
+local turnExecutionFirstPhase <const> = 0
+
+turnExecutionPhase = turnExecutionFirstPhase
+playerChosenSwap = nil
+playerChosenItem = nil
+playerChosenMove = nil
+enemyChosenSwap = nil
+enemyChosenItem = nil
+enemyChosenMove = nil
+
+function playerMonsterMoveCheck()
+	if playerChosenMove ~= nil then
+		playerMonster:useMove(playerChosenMove, enemyMonster)
+	else
+		nextScript()
+	end
+end
+
+function enemyMonsterMoveCheck()
+	if enemyChosenMove ~= nil then
+		enemyMonster:useMove(enemyChosenMove, playerMonster)
+	else
+		nextScript()
+	end
+end
+
+function nextScript()
+	if #scriptStack == 0 then
+		if turnExecuting then
+			getNextCombatActions()
+		end
+	else
+		local nextFound = table.remove(scriptStack, 1)
+		nextFound:execute()
+	end
+end
+
+function swapMonsters(newMonster)
+	addScript(OneParamScript(textScript, "Switch out, " .. playerMonster.name .. "!"))
+	addScript(OneParamScript(swapMonsterScript, newMonster))
+	addScript(OneParamScript(textScript, "Let's go, " .. newMonster.name .. "!"))
+end
+
+function getNextCombatActions()
+	print("Getting next combat actions at phase " .. turnExecutionPhase)
+	if turnExecutionPhase == 0 then
+		turnExecutionPhase += 1
+		--TODO: Better AI
+		enemyChosenMove = enemyMonster:chooseMove()
+		nextScript()
+	elseif turnExecutionPhase == 1 then
+		turnExecutionPhase += 1
+		if playerChosenSwap ~= nil then
+			swapMonsters(playerChosenSwap)
+			playerChosenSwap = nil
+			nextScript()
+		else
+			nextScript()
+		end
+	elseif turnExecutionPhase == 2 then
+		turnExecutionPhase += 1
+		if enemyChosenSwap ~= nil then
+			-- TODO: Enemy swaps creatures
+		else
+			nextScript()
+		end
+	elseif turnExecutionPhase == 3 then
+		turnExecutionPhase += 1
+		if playerChosenItem ~= nil then
+			-- TODO: Player uses item
+		else
+			nextScript()
+		end
+	elseif turnExecutionPhase == 4 then
+		turnExecutionPhase += 1
+		if enemyChosenItem ~= nil then
+			-- TODO: Enemy uses item
+		else
+			nextScript()
+		end
+	elseif turnExecutionPhase == 5 then
+		turnExecutionPhase += 1
+		if enemyMonster.speed > playerMonster.speed then
+			enemyMonsterMoveCheck()
+		else
+			playerMonsterMoveCheck()
+		end
+	elseif turnExecutionPhase == 6 then
+		turnExecutionPhase += 1
+		if enemyMonster.speed > playerMonster.speed then
+			playerMonsterMoveCheck()
+		else
+			enemyMonsterMoveCheck()
+		end
+	elseif turnExecutionPhase == 7 then
+		turnExecutionPhase += 1
+		-- TODO: Player end turn phase
+		nextScript()
+	elseif turnExecutionPhase == 8 then
+		turnExecutionPhase += 1
+		-- TODO: Enemy end turn phase
+		nextScript()
+	elseif turnExecutionPhase == 9 then
+		turnExecuting = false
+		turnExecutionPhase = turnExecutionFirstPhase
+	end
+end
 
 function beginCombat()
 	curScreen = 3
@@ -113,8 +264,9 @@ function beginCombat()
 
 	combatMenuChoiceY = combatMenuOptionsStartY
 	combatInfoPanY = 240
-	movesExecuting = false
+	turnExecuting = false
 	swapToExecution = false
+	turnExecutionPhase = turnExecutionFirstPhase
 	globalBuffer = 0
 end
 
@@ -122,6 +274,75 @@ function hideTissue()
 	combatPrevSubmenu = combatSubmenuChosen
 	combatSubmenuChosen = 0
 	tissueTimer = tissueShowHideTimer
+end
+
+function showTissue(submenu)
+	combatSubmenuChosen = submenu
+	tissueTimer = tissueShowHideTimer
+	tissueSelectionIdx = 1
+end
+
+function fleeCombat()
+	addScript(OneParamScript(textScript, "You flee!"))
+	addScript(OneParamScript(screenChangeScript, openMainScreen))
+	turnExecuting = true
+	nextScript()
+end
+
+function updateMoveSelect()
+	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		tissueSelectionIdx -= 1
+		if tissueSelectionIdx == 0 then
+			tissueSelectionIdx = #playerMonster.moves
+		end
+	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		tissueSelectionIdx += 1
+		if tissueSelectionIdx > #playerMonster.moves then
+			tissueSelectionIdx = 1
+		end
+	end
+	if playdate.buttonJustPressed(playdate.kButtonA) then
+		playerChosenMove = playerMonster.moves[tissueSelectionIdx]
+		hideTissue()
+		turnExecutionPhase = turnExecutionFirstPhase
+		swapToExecution = true
+	end
+	if playdate.buttonJustPressed(playdate.kButtonB) then
+		hideTissue()
+	end
+end
+
+function updateSwapSelect()
+	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		tissueSelectionIdx -= 1
+		if tissueSelectionIdx == 0 then
+			tissueSelectionIdx = #playerMonsters
+		end
+	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		tissueSelectionIdx += 1
+		if tissueSelectionIdx > #playerMonsters then
+			tissueSelectionIdx = 1
+		end
+	end
+	if playdate.buttonJustPressed(playdate.kButtonA) then
+		local targetMonster = playerMonsters[tissueSelectionIdx]
+		if targetMonster ~= playerMonster and targetMonster.curHp > 0 then
+			if playerMonster.curHp == 0 then
+				swapMonsters(targetMonster)
+				hideTissue()
+				swapToExecution = true
+				turnExecutionPhase = 7
+			else
+				playerChosenSwap = targetMonster
+				hideTissue()
+				swapToExecution = true
+				turnExecutionPhase = turnExecutionFirstPhase
+			end
+		end
+	end
+	if playdate.buttonJustPressed(playdate.kButtonB) and playerMonster.curHp > 0 then
+		hideTissue()
+	end
 end
 
 function updateCombatChoicePhase()
@@ -146,8 +367,8 @@ function updateCombatChoicePhase()
 			tissueMenuShown = not tissueMenuShown
 			if swapToExecution then
 				swapToExecution = false
-				movesExecuting = true
-				nextScript()
+				turnExecuting = true
+				getNextCombatActions()
 			end
 		end
 	else
@@ -163,139 +384,19 @@ function updateCombatChoicePhase()
 			end
 			if playdate.buttonJustPressed(playdate.kButtonA) then
 				if combatMenuChoiceIdx == 4 then
-					addScript(OneParamScript(textScript, "You flee!"))
-					addScript(OneParamScript(screenChangeScript, 0))
-					movesExecuting = true
-					nextScript()
+					fleeCombat()
 				else
-					combatSubmenuChosen = combatMenuChoiceIdx
-					tissueTimer = tissueShowHideTimer
-					tissueSelectionIdx = 1
+					showTissue(combatMenuChoiceIdx)
 				end
 			end
 		else
 			if combatSubmenuChosen == 1 then
-				if playdate.buttonJustPressed(playdate.kButtonUp) then
-					tissueSelectionIdx -= 1
-					if tissueSelectionIdx == 0 then
-						tissueSelectionIdx = #playerMonster.moves
-					end
-				elseif playdate.buttonJustPressed(playdate.kButtonDown) then
-					tissueSelectionIdx += 1
-					if tissueSelectionIdx > #playerMonster.moves then
-						tissueSelectionIdx = 1
-					end
-				end
-				if playdate.buttonJustPressed(playdate.kButtonA) then
-					hideTissue()
-					swapToExecution = true
-					if playerMonster.speed > enemyMonster.speed then
-						playerMonster:useMove(playerMonster.moves[tissueSelectionIdx], enemyMonster)
-						enemyIncomingMove = enemyMonster:chooseMove()
-						addScript(GameScript(
-							function()
-								if enemyMonster.curHp > 0 then
-									enemyMonster:useMove(enemyIncomingMove, playerMonster)
-								end
-								nextScript()
-							end
-							)
-						)
-					elseif enemyMonster.speed > playerMonster.speed then
-						playerIncomingMove = playerMonster.moves[tissueSelectionIdx]
-						enemyMonster:useMove(enemyMonster:chooseMove(), playerMonster)
-						addScript(GameScript(
-							function()
-								if playerMonster.curHp > 0 then
-									playerMonster:useMove(playerIncomingMove, enemyMonster)
-								end
-								nextScript()
-							end
-							)
-						)
-					else
-						if math.random(0, 1) == 0 then
-							playerMonster:useMove(playerMonster.moves[tissueSelectionIdx], enemyMonster)
-							enemyIncomingMove = enemyMonster:chooseMove()
-							addScript(GameScript(
-								function()
-									if enemyMonster.curHp > 0 then
-										enemyMonster:useMove(enemyIncomingMove, playerMonster)
-									end
-									nextScript()
-								end
-								)
-							)
-						else
-							playerIncomingMove = playerMonster.moves[tissueSelectionIdx]
-							enemyMonster:useMove(enemyMonster:chooseMove(), playerMonster)
-							addScript(GameScript(
-								function()
-									if playerMonster.curHp > 0 then
-										playerMonster:useMove(playerIncomingMove, enemyMonster)
-									end
-									nextScript()
-								end
-								)
-							)
-						end
-					end
-
-				end
-				if playdate.buttonJustPressed(playdate.kButtonB) then
-					combatPrevSubmenu = combatSubmenuChosen
-					combatSubmenuChosen = 0
-					tissueTimer = tissueShowHideTimer
-				end
+				updateMoveSelect()
 			elseif combatSubmenuChosen == 2 then
 				
 			elseif combatSubmenuChosen == 3 then
-				if playdate.buttonJustPressed(playdate.kButtonUp) then
-					tissueSelectionIdx -= 1
-					if tissueSelectionIdx == 0 then
-						tissueSelectionIdx = #playerMonsters
-					end
-				elseif playdate.buttonJustPressed(playdate.kButtonDown) then
-					tissueSelectionIdx += 1
-					if tissueSelectionIdx > #playerMonsters then
-						tissueSelectionIdx = 1
-					end
-				end
-				if playdate.buttonJustPressed(playdate.kButtonA) then
-					local targetMonster = playerMonsters[tissueSelectionIdx]
-					if targetMonster ~= playerMonster and targetMonster.curHp > 0 then
-						combatPrevSubmenu = combatSubmenuChosen
-						combatSubmenuChosen = 0
-						tissueTimer = tissueShowHideTimer
-						swapToExecution = true
-						addScript(OneParamScript(textScript, "Switch out, " .. playerMonster.name .. "!"))
-						addScript(GameScript(
-								function()
-									targetMonster.dispHp = targetMonster.curHp
-									playerMonster = targetMonster
-									nextScript()
-								end
-							)
-						)
-						addScript(OneParamScript(textScript, "Let's go, " .. targetMonster.name .. "!"))
-						enemyIncomingMove = enemyMonster:chooseMove()
-						addScript(GameScript(
-							function()
-								enemyMonster:useMove(enemyIncomingMove, playerMonster)
-								nextScript()
-							end
-							)
-						)
-					end
-				end
-				if playdate.buttonJustPressed(playdate.kButtonB) and playerMonster.curHp > 0 then
-					combatPrevSubmenu = combatSubmenuChosen
-					combatSubmenuChosen = 0
-					tissueTimer = tissueShowHideTimer
-				end
+				updateSwapSelect()
 			end
-
-
 		end
 	end
 end
@@ -312,10 +413,13 @@ function remainingMonsters(monsterList)
 	return result
 end
 
+function promptForLastResort()
+	addScript(QueryScript("Swap to another Monster?", postKOChoices, {openLastResortMenu, exitBattleViaLoss}))
+end
+
 function openLastResortMenu()
-	combatSubmenuChosen = 3
-	tissueTimer = tissueShowHideTimer
-	tissueSelectionIdx = 1
+	turnExecuting = false
+	showTissue(3)
 end
 
 function exitBattleViaLoss()
@@ -324,74 +428,45 @@ function exitBattleViaLoss()
 	addScript(GameScript(healMonstersToOne))
 end
 
-
-function updateCombatTiming()
-	if globalBuffer > 0 then
-		globalBuffer -= 1
-		if globalBuffer == 0 then
+function updateCombatIntro()
+	if combatIntroPhase == 1 then
+		combatIntroAnimTimer -= 1
+		enemyMonsterPosX = playdate.math.lerp(enemyMonsterStartX, enemyMonsterEndX, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
+		playerImgPosX = playdate.math.lerp(playerImgStartX1, playerImgEndX1, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
+		if combatIntroAnimTimer == 0 then
+			table.insert(scriptStack, OneParamScript(textScript, "You encounter a " .. enemyMonster.name .. "!"))
+			table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 2))
 			nextScript()
 		end
-	else
-		if playerMonster.dispHp ~= playerMonster.curHp or enemyMonster.disppHp ~= enemyMonster.curHp then
-			if playerMonster.dispHp ~= playerMonster.curHp then
-				playerMonster.dispHp -= 1
-				if playerMonster.curHp == playerMonster.dispHp and enemyMonster.dispHp == enemyMonster.curHp then
-					globalBuffer = 10
-					if playerMonster.curHp == 0 then
-						addScript(OneParamScript(textScript, playerMonster.name .. " is KOed!"))
-						if remainingMonsters(playerMonsters) > 0 then
-							addScript(QueryScript("Swap to another Monster?", postKOChoices, {openLastResortMenu, exitBattleViaLoss}))
-						else
-							exitBattleViaLoss()
-						end
-					end
-				end
-			end
-			if enemyMonster.dispHp ~= enemyMonster.curHp then
-				enemyMonster.dispHp -= 1
-				if playerMonster.curHp == playerMonster.dispHp and enemyMonster.dispHp == enemyMonster.curHp then
-					globalBuffer = 10
-				end
-			end
+	elseif combatIntroPhase == 2 then
+		combatIntroAnimTimer -= 1
+		playerImgPosX = playdate.math.lerp(playerImgEndX1, playerImgEndX2, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
+		if combatIntroAnimTimer == 0 then
+			table.insert(scriptStack, TwoParamScript(timedTextScript, "Go, " .. playerMonsters[1].name .. "!", 15))
+			table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 3))
+			nextScript()
+		end
+	elseif combatIntroPhase == 3 then
+		combatIntroAnimTimer -= 1
+		playerMonsterPosX = playdate.math.lerp(playerMonsterStartX, PLAYER_MONSTER_X, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
+		if combatIntroAnimTimer == 0 then
+			combatMenuChoiceIdx = 1
+			table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 4))
+			nextScript()
 		end
 	end
 end
-
-
 
 
 function updateInCombat()
 	if (textBoxShown) then
 		updateTextBox()
 	else
-		if combatIntroPhase == 1 then
-			combatIntroAnimTimer -= 1
-			enemyMonsterPosX = playdate.math.lerp(enemyMonsterStartX, enemyMonsterEndX, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
-			playerImgPosX = playdate.math.lerp(playerImgStartX1, playerImgEndX1, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
-			if combatIntroAnimTimer == 0 then
-				table.insert(scriptStack, OneParamScript(textScript, "You encounter a " .. enemyMonster.name .. "!"))
-				table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 2))
-				nextScript()
-			end
-		elseif combatIntroPhase == 2 then
-			combatIntroAnimTimer -= 1
-			playerImgPosX = playdate.math.lerp(playerImgEndX1, playerImgEndX2, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
-			if combatIntroAnimTimer == 0 then
-				table.insert(scriptStack, TwoParamScript(timedTextScript, "Go, " .. playerMonsters[1].name .. "!", 15))
-				table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 3))
-				nextScript()
-			end
-		elseif combatIntroPhase == 3 then
-			combatIntroAnimTimer -= 1
-			playerMonsterPosX = playdate.math.lerp(playerMonsterStartX, playerMonsterX, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
-			if combatIntroAnimTimer == 0 then
-				combatMenuChoiceIdx = 1
-				table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 4))
-				nextScript()
-			end
+		if combatIntroPhase < 4 then
+			updateCombatIntro()
 		elseif combatIntroPhase == 4 then
-			if movesExecuting then
-				updateCombatTiming()
+			if turnExecuting then
+				updateCombatTurnExecution()
 			else
 				updateCombatChoicePhase()
 			end
@@ -434,7 +509,9 @@ function drawTissueMenu()
 		end
 	end
 
-	globalBack:draw(tissueMenuX + tissueMenuWidth - BACK_BTN_WIDTH - 2, tissueMenuY + tissueMenuHeight - BACK_BTN_HEIGHT - 2)
+	if playerMonster.curHp > 0 then
+		globalBack:draw(tissueMenuX + tissueMenuWidth - BACK_BTN_WIDTH - 2, tissueMenuY + tissueMenuHeight - BACK_BTN_HEIGHT - 2)
+	end
 end
 
 
@@ -472,7 +549,7 @@ function drawCombatChoicePhase()
 
 	drawCombatBottomBg()
 
-	if not movesExecuting then 
+	if not turnExecuting then 
 		if (tissueTimer > tissueShowHideTimer/2 or combatSubmenuChosen == 0) and not swapToExecution then
 			local index = 1
 			for y=0, 1 do
@@ -482,14 +559,14 @@ function drawCombatChoicePhase()
 				end
 			end
 		end
-		if (tissueTimer > tissueShowHideTimer/2 and combatPrevSubmenu == 1) or combatSubmenuChosen == 1 then
-			drawFullMoveInfo(playerMonster.moves[tissueSelectionIdx], COMBAT_MOVE_PANEL_STARTX, combatInfoPanY)
-		end
+	end
+
+	if (tissueTimer > tissueShowHideTimer/2 and combatPrevSubmenu == 1) or combatSubmenuChosen == 1 then
+		drawFullMoveInfo(playerMonster.moves[tissueSelectionIdx], COMBAT_MOVE_PANEL_STARTX, combatInfoPanY)
 	end
 end
 
-
-function drawInCombat()
+function drawCombatIntro()
 	if combatIntroPhase == 1 then
 		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
 		playerCombatImg:draw(playerImgPosX, 65)
@@ -501,16 +578,30 @@ function drawInCombat()
 		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
 		drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
 		playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
-	elseif combatIntroPhase == 4 then
-		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
-		drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
-		playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
-		drawCombatMonsterData(PLAYER_MONSTER_INFO_DRAWX, PLAYER_MONSTER_INFO_DRAWY, playerMonster)
 	end
 
 	if textBoxShown then
 		drawCombatTextBox()
-	elseif combatIntroPhase == 4 then
+	end
+end
+
+function drawCombatInterface()
+	enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
+	drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
+	playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
+	drawCombatMonsterData(PLAYER_MONSTER_INFO_DRAWX, PLAYER_MONSTER_INFO_DRAWY, playerMonster)
+
+	if textBoxShown then
+		drawCombatTextBox()
+	else
 		drawCombatChoicePhase()
+	end
+end
+
+function drawInCombat()
+	if combatIntroPhase < 4 then
+		drawCombatIntro()
+	elseif combatIntroPhase == 4 then
+		drawCombatInterface()
 	end
 end

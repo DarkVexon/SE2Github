@@ -12,8 +12,7 @@ monsterScreenSelectionIdx = 1
 local monsterMenuPopupOptions <const> = {"Info", "Swap"}
 
 function onSelectMonsterInfoPopup()
-	fadeOutTimer = 15
-	fadeDest = 3
+	startFade(openSingleMonsterView)
 end
 
 function onSelectMonsterSwapPopup()
@@ -89,8 +88,7 @@ end
 
 function updatePartyViewMenu()
 	if playdate.buttonJustPressed(playdate.kButtonB) then
-		fadeOutTimer = 15
-		fadeDest = 0
+		startFade(openMainScreen)
 	end
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
 		moveVertInPartyView()

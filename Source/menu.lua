@@ -11,7 +11,7 @@ menuIdx = menuStartIndex
 menuAngle = 0
 local baseMenuItemOffset <const> = 180
 local menuDistBetween <const> = (180/3)
-local menuCrankDistBetween <const> = menuDistBetween * 0.85
+local menuCrankDistBetween <const> = menuDistBetween * 0.75
 local offsetPerMenuItem <const> = menuDistBetween * -1
 menuAngleToNext = 0
 menuAngleToPrev = 0
@@ -92,11 +92,9 @@ function updateInMenu()
 	if playdate.buttonJustPressed(playdate.kButtonA) then
 		local target = menuItems[menuIdx]
 		if target == "Creatures" then
-			fadeOutTimer = 15
-			fadeDest = 2
+			startFadeOut(openSingleMonsterView)
 		elseif target == "Bag" then
-			fadeOutTimer = 15
-			fadeDest = 5
+			startFadeOut(openBag)
 		end
 	end
 end

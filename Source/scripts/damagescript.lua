@@ -7,4 +7,5 @@ end
 
 function DamageScript:execute()
 	self.target:takeDamage(self.amount)
+	nextScript()
 end

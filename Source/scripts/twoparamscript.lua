@@ -13,8 +13,7 @@ end
 -- SCRIPTS --
 
 function mapChangeScript(map, transloc)
-	fadeOutTimer = 15
-	fadeDest = 1
+	startFade(loadNextMap)
 	nextMap = map
 	nextTransloc = transloc
 end

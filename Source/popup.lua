@@ -50,7 +50,7 @@ function updatePopupMenu()
 		popupFuncs[popupMenuSelectionIdx]()
 		if followTextBoxWithPopup then
 			followTextBoxWithPopup = false
-			hideTextBox()
+			textBoxShown = false
 		end
 		popupUp = false
 	elseif playdate.buttonJustPressed(playdate.kButtonB) and canCancel then

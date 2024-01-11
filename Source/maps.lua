@@ -28,3 +28,7 @@ function loadMap(map, transloc)
 	setPlayerFacing(targetTransloc[3])
 	hardSetupCameraOffsets()
 end
+
+function loadNextMap()
+	loadMap(nextMap, nextTransloc)
+end

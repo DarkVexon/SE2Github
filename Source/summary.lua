@@ -114,8 +114,7 @@ function updateSingleMonsterViewMenu()
 	if playdate.buttonJustPressed(playdate.kButtonB) then
 		gfx.setDrawOffset(0, 0)
 		skipNextRender = true
-		fadeOutTimer = 15
-		fadeDest = 2
+		startFade(openMonsterScreen)
 	end
 	if playdate.buttonJustPressed(playdate.kButtonLeft) then
 		monsterScreenSelectionIdx -= 1

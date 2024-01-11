@@ -1,16 +1,14 @@
+local transitionTimer <const> = 15
 fadeOutTimer = 0
 fadeInTimer = 0
-fadeDest = 0
-
--- FADE DESTINATIONS
--- 0: Normal Gameplay
--- 1: Map
--- 2: Monsters Screen
--- 3: Individual Monster Screen
--- 4: Combat Screen
--- 5: Bag
+fadeDest = nil
 
 local fadeCircEndpoint = math.sqrt(400^2 + 240^2)/2
+
+function startFade(toCall)
+	fadeOutTimer = transitionTimer
+	fadeDest = toCall
+end
 
 function updateFade()
 	if fadeOutTimer > 0 then
@@ -30,31 +28,15 @@ end
 
 function renderFade()
 	if fadeOutTimer > 0 then
-		gfx.fillCircleAtPoint(200, 120, playdate.math.lerp(0, 1, ((15-fadeOutTimer)/14)) * fadeCircEndpoint)
+		gfx.fillCircleAtPoint(200, 120, playdate.math.lerp(0, 1, timeLeft(fadeOutTimer, transitionTimer)) * fadeCircEndpoint)
 	elseif fadeInTimer > 0 then
 		gfx.clear()
 		transitionImg:draw(0, 0)
-		gfx.fillCircleAtPoint(200, 120, playdate.math.lerp(1, 0, ((15-fadeInTimer)/14)) * fadeCircEndpoint)
+		gfx.fillCircleAtPoint(200, 120, playdate.math.lerp(1, 0, timeLeft(fadeInTimer, transitionTimer)) * fadeCircEndpoint)
 	end
 end
 
 
 function onEndFadeOut()
-	if scriptAfter then
-		scriptAfter = false
-		nextScript()
-	end
-	if fadeDest == 0 then
-		openMainScreen()
-	elseif fadeDest == 1 then
-		loadMap(nextMap, nextTransloc)
-	elseif fadeDest == 2 then
-		openMonsterScreen()
-	elseif fadeDest == 3 then
-		openSingleMonsterView()
-	elseif fadeDest == 4 then
-		beginCombat()
-	elseif fadeDest == 5 then
-		openBag()
-	end
+	fadeDest()
 end
