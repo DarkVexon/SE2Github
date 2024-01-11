@@ -1,11 +1,11 @@
-globalBack = gfx.image.new("img/globalBack")
+globalBack = gfx.image.new("img/ui/globalBack")
 
-backBtnWidth, backBtnHeight = globalBack:getSize()
-local globalBackX <const> = 400 - backBtnWidth - 1
-local globalBackY <const> = 240 - backBtnHeight - 1
+BACK_BTN_WIDTH, BACK_BTN_HEIGHT = globalBack:getSize()
+local GLOBAL_BACK_X <const> = 400 - BACK_BTN_WIDTH - 1
+local GLOBAL_BACK_Y <const> = 240 - BACK_BTN_HEIGHT - 1
 
 function drawBackButton()
-	globalBack:drawIgnoringOffset(globalBackX, globalBackY)
+	globalBack:drawIgnoringOffset(GLOBAL_BACK_X, GLOBAL_BACK_Y)
 end
 
 function drawBackAt(x, y)

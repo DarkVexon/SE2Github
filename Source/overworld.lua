@@ -7,10 +7,10 @@ local gridHeight <const> = 240/40
 
 local cameraMoveSpeed <const> = 5
 
-guyImgN = gfx.image.new("img/guy-n")
-guyImgE = gfx.image.new("img/guy-e")
-guyImgS = gfx.image.new("img/guy-s")
-guyImgW = gfx.image.new("img/guy-w")
+guyImgN = gfx.image.new("img/overworld/player/guy-n")
+guyImgE = gfx.image.new("img/overworld/player/guy-e")
+guyImgS = gfx.image.new("img/overworld/player/guy-s")
+guyImgW = gfx.image.new("img/overworld/player/guy-w")
 
 camWidth = 400/40
 camHeight = 240/40
@@ -114,7 +114,7 @@ function updateOverworld()
 end
 
 function drawInOverworld()
-	overworldTiles:draw(cameraOffsetX, cameraOffsetY)
+	currentTileset:draw(cameraOffsetX, cameraOffsetY)
 
 	for i, v in ipairs(objs) do
 		v:render()
@@ -135,7 +135,7 @@ function canMoveThere(x, y)
 	if x < 1 or y < 1 or x > mapWidth or y > mapHeight then
 		return false
 	end
-	local result = overworldTiles:getTileAtPosition(x, y)
+	local result = currentTileset:getTileAtPosition(x, y)
 	if (contains(impassables, result)) then
 		return false
 	end

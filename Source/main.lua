@@ -7,7 +7,7 @@ import "CoreLibs/math"
 gfx = playdate.graphics
 sfx = playdate.sound
 
-gameFont = gfx.font.new("font/Sasser Slab/Sasser-Slab-Bold")
+gameFont = gfx.font.new("font/coreTextFont")
 gfx.setFont(gameFont)
 
 import "constants"
@@ -21,46 +21,22 @@ import "type"
 import "monstermark"
 import "ability"
 import "move"
-import "images"
 import "overworld"
 import "menu"
 import "transitions"
-
-isCrankUp = false
-
--- VARIABLES THAT ALWAYS IMPORTANT
-playerMonsters = {randomEncounterMonster("Palpillar"), randomEncounterMonster("Dubldraker")}
-playerItems = {}
-
--- 1: Map
--- 2: Monsters Screen
--- 3: Individual Monster Screen
--- 4: Combat Screen
-
-scriptStack = {}
-
-function nextScript()
-	if #scriptStack == 0 then
-		if curScreen == 3 then
-			getNextCombatActions()
-		end
-	else
-		local nextFound = table.remove(scriptStack, 1)
-		nextFound:execute()
-	end
-end
-
-function getNextCombatActions()
-	if movesExecuting then
-		movesExecuting = false
-	end
-end
+import "bag"
+import "monstersummary"
+import "partyview"
+import "popup"
+import "backbutton"
+import "textbox"
+import "combat"
+import "visual"
 
 function initialize()
-	gfx.setLINE_WIDTH(LINE_WIDTH)
+	gfx.setLineWidth(LINE_WIDTH)
 	loadMap("testtown", 1)
 end
-
 
 curScreen = 0
 -- 0: main gameplay
@@ -69,13 +45,7 @@ curScreen = 0
 -- 3: combat screen
 -- 4: bag screen
 
-bobTime = 0
-
 skipNextRender = false
-
-function updateNonGameplayRelated()
-	bobTime += 0.15
-end
 
 function playdate.update()
 	updateNonGameplayRelated()

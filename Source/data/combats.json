@@ -4,14 +4,14 @@
       "randomNum": 1042,
       "species": "Palpillar",
       "level": 4,
-      "moves": ["Nibble", "Love Tap"],
+      "moves": ["Nibble"],
       "nature": "Thoughtful"
     },
     "2": {
       "randomNum": 109,
       "species": "Palpillar",
       "level": 6,
-      "moves": ["Nibble", "Love Tap"],
+      "moves": ["Nibble"],
       "nature": "Bored"
     }
   }

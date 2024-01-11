@@ -2,6 +2,14 @@ fadeOutTimer = 0
 fadeInTimer = 0
 fadeDest = 0
 
+-- FADE DESTINATIONS
+-- 0: Normal Gameplay
+-- 1: Map
+-- 2: Monsters Screen
+-- 3: Individual Monster Screen
+-- 4: Combat Screen
+-- 5: Bag
+
 local fadeCircEndpoint = math.sqrt(400^2 + 240^2)/2
 
 function updateFade()

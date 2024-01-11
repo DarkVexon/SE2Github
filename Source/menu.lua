@@ -1,11 +1,11 @@
 menuItems = {"Save", "Creatures", "Creaturedex", "Bag", "ID"}
 local menuStartIndex <const> = 2
 menuIcons = {}
-menuIcons["Save"] = gfx.image.new("img/saveMenuIcon")
-menuIcons["Creatures"] = gfx.image.new("img/creaturesMenuIcon")
-menuIcons["Creaturedex"] = gfx.image.new("img/creaturedexMenuIcon")
-menuIcons["Bag"] = gfx.image.new("img/bagMenuIcon")
-menuIcons["ID"] = gfx.image.new("img/idCardMenuIcon")
+menuIcons["Save"] = gfx.image.new("img/ui/menu/saveMenuIcon")
+menuIcons["Creatures"] = gfx.image.new("img/ui/menu/creaturesMenuIcon")
+menuIcons["Creaturedex"] = gfx.image.new("img/ui/menu/creaturedexMenuIcon")
+menuIcons["Bag"] = gfx.image.new("img/ui/menu/bagMenuIcon")
+menuIcons["ID"] = gfx.image.new("img/ui/menu/idCardMenuIcon")
 
 menuIdx = menuStartIndex
 menuAngle = 0
@@ -19,6 +19,8 @@ local menuMaxAngle <const> = #menuItems * menuDistBetween - 35
 local menuCircRadius <const> = 115
 local numMenuPaddingFrames <const> = 5
 menuPaddingFrames = 0
+
+isCrankUp = false
 
 function openMenu()
 	menuTimer = 10

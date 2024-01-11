@@ -1,20 +1,20 @@
-local combatMoveInfoPanelStartX <const> = 5
-local combatMoveInfoPanelDescWidth <const> = 295
-local combatMoveInfoPanelDescHeight <const> = 45
+local COMBAT_MOVE_PANEL_STARTX <const> = 5
+local COMBAT_MOVE_PANEL_DESCRIPTION_WIDTH <const> = 295
+local COMBAT_MOVE_PANEL_DESCRIPTION_HEIGHT <const> = 45
 
-local enemyMonsterPanelDrawX <const> = 275
-local enemyMonsterPanelDrawY <const> = 10
+local ENEMY_MONSTER_INFO_DRAWX <const> = 275
+local ENEMY_MONSTER_INFO_DRAWY <const> = 10
 
-local playerMonsterPanelDrawX <const> = 15
-local playerMonsterPanelDrawY <const> = 10
+local PLAYER_MONSTER_INFO_DRAWX <const> = 15
+local PLAYER_MONSTER_INFO_DRAWY <const> = 10
 
-local monsterPanelHpBarWidth <const> = 60
-local monsterPanelHpBarHeight <const> = 12
+local MONSTER_INFO_HPBAR_WIDTH <const> = 60
+local MONSTER_INFO_HPBAR_HEIGHT <const> = 12
 
 combatMenuChoices = {"Moves", "Bag", "Swap", "Run"}
 
-local combatTextBoxPosY = 190
-local combatTextBoxHeight = 240 - combatTextBoxPosY - GLOBAL_BEZEL
+combatTextBoxPosY = 190
+combatTextBoxHeight = 240 - combatTextBoxPosY - GLOBAL_BEZEL
 
 local tissueMenuX <const> = 120
 local tissueMenuRestY <const> = 40
@@ -46,7 +46,7 @@ local postKOChoices <const> = {"Swap", "Flee"}
 
 combatIntroAnimTimers = {40, 12, 15}
 
-playerCombatImg = gfx.image.new("img/combatPlayer")
+playerCombatImg = gfx.image.new("img/combat/combatPlayer")
 
 
 combatSubmenuChosen = 0
@@ -402,7 +402,7 @@ end
 function drawCombatMonsterData(x, y, monster)
 	gfx.drawText(monster.name, x, y)
 	gfx.drawText("LV. " .. monster.level, x + 15, y + 20)
-	drawHealthBar(x + 5, y + 40, monsterPanelHpBarWidth, monsterPanelHpBarHeight, monster.dispHp, monster.maxHp)
+	drawHealthBar(x + 5, y + 40, MONSTER_INFO_HPBAR_WIDTH, MONSTER_INFO_HPBAR_HEIGHT, monster.dispHp, monster.maxHp)
 end
 
 function drawCombatSwapMonsterRow(monster, x, y, selected)
@@ -434,7 +434,7 @@ function drawTissueMenu()
 		end
 	end
 
-	globalBack:draw(tissueMenuX + tissueMenuWidth - backBtnWidth - 2, tissueMenuY + tissueMenuHeight - backBtnHeight - 2)
+	globalBack:draw(tissueMenuX + tissueMenuWidth - BACK_BTN_WIDTH - 2, tissueMenuY + tissueMenuHeight - BACK_BTN_HEIGHT - 2)
 end
 
 
@@ -452,9 +452,9 @@ end
 
 function drawFullMoveInfo(move, x, y)
 	renderType(move.type, x, y + 8)
-	gfx.drawTextInRect(move.description, x + typeImgWidth + 5, y, combatMoveInfoPanelDescWidth, combatMoveInfoPanelDescHeight)
+	gfx.drawTextInRect(move.description, x + typeImgWidth + 5, y, COMBAT_MOVE_PANEL_DESCRIPTION_WIDTH, COMBAT_MOVE_PANEL_DESCRIPTION_HEIGHT)
 	if move.basePower ~= nil then
-		gfx.drawText("" .. move.basePower, x + typeImgWidth + 5 + combatMoveInfoPanelDescWidth - 8, y + 12)
+		gfx.drawText("" .. move.basePower, x + typeImgWidth + 5 + COMBAT_MOVE_PANEL_DESCRIPTION_WIDTH - 8, y + 12)
 	end
 end
 
@@ -483,7 +483,7 @@ function drawCombatChoicePhase()
 			end
 		end
 		if (tissueTimer > tissueShowHideTimer/2 and combatPrevSubmenu == 1) or combatSubmenuChosen == 1 then
-			drawFullMoveInfo(playerMonster.moves[tissueSelectionIdx], combatMoveInfoPanelStartX, combatInfoPanY)
+			drawFullMoveInfo(playerMonster.moves[tissueSelectionIdx], COMBAT_MOVE_PANEL_STARTX, combatInfoPanY)
 		end
 	end
 end
@@ -495,17 +495,17 @@ function drawInCombat()
 		playerCombatImg:draw(playerImgPosX, 65)
 	elseif combatIntroPhase == 2 then
 		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
-		drawCombatMonsterData(enemyMonsterPanelDrawX, enemyMonsterPanelDrawY, enemyMonster)
+		drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
 		playerCombatImg:draw(playerImgPosX, 65)
 	elseif combatIntroPhase == 3 then
 		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
-		drawCombatMonsterData(enemyMonsterPanelDrawX, enemyMonsterPanelDrawY, enemyMonster)
+		drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
 		playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
 	elseif combatIntroPhase == 4 then
 		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
-		drawCombatMonsterData(enemyMonsterPanelDrawX, enemyMonsterPanelDrawY, enemyMonster)
+		drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
 		playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
-		drawCombatMonsterData(playerMonsterPanelDrawX, playerMonsterPanelDrawY, playerMonster)
+		drawCombatMonsterData(PLAYER_MONSTER_INFO_DRAWX, PLAYER_MONSTER_INFO_DRAWY, playerMonster)
 	end
 
 	if textBoxShown then

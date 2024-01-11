@@ -75,9 +75,9 @@ function fromBot(bevel)
 end
 
 function drawNiceRect(x, y, width, height)
-	gfx.drawRoundRect(x, y, width, height, boxOutlineSize)
+	gfx.drawRoundRect(x, y, width, height, BOX_OUTLINE_SIZE)
 	gfx.setColor(gfx.kColorWhite)
-	gfx.fillRoundRect(x + (boxOutlineSize/2), y + (boxOutlineSize/2), width - boxOutlineSize, height - boxOutlineSize, boxOutlineSize)
+	gfx.fillRoundRect(x + (BOX_OUTLINE_SIZE/2), y + (BOX_OUTLINE_SIZE/2), width - BOX_OUTLINE_SIZE, height - BOX_OUTLINE_SIZE, BOX_OUTLINE_SIZE)
 	gfx.setColor(gfx.kColorBlack)
 end
 
@@ -92,11 +92,11 @@ end
 local selectionBorderFillAmt <const> = 8
 
 function drawSelectedRect(x, y, width, height)
-	gfx.drawRoundRect(x, y, width, height, boxOutlineSize)
+	gfx.drawRoundRect(x, y, width, height, BOX_OUTLINE_SIZE)
 	gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
-	gfx.fillRoundRect(x + (boxOutlineSize/2), y + (boxOutlineSize/2), width - boxOutlineSize, height - boxOutlineSize, boxOutlineSize)
+	gfx.fillRoundRect(x + (BOX_OUTLINE_SIZE/2), y + (BOX_OUTLINE_SIZE/2), width - BOX_OUTLINE_SIZE, height - BOX_OUTLINE_SIZE, BOX_OUTLINE_SIZE)
 	gfx.setColor(gfx.kColorWhite)
-	gfx.fillRoundRect(x + (boxOutlineSize/2) + selectionBorderFillAmt, y + (boxOutlineSize/2) + selectionBorderFillAmt, width - boxOutlineSize - (selectionBorderFillAmt*2), height - boxOutlineSize- (selectionBorderFillAmt*2), boxOutlineSize)
+	gfx.fillRoundRect(x + (BOX_OUTLINE_SIZE/2) + selectionBorderFillAmt, y + (BOX_OUTLINE_SIZE/2) + selectionBorderFillAmt, width - BOX_OUTLINE_SIZE - (selectionBorderFillAmt*2), height - BOX_OUTLINE_SIZE- (selectionBorderFillAmt*2), BOX_OUTLINE_SIZE)
 	gfx.setColor(gfx.kColorBlack)
 end
 
@@ -104,10 +104,10 @@ local hpText <const> = gfx.imageWithText("HP:", 100, 50)
 local hpTextWidth, hpTextHeight = hpText:getSize()
 
 function drawBar(x, y, width, height, cur, max)
-	gfx.fillRoundRect(x + healthBarSquish, y, width, height, healthBarSquish)
+	gfx.fillRoundRect(x + HEALTH_BAR_SQUISH, y, width, height, HEALTH_BAR_SQUISH)
 	if (cur > 0) then
 		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRoundRect(x + (healthBarSquish/2) + healthBarSquish, y + (healthBarSquish/2), (width * playdate.math.lerp(0, 1, cur/max)) - healthBarSquish, height - healthBarSquish, healthBarSquish)
+		gfx.fillRoundRect(x + (HEALTH_BAR_SQUISH/2) + HEALTH_BAR_SQUISH, y + (HEALTH_BAR_SQUISH/2), (width * playdate.math.lerp(0, 1, cur/max)) - HEALTH_BAR_SQUISH, height - HEALTH_BAR_SQUISH, HEALTH_BAR_SQUISH)
 		gfx.setColor(gfx.kColorBlack)
 	end
 end
@@ -115,5 +115,5 @@ end
 function drawHealthBar(x, y, width, height, health, max)
 	hpText:draw(x, y)
 	drawBar(x + hpTextWidth, y + hpTextHeight/6, width, height, health, max)
-	gfx.drawText(health .. "/" .. max, x + hpTextWidth + healthBarSquish, y + hpTextHeight)
+	gfx.drawText(health .. "/" .. max, x + hpTextWidth + HEALTH_BAR_SQUISH, y + hpTextHeight)
 end

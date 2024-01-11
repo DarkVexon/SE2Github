@@ -4,6 +4,7 @@ moveInfo = json.decodeFile("data/moves.json")
 
 function MonsterMove:init(name)
 	local targetMoveInfo = moveInfo[name]
+	self.id = name
 	self.name = targetMoveInfo["moveName"]
 	self.type = targetMoveInfo["type"]
 	self.basePower = targetMoveInfo["basePower"]
@@ -44,9 +45,13 @@ function MonsterMove:use(owner, target)
 	
 end
 
+function MonsterMove:getCopy()
+	return getMoveByName(self.id)
+end
+
 -- import
 
-import "nibble"
+import "moves/nibble"
 
 function getMoveByName(name)
 	if name == "Nibble" then

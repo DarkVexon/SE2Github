@@ -138,7 +138,7 @@ function randomEncounterMonster(species)
 	monsterData["exp"] = 0
 	monsterData["nature"] = randomKey(natures)
 	if math.random(0, 10) == 0 then
-		monsterData["mark"] = getMarkByName(randomKey(marks))
+		monsterData["mark"] = getMarkByName(randomKey(markInfo))
 	else
 		monsterData["mark"] = nil
 	end

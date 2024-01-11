@@ -30,7 +30,7 @@ function drawPopupMenu()
 		gfx.drawText(v, popupX + 20, popupY + ((i-1)*distBetweenPopupOptions) + 10)
 	end
 	if canCancel then
-		globalBack:draw(popupX + popupWidth - backBtnWidth - 2, popupY + popupHeight - backBtnHeight - 2)
+		globalBack:draw(popupX + popupWidth - BACK_BTN_WIDTH - 2, popupY + popupHeight - BACK_BTN_HEIGHT - 2)
 	end
 end
 

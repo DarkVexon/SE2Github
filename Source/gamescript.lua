@@ -12,6 +12,26 @@ function addScript(script)
 	table.insert(scriptStack, script)
 end
 
+scriptStack = {}
+
+function nextScript()
+	if #scriptStack == 0 then
+		if curScreen == 3 then
+			getNextCombatActions()
+		end
+	else
+		local nextFound = table.remove(scriptStack, 1)
+		nextFound:execute()
+	end
+end
+
+function getNextCombatActions()
+	if movesExecuting then
+		movesExecuting = false
+	end
+end
+
+
 -- SCRIPTS
 
 function healMonstersToOne()
@@ -28,8 +48,7 @@ end
 
 -- IMPORTS
 
-import "oneparamscript"
-import "twoparamscript"
-import "damagescript"
-import "queryscript"
-import "usemovescript"
+import "scripts/oneparamscript"
+import "scripts/twoparamscript"
+import "scripts/damagescript"
+import "scripts/queryscript"

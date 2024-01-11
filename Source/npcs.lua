@@ -1,6 +1,6 @@
-import "signpost"
-import "person"
-import "door"
+import "npcs/signpost"
+import "npcs/person"
+import "npcs/door"
 
 function loadNpc(info)
 	local npcType = info[1]

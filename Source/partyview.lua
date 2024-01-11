@@ -3,7 +3,7 @@ local monsterInfoBoxWidth <const> = 195
 local monsterInfoBoxHeight <const> = 110
 local partyMenuHealthBarWidth <const> = 50
 local partyMenuHealthBarHeight <const> = 12
-local healthBarSquish <const> = 4
+
 
 
 monsterScreenSelectionIdx = 1

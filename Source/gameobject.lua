@@ -7,7 +7,7 @@ function GameObject:init(name, x, y)
 	if (containsKey(objectImgs, name)) then
 		self.img = objectImgs[name]
 	else
-		objectImgs[name] = gfx.image.new("img/" .. name)
+		objectImgs[name] = gfx.image.new("img/overworld/npc/" .. name)
 		self.img = objectImgs[name]
 	end
 	self.posX = x

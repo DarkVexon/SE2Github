@@ -1,7 +1,7 @@
 local queryDropdownX <const> = 300
 local queryDropdownY <const> = 100
 local textBoxPosY <const> = 165
-boxOutlineSize = 2
+
 local textBoxTextBufferSize <const> = 4
 local textBoxWidth <const> = 400 - (GLOBAL_BEZEL * 2)
 local textBoxHeight <const> = 240 - textBoxPosY - (GLOBAL_BEZEL)
