@@ -11,6 +11,12 @@ end
 
 -- SCRIPTS --
 
+function screenChangeScript(screen)
+	fadeOutTimer = 15
+	fadeDest = screen
+	scriptAfter = true
+end
+
 function changeCombatPhaseScript(phase)
 	combatIntroPhase = phase
 	combatIntroAnimTimer = combatIntroAnimTimers[combatIntroPhase]

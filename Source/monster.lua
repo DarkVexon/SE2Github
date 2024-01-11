@@ -122,7 +122,7 @@ function getMostRecentFourMovesAtLevel(species, level)
 			if #moves == 4 then
 				table.remove(moves, 0)
 			end
-			table.insert(moves, MonsterMove(v))
+			table.insert(moves, getMoveByName(v))
 		end
 	end
 	return moves
@@ -146,4 +146,19 @@ function randomEncounterMonster(species)
 	monsterData["curHp"] = nil
 	monsterData["curStatus"] = nil
 	return Monster(monsterData)
+end
+
+function Monster:useMove(move, target)
+	move:use(self, target)
+end
+
+function Monster:takeDamage(amount)
+	self.curHp -= amount
+	if self.curHp <= 0 then
+		self.curHp = 0
+	end
+end
+
+function Monster:chooseMove()
+	return self.moves[math.random(#self.moves)]
 end

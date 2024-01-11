@@ -10,6 +10,10 @@ function MonsterAbility:init(name)
 	self.description = abilities[self.name]
 end
 
+-- IMPORTS
+import "lovebugability"
+import "backforsecondsability"
+
 function getAbilityByName(name)
 	if name == "Lovebug" then
 		return LovebugAbility()

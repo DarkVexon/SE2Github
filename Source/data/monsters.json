@@ -9,10 +9,7 @@
     "grantedExp": 40,
     "catchDifficulty": 40,
     "learnset": {
-      "1": "Nibble",
-      "2": "Love Tap",
-      "7": "Infest",
-      "11": "Emote Strike"
+      "1": "Nibble"
     }
   },
   "Dubldraker":
@@ -25,9 +22,7 @@
     "grantedExp": 70,
     "catchDifficulty": 10,
     "learnset": {
-      "1": "Nibble",
-      "2": "Drakebreath",
-      "3": "2X-Strike"
+      "1": "Nibble"
     }
   }
 }

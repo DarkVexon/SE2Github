@@ -25,6 +25,10 @@ function MonsterMark:applyToStats(stats)
 
 end
 
+-- IMPORTS
+
+import "toughmark"
+
 function getMarkByName(name)
 	if name == "Tough" then
 		return ToughMark()

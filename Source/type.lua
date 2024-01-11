@@ -5,23 +5,100 @@ local typeBetweenBufferHoriz <const> = 8
 local typeBetweenBufferVert <const> = 5
 
 types = {
-	["fire"] = {"plant", "tech", "ice", "bug"},
-	["water"] = {"fire", "tech", "stone"},
-	["plant"] = {"water", "stone"},
-	["alien"] = {"alien", "tech", "drake", "knight"},
-	["tech"] = {"water", "fear", "magic", "poison", "love"},
-	["fear"] = {"fear", "magic", "love"},
-	["drake"] = {"fire", "drake", "wind"},
-	["ice"] = {"water", "plant", "drake", "wind"},
-	["magic"] = {"tech", "poison", "knight"},
-	["bug"] = {"plant", "magic", "poison"},
-	["stone"] = {"fire", "ice", "wind", "poison", "teeth"},
-	["wind"] = {"plant", "bug", "knight"},
-	["poison"] = {"plant", "love", "teeth"},
-	["love"] = {"alien", "fear", "ice", "knight"},
-	["knight"] = {"fear", "drake", "stone", "knight"},
-	["teeth"] = {"alien", "ice", "bug", "love"}
+	"fire",
+	"water",
+	"plant",
+	"alien",
+	"tech",
+	"fear",
+	"drake",
+	"ice",
+	"magic",
+	"bug",
+	"stone",
+	"wind",
+	"poison",
+	"love",
+	"knight",
+	"teeth"
 }
+
+dealsDoubleTo = {
+	["fire"] = {"plant"},
+	["water"] = {"fire"},
+	["plant"] = {"water"},
+	["alien"] = {},
+	["tech"] = {},
+	["fear"] = {},
+	["drake"] = {},
+	["ice"] = {},
+	["magic"] = {},
+	["bug"] = {},
+	["stone"] = {},
+	["wind"] = {},
+	["poison"] = {},
+	["love"] = {},
+	["knight"] = {},
+	["teeth"] = {}
+}
+
+dealsHalfTo = {
+	["fire"] = {"fire", "water"},
+	["water"] = {"water", "plant"},
+	["plant"] = {"plant", "fire"},
+	["alien"] = {},
+	["tech"] = {},
+	["fear"] = {},
+	["drake"] = {},
+	["ice"] = {},
+	["magic"] = {},
+	["bug"] = {},
+	["stone"] = {},
+	["wind"] = {},
+	["poison"] = {},
+	["love"] = {},
+	["knight"] = {},
+	["teeth"] = {}
+}
+
+dealsNoneTo = {
+	["fire"] = {},
+	["water"] = {},
+	["plant"] = {},
+	["alien"] = {},
+	["tech"] = {},
+	["fear"] = {},
+	["drake"] = {},
+	["ice"] = {},
+	["magic"] = {},
+	["bug"] = {},
+	["stone"] = {},
+	["wind"] = {},
+	["poison"] = {},
+	["love"] = {},
+	["knight"] = {},
+	["teeth"] = {}
+}
+
+function typeMatchupResult(offense, defense)
+	if contains(dealsDoubleTo[offense], defense) then
+		return 2
+	elseif contains(dealsHalfTo[offense], defense) then
+		return 0.5
+	elseif contains(dealsNoneTo[offense], defense) then
+		return 0
+	else
+		return 1
+	end
+end
+
+function totalMult(offenseType, defenseTypes)
+	local result = 1
+	for k, v in pairs(defenseTypes) do
+		result *= typeMatchupResult(offenseType, v)
+	end
+	return result
+end
 
 function generateTypeImg(type)
 	local newImg = gfx.image.new(typeImgWidth, typeImgHeight)
@@ -36,7 +113,7 @@ end
 
 typeImgs = {}
 for k, v in pairs(types) do
-	typeImgs[k] = generateTypeImg(k)
+	typeImgs[v] = generateTypeImg(v)
 end
 
 function renderType(type, x, y)

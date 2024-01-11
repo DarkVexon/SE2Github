@@ -1,5 +1,13 @@
-function contains(table, item)
-	for i,v in ipairs(table) do
+function numKeys(test)
+	local result = 0
+	for k, v in pairs(test) do
+		result += 1
+	end
+	return result
+end
+
+function contains(test, item)
+	for i,v in ipairs(test) do
 		if (v==item) then
 			return true
 		end
@@ -16,7 +24,7 @@ function containsKey(key)
 	return false
 end
 
-function startsWith (test, start)
+function startsWith(test, start)
 	return string.sub(test, 1, #start) == start
 end
 
@@ -41,6 +49,21 @@ end
 
 function toRadians(degrees)
 	return degrees * (math.pi/180)
+end
+
+function timeLeft(timer, total)
+	return (total - timer) / total
+end
+
+function widthOfWidest(strings)
+	local widest = 0
+	for i, v in ipairs(strings) do
+		local result = gfx.getTextSize(v)
+		if result > widest then
+			widest = result
+		end
+	end
+	return widest
 end
 
 function drawNiceRect(x, y, width, height)
