@@ -12,6 +12,10 @@ function addScript(script)
 	table.insert(scriptStack, script)
 end
 
+function addScriptTop(script)
+	table.insert(scriptStack, 1, script)
+end
+
 scriptStack = {}
 
 -- SCRIPTS
@@ -31,3 +35,8 @@ import "scripts/twoparamscript"
 import "scripts/damagescript"
 import "scripts/queryscript"
 import "scripts/startanimscript"
+import "scripts/applystatusscript"
+import "scripts/moveattackscript"
+import "scripts/textscript"
+import "scripts/healingscript"
+import "scripts/calculateddamagescript"

@@ -10,19 +10,92 @@
     "catchDifficulty": 40,
     "learnset": {
       "1": "Nibble"
-    }
+    },
+    "article": "a "
   },
   "Dubldraker":
   {
     "speciesName": "Dubldraker",
     "types": ["drake", "teeth"],
     "ability": "Back for Seconds",
-    "stats": [225, 200, 110, 200],
+    "stats": [225, 100, 110, 75],
     "lvlspeed": "normal",
     "grantedExp": 70,
     "catchDifficulty": 10,
     "learnset": {
       "1": "Nibble"
-    }
+    },
+    "article": "a "
+  },
+  "Bombeetl":
+  {
+    "speciesName": "Bombeetl",
+    "types": ["fire", "bug"],
+    "ability": "Explosive",
+    "stats": [140, 130, 85, 170],
+    "lvlspeed": "normal",
+    "grantedExp": 35,
+    "catchDifficulty": 50,
+    "learnset": {
+      "1": "Ember",
+      "11": "Nibble"
+    },
+    "article": "a "
+  },
+  "Circe":
+  {
+    "speciesName": "Circe",
+    "types": ["teeth"],
+    "ability": "Taste Tester",
+    "stats": [166, 133, 100, 100],
+    "lvlspeed": "normal",
+    "grantedExp": 30,
+    "catchDifficulty": 20,
+    "learnset": {
+      "1": "Nibble"
+    },
+    "article": ""
+  },
+  "Mx Roboto":
+  {
+    "speciesName": "Mx. Roboto",
+    "types": ["tech"],
+    "ability": "Steel Soul",
+    "stats": [200, 100, 150, 50],
+    "lvlspeed": "normal",
+    "grantedExp": 40,
+    "catchDifficulty": 25,
+    "learnset": {
+      "1": "Spark"
+    },
+    "article": ""
+  },
+  "Achewig":
+  {
+    "speciesName": "Achewig",
+    "types": ["bug", "teeth"],
+    "ability": "Dental Carry",
+    "stats": [150, 110, 125, 100],
+    "lvlspeed": "normal",
+    "grantedExp": 35,
+    "catchDifficulty": 40,
+    "learnset": {
+      "1": "Nibble"
+    },
+    "article": "an "
+  },
+  "Chompah":
+  {
+    "speciesName": "Chompah",
+    "types": ["plant", "teeth"],
+    "ability": "Snapper",
+    "stats": [125, 150, 85, 125],
+    "lvlspeed": "normal",
+    "grantedExp": 25,
+    "catchDifficulty": 35,
+    "learnset": {
+      "1": "Nibble"
+    },
+    "article": "a "
   }
 }

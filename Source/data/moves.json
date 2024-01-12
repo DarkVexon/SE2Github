@@ -6,38 +6,18 @@
     "basePower": 20,
     "description": "A weak biting attack."
   },
-  "Love Tap":
+  "Ember":
   {
-    "moveName": "Love Tap",
-    "type": "love",
-    "basePower": 20,
-    "description": "The user playfully strikes with a hand or tail."
-  },
-  "Infest":
-  {
-    "moveName": "Infest",
-    "type": "bug",
-    "description": "Infestation causes the target to lose 10% max HP each turn."
-  },
-  "Emote Strike":
-  {
-    "moveName": "Emote Strike",
-    "type": "love",
-    "basePower": 40,
-    "description": "By seeing the foe's emotions, the user strikes a weakpoint."
-  },
-  "Drakebreath":
-  {
-    "moveName": "Dragonbreath",
-    "type": "drake",
-    "basePower": 60,
-    "description": "Drakes can breath sparkling, incandescent flame."
-  },
-  "2X-Strike":
-  {
-    "moveName": "2X-Strike",
-    "type": "tech",
+    "moveName": "Ember",
+    "type": "fire",
     "basePower": 25,
-    "description": "Hits twice."
+    "description": "A small, fiery burst."
+  },
+  "Spark":
+  {
+    "moveName": "Spark",
+    "type": "tech",
+    "basePower": 20,
+    "description": "A tepid electric shock."
   }
 }

@@ -111,13 +111,17 @@ function updatePartyViewMenu()
 			end
 		else
 			singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
-			local index = 1
-			for y=0, 1 do
-				for x=0, 1 do
-					if index == monsterScreenSelectionIdx then
-						setupPopupMenu(monsterMenuOuterBuffer + (x * (monsterInfoBoxWidth +  monsterMenuOuterBuffer )) + 70, monsterMenuOuterBuffer + (y * (monsterInfoBoxHeight +  monsterMenuOuterBuffer )) + 50, monsterMenuPopupOptions, {onSelectMonsterInfoPopup, onSelectMonsterSwapPopup}, true)
+			if #playerMonsters == 1 then
+				startFade(openSingleMonsterView)
+			else
+				local index = 1
+				for y=0, 1 do
+					for x=0, 1 do
+						if index == monsterScreenSelectionIdx then
+							setupPopupMenu(monsterMenuOuterBuffer + (x * (monsterInfoBoxWidth +  monsterMenuOuterBuffer )) + 70, monsterMenuOuterBuffer + (y * (monsterInfoBoxHeight +  monsterMenuOuterBuffer )) + 50, monsterMenuPopupOptions, {onSelectMonsterInfoPopup, onSelectMonsterSwapPopup}, true)
+						end
+						index += 1
 					end
-					index += 1
 				end
 			end
 		end

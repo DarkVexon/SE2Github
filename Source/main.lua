@@ -3,6 +3,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/object"
 import "CoreLibs/crank"
 import "CoreLibs/math"
+import "CoreLibs/keyboard"
 
 gfx = playdate.graphics
 sfx = playdate.sound
@@ -15,11 +16,11 @@ import "helpers"
 import "script"
 import "npc"
 import "maps"
+import "move"
 import "monster"
 import "type"
 import "mark"
 import "ability"
-import "move"
 import "overworld"
 import "menu"
 import "transitions"
@@ -31,8 +32,15 @@ import "backbutton"
 import "textbox"
 import "combat"
 import "visual"
-import "player"
 import "animation"
+import "status"
+import "item"
+import "postcapture"
+import "options"
+import "dex"
+import "player"
+
+isCrankUp = false
 
 function initialize()
 	gfx.setLineWidth(LINE_WIDTH)
@@ -45,6 +53,9 @@ curScreen = 0
 -- 2: individual monster screen
 -- 3: combat screen
 -- 4: bag screen
+-- 5: Post capture screen
+-- 6: Options menu screen
+-- 7: Monsterdex total screen
 
 skipNextRender = false
 
@@ -68,6 +79,12 @@ function playdate.update()
 				updateInCombat()
 			elseif curScreen == 4 then
 				updateBagViewScreen()
+			elseif curScreen == 5 then
+				updatePostCaptureScreen()
+			elseif curScreen == 6 then
+				updateOptionsMenu()
+			elseif curScreen == 7 then
+				updateDexMenu()
 			end
 		end
 
@@ -92,6 +109,12 @@ function render()
 		drawInCombat()
 	elseif curScreen == 4 then
 		drawBagViewScreen()
+	elseif curScreen == 5 then
+		drawPostCaptureScreen()
+	elseif curScreen == 6 then
+		drawOptionsMenu()
+	elseif curScreen == 7 then
+		drawDexMenu()
 	end
 
 	if popupUp then

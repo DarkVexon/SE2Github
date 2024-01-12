@@ -19,7 +19,9 @@ function setupPopupMenu(x, y, options, funcs, canCancel)
 		popupFuncs[i] = v
 	end
 	popupMenuSelectionIdx = 1
+	popupViewOnly = false
 end
+
 
 function drawPopupMenu()
 	drawNiceRect(popupX, popupY, popupWidth, popupHeight)
@@ -29,7 +31,7 @@ function drawPopupMenu()
 		end
 		gfx.drawText(v, popupX + 20, popupY + ((i-1)*distBetweenPopupOptions) + 10)
 	end
-	if canCancel then
+	if canCancelPopup then
 		globalBack:draw(popupX + popupWidth - BACK_BTN_WIDTH - 2, popupY + popupHeight - BACK_BTN_HEIGHT - 2)
 	end
 end
@@ -47,13 +49,13 @@ function updatePopupMenu()
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) then
-		popupFuncs[popupMenuSelectionIdx]()
 		if followTextBoxWithPopup then
 			followTextBoxWithPopup = false
 			textBoxShown = false
 		end
+		popupFuncs[popupMenuSelectionIdx]()
 		popupUp = false
-	elseif playdate.buttonJustPressed(playdate.kButtonB) and canCancel then
+	elseif playdate.buttonJustPressed(playdate.kButtonB) and canCancelPopup then
 		popupUp = false
 	end
 end

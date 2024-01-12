@@ -1,10 +1,10 @@
-class('Nibble').extends(Move)
+class('Ember').extends(Move)
 
-function Nibble:init()
-	Nibble.super.init(self, "Nibble")
+function Ember:init()
+	Ember.super.init(self, "Ember")
 end
 
-function Nibble:use(owner, target)
+function Ember:use(owner, target)
 	addScript(StartAnimScript(AttackAnim(owner ~= playerMonster)))
 	addScript(MoveAttackScript(owner, self, target))
 end

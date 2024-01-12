@@ -6,6 +6,22 @@ function numKeys(test)
 	return result
 end
 
+function keyAtIndex(test, index)
+	for i, v in ipairs(getTableKeys(test)) do
+		if i == index then
+			return v
+		end
+	end
+end
+
+function indexKey(test, key)
+	for i, v in ipairs(getTableKeys(test)) do
+		if v == key then
+			return i
+		end
+	end
+end
+
 function contains(test, item)
 	for i,v in ipairs(test) do
 		if (v==item) then

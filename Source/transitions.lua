@@ -1,4 +1,4 @@
-local transitionTimer <const> = 15
+transitionTimer = 15
 fadeOutTimer = 0
 fadeInTimer = 0
 fadeDest = nil
@@ -19,7 +19,7 @@ function updateFade()
 			gfx.pushContext(transitionImg)
 			render()
 			gfx.popContext()
-			fadeInTimer = 15
+			fadeInTimer = transitionTimer
 		end
 	elseif fadeInTimer > 0 then
 		fadeInTimer -= 1

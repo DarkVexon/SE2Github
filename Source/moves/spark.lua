@@ -1,10 +1,10 @@
-class('Nibble').extends(Move)
+class('Spark').extends(Move)
 
-function Nibble:init()
-	Nibble.super.init(self, "Nibble")
+function Spark:init()
+	Spark.super.init(self, "Spark")
 end
 
-function Nibble:use(owner, target)
+function Spark:use(owner, target)
 	addScript(StartAnimScript(AttackAnim(owner ~= playerMonster)))
 	addScript(MoveAttackScript(owner, self, target))
 end

@@ -21,3 +21,9 @@ end
 function timedTextScript(text, time)
 	showTimedTextBox(text, time)
 end
+
+function randomEncounterScript(species, range)
+	startFade(beginWildBattle)
+	wildSpecies = species
+	wildLevelRange = range
+end

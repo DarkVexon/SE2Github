@@ -8,5 +8,30 @@
   {
     "abilityName": "Back for Seconds",
     "description": "Attacks hit again for 30% damage."
+  },
+  "Explosive":
+  {
+    "abilityName": "Explosive",
+    "description": "On death, deal 40% of enemy Max HP."
+  },
+  "Taste Tester":
+  {
+    "abilityName": "Taste Tester",
+    "description": "Heal for 20% of dealt damage."
+  },
+  "Steel Soul":
+  {
+    "abilityName": "Steel Soul",
+    "description": "Reduce damage taken to 40% Max HP."
+  },
+  "Dental Carry":
+  {
+    "abilityName": "Dental Carry",
+    "description": "Reduce the first damage taken to 1."
+  },
+  "Snapper":
+  {
+    "abilityName": "Snapper",
+    "description": "Enters combat with a 20 damage Plant attack."
   }
 }

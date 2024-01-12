@@ -1,18 +1,13 @@
 {
   "signposty": {
+    "img": "signposty",
+    "name": "SIGNPOSTY THE GREAT",
     "1": {
       "randomNum": 1042,
-      "species": "Palpillar",
-      "level": 4,
+      "species": "Bombeetl",
+      "level": 7,
       "moves": ["Nibble"],
       "nature": "Thoughtful"
-    },
-    "2": {
-      "randomNum": 109,
-      "species": "Palpillar",
-      "level": 6,
-      "moves": ["Nibble"],
-      "nature": "Bored"
     }
   }
 }

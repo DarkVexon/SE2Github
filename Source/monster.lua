@@ -9,6 +9,8 @@ end
 
 local natureMultPerPoint <const> = 0.2
 
+local levelCap <const> = 99
+
 natures = {
 	["Lucky"] = {1, 1, 1, 1},
 	["Bored"] = {0, 0, 0, 0},
@@ -46,11 +48,15 @@ function Monster:init(data)
 	end
 	self.level = data["level"]
 	if data["exp"] == nil then
-		self.exp = 0
+		self.exp = xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level)
 	else
-		self.exp = data["exp"]
+		self.exp = data["exp"] + xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level)
 	end
-	self.moves = data["moves"]
+	self.moves = {}
+	for k, v in pairs(data["moves"]) do
+		local move = getMoveByName(v)
+		table.insert(self.moves, move)
+	end
 	self.nature = data["nature"]
 	self.mark = data["mark"]
 	self.item = data["item"]
@@ -63,14 +69,16 @@ function Monster:init(data)
 	else
 		self.curHp = data["curHp"]
 	end
+
+	self.statuses = {}
 end
 
 function hpFromLevelFunc(base, level)
-	return math.floor(((base * level) / 100) + (10 - math.floor(level / 10)))
+	return math.floor(((base * level) / levelCap) + (10 - math.floor(level / 10)))
 end
 
 function otherStatFromLevelFunc(base, level)
-	return math.floor((base*level)/100)
+	return math.floor((base*level)/levelCap)
 end
 
 function getStats(species, level, nature, mark)
@@ -98,14 +106,18 @@ function getStats(species, level, nature, mark)
 	return results[1], results[2], results[3], results[4]
 end
 
-function Monster:loadSpeciesData()
-	self.types = monsterInfo[self.species]["types"]
-	self.ability = getAbilityByName(monsterInfo[self.species]["ability"])
+function Monster:reloadStats()
 	local hp, attack, defense, speed = getStats(self.species, self.level, self.nature, self.mark)
 	self.maxHp = hp
 	self.attack = attack
 	self.defense = defense
 	self.speed = speed
+end
+
+function Monster:loadSpeciesData()
+	self.types = monsterInfo[self.species]["types"]
+	self.ability = getAbilityByName(monsterInfo[self.species]["ability"], self)
+	self:reloadStats()
 end
 
 function xpNeededForLevel(xpCurve, level)
@@ -122,18 +134,18 @@ function getMostRecentFourMovesAtLevel(species, level)
 			if #moves == 4 then
 				table.remove(moves, 0)
 			end
-			table.insert(moves, getMoveByName(v))
+			table.insert(moves, v)
 		end
 	end
 	return moves
 end
 
-function randomEncounterMonster(species)
+function randomEncounterMonster(species, levelRange)
 	local monsterData = {}
 	monsterData["randomNum"] = math.random(1, 10000)
 	monsterData["species"] = species
 	monsterData["name"] = monsterInfo[species]["speciesName"]
-	monsterData["level"] = math.random(8, 11)
+	monsterData["level"] = math.random(levelRange[1], levelRange[2])
 	monsterData["moves"] = getMostRecentFourMovesAtLevel(species, monsterData["level"])
 	monsterData["exp"] = 0
 	monsterData["nature"] = randomKey(natures)
@@ -148,33 +160,141 @@ function randomEncounterMonster(species)
 	return Monster(monsterData)
 end
 
-function Monster:useMove(move, target)
-	local outputText = self.name .. " used " .. move.name .. "!"
+function Monster:messageBoxName()
+	local outputText = self.name
 	if self == enemyMonster then
 		outputText = "The opposing " .. outputText
 	end
-	addScript(OneParamScript(textScript, outputText))
-	move:use(self, target)
-	nextScript()
+	return outputText
 end
 
-function Monster:takeDamage(amount)
+function Monster:useMove(move, target)
+	local outputText = self:messageBoxName() .. " used " .. move.name .. "!"
+	addScript(TextScript(outputText))
+	move:use(self, target)
+	local char = self
+	self.ability:onUseMove(move, target)
+end
+
+function Monster:getFoe()
+	if self == playerMonster then
+		return enemyMonster
+	else
+		return playerMonster
+	end
+end
+
+function Monster:levelUp()
+	local learnset = monsterInfo[self.species]["learnset"]
+	local targetMove = getMoveByName(learnset[self.level+1 .. ""])
+	local prevLevel = self.level
+	local prevMaxHp = self.maxHp
+	local prevAtk = self.attack
+	local prevDef = self.defense
+	local prevSpeed = self.speed
+	self.level += 1
+	self:reloadStats()
+	self.curHp += (self.maxHp - prevMaxHp)
+	local gridRows = {}
+	levelHeader = prevLevel .. " -> " .. self.level
+	table.insert(gridRows, "HP: " .. prevMaxHp .. " -> " .. self.maxHp)
+	table.insert(gridRows, "ATK: " .. prevAtk .. " -> " .. self.attack)
+	table.insert(gridRows, "DEF: " .. prevDef .. " -> " .. self.defense)
+	table.insert(gridRows, "SPD: " .. prevSpeed .. " -> " .. self.speed)
+	levelStats = gridRows
+	if targetMove ~= nil then
+		if #playerMonster.moves < 4 then
+			table.insert(playerMonster.moves, targetMove)
+			addScriptTop(TextScript(self.name .. " learned " .. targetMove.name .. "!"))
+		else
+			learningMove = targetMove
+			addScriptTop(GameScript(function() turnExecuting = false showTissue(6) end))
+			addScriptTop(TextScript(self.name .. " wants to learn " .. targetMove.name .. "."))
+		end
+	end
+	addScriptTop(GameScript(
+		function()
+			turnExecuting = false
+			showTissue(5)
+		end
+		)
+	)
+	addScriptTop(TextScript(self.name .. " leveled up!"))
+end
+
+function Monster:xpToNext()
+	return xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level+1)
+end
+
+function Monster:getExp(defeated, wasCaught)
+	local output = monsterInfo[defeated.species]["grantedExp"]
+	if isTrainerBattle then
+		output *= 1.2
+	end
+	if wasCaught then
+		output *= 1.2
+	end
+	output *= (defeated.level / self.level)
+	output = math.floor(output)
+	self.exp += output
+	if self.exp > self:xpToNext() and self.level < levelCap then
+		addScriptTop(GameScript(function() self:levelUp() nextScript() end))
+	end
+	addScriptTop(TextScript(self.name .. " gained " .. output .. " EXP!"))
+end
+
+function Monster:heal(amount)
+	amount = math.floor(amount)
+	amount = math.min(amount, self.maxHp - self.curHp)
+	self.curHp += amount
+	if (self.curHp >= self.maxHp) then
+		self.curHp = self.maxHp
+	end
+	if amount ~= 0 then
+		addScriptTop(StartAnimScript(HpBarAnim(self)))
+	end
+end
+
+function Monster:takeDamage(amount, damageType, source)
+	amount = self.ability:modifyIncomingDamage(amount, damageType)
+
+	amount = math.floor(amount)
+	amount = math.min(amount, self.curHp)
 	self.curHp -= amount
 	if self.curHp <= 0 then
 		self.curHp = 0
 	end
-	addScript(StartAnimScript(LoseHpAnim(self)))
+	source.ability:onDealDamage(amount, damageType)
+	self.ability:whenHit(amount, damageType)
+	if amount ~= 0 then
+		addScriptTop(StartAnimScript(HpBarAnim(self)))
+	end
+
 	if self.curHp == 0 then
-		addScript(OneParamScript(textScript, self.name .. " is KOed!"))
+		addScript(TextScript(self:messageBoxName() .. " is KOed!"))
+		self.ability:onDeath()
 		addScript(StartAnimScript(FaintAnim(self ~= playerMonster)))
 		if self == playerMonster then
 			if remainingMonsters(playerMonsters) > 0 then
-				promptForLastResort()
+				if isTrainerBattle then
+					openLastResortMenu()
+				else
+					promptForLastResort()
+				end
 			else
 				exitBattleViaLoss()
 			end
 		else
-
+			addScript(GameScript(function()
+					playerMonster:getExp(self)
+					nextScript()
+			end))
+			if remainingMonsters(enemyMonsters) > 0 then
+				swapEnemyMonsters(getNextMonster(enemyMonsters))
+				turnExecutionPhase = 7
+			else
+				exitBattleViaVictory()
+			end
 		end
 	end
 end

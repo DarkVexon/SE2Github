@@ -1,6 +1,7 @@
-menuItems = {"Save", "Creatures", "Creaturedex", "Bag", "ID"}
+menuItems = {"Save", "Creatures", "Creaturedex", "Bag", "ID", "Options"}
 local menuStartIndex <const> = 2
 menuIcons = {}
+menuIcons["Options"] = gfx.image.new("img/ui/menu/optionsMenuIcon")
 menuIcons["Save"] = gfx.image.new("img/ui/menu/saveMenuIcon")
 menuIcons["Creatures"] = gfx.image.new("img/ui/menu/creaturesMenuIcon")
 menuIcons["Creaturedex"] = gfx.image.new("img/ui/menu/creaturedexMenuIcon")
@@ -19,8 +20,6 @@ local menuMaxAngle <const> = #menuItems * menuDistBetween - 35
 local menuCircRadius <const> = 115
 local numMenuPaddingFrames <const> = 5
 menuPaddingFrames = 0
-
-isCrankUp = false
 
 function openMenu()
 	menuTimer = 10
@@ -92,9 +91,13 @@ function updateInMenu()
 	if playdate.buttonJustPressed(playdate.kButtonA) then
 		local target = menuItems[menuIdx]
 		if target == "Creatures" then
-			startFadeOut(openSingleMonsterView)
+			startFade(openMonsterScreen)
 		elseif target == "Bag" then
-			startFadeOut(openBag)
+			startFade(openBag)
+		elseif target == "Options" then
+			startFade(openOptionsMenu)
+		elseif target == "Creaturedex" then
+			startFade(openDexMenu)
 		end
 	end
 end

@@ -27,7 +27,7 @@ function textScript(text)
 end
 
 function combatScript(combatID) 
-	startFade(beginCombat)
+	startFade(beginNextCombat)
 	curCombat = combatID
 end
 
@@ -52,8 +52,16 @@ function moveScript(moves)
 end
 
 function swapMonsterScript(newMonster)
-	newMonster.dispHp = newMonster.curHp
+	sendInMonster(newMonster)
 	playerMonster = newMonster
 	playerMonsterPosX = PLAYER_MONSTER_X
+	nextScript()
+end
+
+
+function swapEnemyMonsterScript(newMonster)
+	sendInMonster(newMonster)
+	enemyMonster = newMonster
+	enemyMonsterPosX = enemyMonsterEndX
 	nextScript()
 end

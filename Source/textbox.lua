@@ -85,7 +85,8 @@ end
 function drawCombatTextBox()
 	drawCombatBottomBg()
 
-	gfx.drawTextInRect(textBoxDisplayedText, GLOBAL_BEZEL + textBoxTextBufferSize, combatTextBoxPosY + textBoxTextBufferSize, textBoxWidth - (textBoxTextBufferSize*2), combatTextBoxHeight - (textBoxTextBufferSize*2))
+	--combatTextBoxHeight - (textBoxTextBufferSize*2)
+	gfx.drawTextInRect(textBoxDisplayedText, GLOBAL_BEZEL + textBoxTextBufferSize, combatTextBoxPosY + textBoxTextBufferSize, textBoxWidth - (textBoxTextBufferSize*2), 45)
 	
 	if textBoxScrollDone and textBoxTimer == 0 then
 		downFacingTriangle(400 - (GLOBAL_BEZEL * 2), textBoxPosY + (GLOBAL_BEZEL * 6) + (math.sin(bobTime * 3)), 10)

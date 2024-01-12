@@ -9,5 +9,7 @@ function Animation:update()
 end
 
 -- Imports
-import "animations/losehpanim"
+import "animations/hpbaranim"
 import "animations/faintanim"
+import "animations/attackanim"
+import "animations/moveofforonanim"

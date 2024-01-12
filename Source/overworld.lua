@@ -211,6 +211,54 @@ function getPlayerPointCoord()
 	return playerX, playerY-1
 end
 
+function randomEncounterChance()
+	if math.random(0, 10) == 0 then
+		return true
+	end
+	return false
+end
+
+function mapRandomEncounter()
+	local maxSum = 0
+	for k, v in pairs(randomEncounters) do
+		maxSum += v[3]
+	end
+
+	local result = math.random(maxSum)
+
+	for k, v in pairs(randomEncounters) do
+		result -= v[3]
+		if result <= 0 then
+			addScript(TwoParamScript(randomEncounterScript, v[1], v[2]))
+			nextScript()
+			break
+		end
+	end
+end
+
+function onMoveEnd()
+	local landedTile = currentTileset:getTileAtPosition(playerX, playerY)
+	movingCam = false
+	allowImmediateMovementCheck = true
+	for k, v in ipairs(objs) do
+		if v.posX == playerX and v.posY == playerY then
+			v:onOverlap()
+			if not v:allowImmediateMovementAfterStep() then
+				allowImmediateMovementCheck = false
+			end
+		end
+	end
+	if contains(encounterTiles, landedTile) then
+		if randomEncounterChance() then
+			allowImmediateMovementCheck = false
+			mapRandomEncounter()
+		end
+	end
+	if allowImmediateMovementCheck then
+		checkMovement()
+	end
+end
+
 function updateCameraOffset()
 	if playerRenderPosX == playerDestRenderPosX and playerRenderPosY == playerDestRenderPosY then
 		if (cameraOffsetX > cameraDestOffsetX) then
@@ -236,19 +284,7 @@ function updateCameraOffset()
 			end
 		end
 		if (cameraOffsetX == cameraDestOffsetX and cameraOffsetY == cameraDestOffsetY) then
-			movingCam = false
-			allowImmediateMovementCheck = true
-			for k, v in ipairs(objs) do
-				if v.posX == playerX and v.posY == playerY then
-					v:onOverlap()
-					if not v:allowImmediateMovementAfterStep() then
-						allowImmediateMovementCheck = false
-					end
-				end
-			end
-			if allowImmediateMovementCheck then
-				checkMovement()
-			end
+			onMoveEnd()
 		end
 	end
 
@@ -276,19 +312,7 @@ function updateCameraOffset()
 			end
 		end
 		if (playerRenderPosX == playerDestRenderPosX and playerRenderPosY == playerDestRenderPosY) then
-			movingCam = false
-			allowImmediateMovementCheck = true
-			for k, v in ipairs(objs) do
-				if v.posX == playerX and v.posY == playerY then
-					v:onOverlap()
-					if not v:allowImmediateMovementAfterStep() then
-						allowImmediateMovementCheck = false
-					end
-				end
-			end
-			if allowImmediateMovementCheck then
-				checkMovement()
-			end
+			onMoveEnd()
 		end
 	end
 end
