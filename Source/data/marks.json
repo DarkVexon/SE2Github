@@ -3,5 +3,20 @@
   {
     "markName": "Tough",
     "description": "+20% DEF"
+  },
+  "Big":
+  {
+    "markName": "Big",
+    "description": "+20% HP"
+  },
+  "Speedy":
+  {
+    "markName": "Speedy",
+    "description": "+20% SPD"
+  },
+  "Swole":
+  {
+    "markName": "Swole",
+    "description": "+20% ATK"
   }
 }

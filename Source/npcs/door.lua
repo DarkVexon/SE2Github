@@ -1,4 +1,4 @@
-class('Door').extends(GameObject)
+class('Door').extends(Object)
 
 function Door:init(x, y, map, transloc)
 	Door.super.init(self, "door", x, y)

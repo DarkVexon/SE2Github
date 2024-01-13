@@ -39,6 +39,7 @@ import "postcapture"
 import "options"
 import "dex"
 import "player"
+import "dexsingleview"
 
 isCrankUp = false
 
@@ -56,6 +57,7 @@ curScreen = 0
 -- 5: Post capture screen
 -- 6: Options menu screen
 -- 7: Monsterdex total screen
+-- 8: Monsterdex single screen
 
 skipNextRender = false
 
@@ -85,6 +87,8 @@ function playdate.update()
 				updateOptionsMenu()
 			elseif curScreen == 7 then
 				updateDexMenu()
+			elseif curScreen == 8 then
+				updateDexSingleView()
 			end
 		end
 
@@ -115,6 +119,8 @@ function render()
 		drawOptionsMenu()
 	elseif curScreen == 7 then
 		drawDexMenu()
+	elseif curScreen == 8 then
+		drawDexSingleView()
 	end
 
 	if popupUp then

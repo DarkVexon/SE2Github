@@ -28,8 +28,8 @@ local singleViewNatureDrawX <const> = 245
 local singleViewNatureDrawY <const> = 65
 
 local singleViewMarkDrawX <const> = 125
-local singleViewMarkImgWidth <const> = 60
-local singleViewMarkDistBetweenImgAndExplanation = 5
+singleViewMarkImgWidth = 60
+singleViewMarkDistBetweenImgAndExplanation = 5
 local singleViewMarkDrawY <const> = 90
 
 local singleViewAbilityDrawX <const> = 90

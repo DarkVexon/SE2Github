@@ -39,4 +39,8 @@ end
 
 function onEndFadeOut()
 	fadeDest()
+	if scriptAfter then
+		scriptAfter = false
+		nextScript()
+	end
 end

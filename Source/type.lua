@@ -25,21 +25,21 @@ types = {
 typeImgWidth = widthOfWidest(types) + 10
 
 dealsDoubleTo = {
-	["fire"] = {"plant"},
-	["water"] = {"fire"},
-	["plant"] = {"water"},
-	["alien"] = {},
-	["tech"] = {},
-	["fear"] = {},
-	["drake"] = {},
-	["ice"] = {},
-	["magic"] = {},
-	["bug"] = {},
-	["stone"] = {},
-	["wind"] = {},
-	["poison"] = {},
-	["love"] = {},
-	["knight"] = {},
+	["fire"] = {"plant", "tech", "ice", "bug"},
+	["water"] = {"fire", "tech", "stone"},
+	["plant"] = {"water", "stone"},
+	["alien"] = {"alien", "knight"},
+	["tech"] = {"water", "magic", "poison", "love"},
+	["fear"] = {"magic", "love"},
+	["drake"] = {"drake"},
+	["ice"] = {"plant", "wind"},
+	["magic"] = {"tech"},
+	["bug"] = {"plant"},
+	["stone"] = {"ice", "teeth"},
+	["wind"] = {"plant", "bug"},
+	["poison"] = {"plant"},
+	["love"] = {"fear"},
+	["knight"] = {"drake"},
 	["teeth"] = {}
 }
 

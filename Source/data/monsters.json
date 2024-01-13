@@ -11,7 +11,8 @@
     "learnset": {
       "1": "Nibble"
     },
-    "article": "a "
+    "article": "a ",
+    "description": "Exceedingly friendly and cuddly, ~s make for good starting partners."
   },
   "Dubldraker":
   {
@@ -25,7 +26,8 @@
     "learnset": {
       "1": "Nibble"
     },
-    "article": "a "
+    "article": "a ",
+    "description": "Its heads have different brains, but tend to get along. ~ is never lonely."
   },
   "Bombeetl":
   {
@@ -40,7 +42,8 @@
       "1": "Ember",
       "11": "Nibble"
     },
-    "article": "a "
+    "article": "a ",
+    "description": "Stores acid in one organ and explosive powder in another. Stepping on a ~ is a ticket to the hospital."
   },
   "Circe":
   {
@@ -54,9 +57,10 @@
     "learnset": {
       "1": "Nibble"
     },
-    "article": ""
+    "article": "",
+    "description": "Exceedingly rare, ~ is said to be a type of demon which manifested into the human realm."
   },
-  "Mx Roboto":
+  "Mx. Roboto":
   {
     "speciesName": "Mx. Roboto",
     "types": ["tech"],
@@ -68,7 +72,8 @@
     "learnset": {
       "1": "Spark"
     },
-    "article": ""
+    "article": "",
+    "description": "Exceedingly chatty. ~ will discuss any topic at length except their origin."
   },
   "Achewig":
   {
@@ -82,7 +87,8 @@
     "learnset": {
       "1": "Nibble"
     },
-    "article": "an "
+    "article": "an ",
+    "description": "An ~'s tooth signifies its stature. Wisdom teeth are the highest rank."
   },
   "Chompah":
   {
@@ -96,6 +102,7 @@
     "learnset": {
       "1": "Nibble"
     },
-    "article": "a "
+    "article": "a ",
+    "description": "A highly aggressive plant. Even the lightest breeze causes ~ to blindly attack."
   }
 }

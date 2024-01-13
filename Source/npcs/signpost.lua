@@ -1,4 +1,4 @@
-class('Signpost').extends(GameObject)
+class('Signpost').extends(Object)
 
 function Signpost:init(x, y, text)
 	Signpost.super.init(self, "signpost", x, y)

@@ -171,6 +171,7 @@ enemyChosenMove = nil
 function playerMonsterMoveCheck()
 	if playerChosenMove ~= nil then
 		playerMonster:useMove(playerChosenMove, enemyMonster)
+		playerChosenMove = nil
 		nextScript()
 	else
 		nextScript()
@@ -180,6 +181,7 @@ end
 function enemyMonsterMoveCheck()
 	if enemyChosenMove ~= nil then
 		enemyMonster:useMove(enemyChosenMove, playerMonster)
+		enemyChosenMove = nil
 		nextScript()
 	else
 		nextScript()
@@ -189,6 +191,9 @@ end
 function sendInMonster(monster)
 	clear(monster.statuses)
 	monster.dispHp = monster.curHp
+	if playerDex[monster.speciesName] == 0 then
+		playerDex[monster.speciesName] = 1
+	end
 end
 
 function nextScript()
@@ -254,6 +259,7 @@ function getNextCombatActions()
 			if playerChosenItem.useOnce then
 				playerChosenItem:consumeOne()
 			end
+			playerChosenItem = nil
 			nextScript()
 		else
 			nextScript()

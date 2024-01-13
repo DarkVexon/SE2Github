@@ -18,6 +18,7 @@ function showTextBox(text)
 	textBoxShown = true
 	textBoxScrollDone = false
 	textBoxLetterIndex = 0
+	callScriptAfterHideTextBox = true
 end
 
 function showTimedTextBox(text, time)
@@ -34,7 +35,9 @@ end
 
 function hideTextBox()
 	textBoxShown = false
-	nextScript()
+	if callScriptAfterHideTextBox then
+		nextScript()
+	end
 end
 
 function updateTextBox()

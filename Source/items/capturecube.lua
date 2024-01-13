@@ -22,15 +22,28 @@ function attemptToCapture(target)
 	local output = monsterInfo[target.species]["catchDifficulty"]
 	output *= (((target.maxHp - target.curHp) / target.maxHp) + 0.1)
 	-- TODO: Persistent statuses modify catch rate
-	-- TODO: Dex bonus
+	if playerDex[target.species] == 2 then
+		output *= 1.1
+	end
 	output = math.floor(output)
 	local foundValue = math.random(1, 100)
 	if foundValue >= output then
 		caughtMonster = target
+		if (playerDex[caughtMonster.speciesName]) < 2 then
+			playerDex[caughtMonster.speciesName] = 2
+		end
 		addScript(TextScript("Capture was successful!"))
-		--TODO: If not seen in dex yet, dex presentation screen
-		addScript(OneParamScript(screenChangeScript, openPostCaptureScreen))
+		if playerDex[target.species] ~= 2 then
+			playerDex[target.species] = 2
+			dexSelectedSpecies = target.species
+			dexFromCapture = true
+			addScript(TwoParamScript(screenChangeScript, openDexSingleView, true))
+			addScript(NonblockingTextScript(target.name .. "'s information was added to the Monsterpedia."))
+			addScript(OneParamScript(screenChangeScript, openPostCaptureScreen))
+		else
+			addScript(OneParamScript(screenChangeScript, openPostCaptureScreen))
+		end
 	else
-		addScript(textScript("Capture failed! Darn."))
+		addScript(TextScript("Capture failed! Darn."))
 	end
 end

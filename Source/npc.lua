@@ -1,15 +1,19 @@
-class('GameObject').extends()
+class('Object').extends()
 
 objectImgs = {}
 
-function GameObject:init(name, x, y)
-	self.name = name
-	if (containsKey(objectImgs, name)) then
-		self.img = objectImgs[name]
+function Object:loadImg()
+	if (containsKey(objectImgs, self.name)) then
+		self.img = objectImgs[self.name]
 	else
-		objectImgs[name] = gfx.image.new("img/overworld/npc/" .. name)
-		self.img = objectImgs[name]
+		objectImgs[self.name] = gfx.image.new("img/overworld/npc/" .. self.name)
+		self.img = objectImgs[self.name]
 	end
+end
+
+function Object:init(name, x, y)
+	self.name = name
+	self:loadImg()
 	self.posX = x
 	self.startX = x
 	self.posY = y
@@ -21,7 +25,7 @@ function GameObject:init(name, x, y)
 	self.speed = 4
 end
 
-function GameObject:updateVisualMotion()
+function Object:updateVisualMotion()
 	if self.visX ~= self.visDestX then
 		if self.visX < self.visDestX then
 			self.visX += self.speed
@@ -38,7 +42,7 @@ function GameObject:updateVisualMotion()
 	end
 end
 
-function GameObject:moveBy(x, y)
+function Object:moveBy(x, y)
 	if (x ~= 0 or y ~= 0) then
 		self.posX += x
 		self.posX += y
@@ -47,29 +51,29 @@ function GameObject:moveBy(x, y)
 	end
 end
 
-function GameObject:update()
+function Object:update()
 	self:updateVisualMotion()
 end
 
-function GameObject:render()
+function Object:render()
 	if (cameraOffsetGridX <= self.posX+1 and cameraOffsetGridX + camWidth >= self.posX-1 and cameraOffsetGridY <= self.posY+1 and cameraOffsetGridY + camHeight >= self.posY-1) then
 		self.img:draw(self.visX + cameraOffsetX, self.visY + cameraOffsetY)
 	end
 end
 
-function GameObject:canMoveHere()
+function Object:canMoveHere()
 	return false
 end
 
-function GameObject:onInteract()
+function Object:onInteract()
 
 end
 
-function GameObject:onOverlap()
+function Object:onOverlap()
 
 end
 
-function GameObject:allowImmediateMovementAfterStep()
+function Object:allowImmediateMovementAfterStep()
 	return true
 end
 

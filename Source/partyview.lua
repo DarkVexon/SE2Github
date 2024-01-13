@@ -52,8 +52,6 @@ function moveHorizInPartyView()
 	elseif monsterScreenSelectionIdx == 3 then
 		if #playerMonsters >= 4 then
 			monsterScreenSelectionIdx = 4
-		else
-			monsterScreenSelectionIdx = 2
 		end
 	elseif monsterScreenSelectionIdx == 4 then
 		monsterScreenSelectionIdx = 3

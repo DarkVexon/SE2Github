@@ -1,25 +1,21 @@
-menuItems = {"Save", "Creatures", "Creaturedex", "Bag", "ID", "Options"}
+menuItems = {"Save", "Creatures", "Creaturedex", "Bag", "Options"}
 local menuStartIndex <const> = 2
 menuIcons = {}
-menuIcons["Options"] = gfx.image.new("img/ui/menu/optionsMenuIcon")
 menuIcons["Save"] = gfx.image.new("img/ui/menu/saveMenuIcon")
 menuIcons["Creatures"] = gfx.image.new("img/ui/menu/creaturesMenuIcon")
 menuIcons["Creaturedex"] = gfx.image.new("img/ui/menu/creaturedexMenuIcon")
 menuIcons["Bag"] = gfx.image.new("img/ui/menu/bagMenuIcon")
-menuIcons["ID"] = gfx.image.new("img/ui/menu/idCardMenuIcon")
+menuIcons["Options"] = gfx.image.new("img/ui/menu/optionsMenuIcon")
 
-menuIdx = menuStartIndex
-menuAngle = 0
 local baseMenuItemOffset <const> = 180
 local menuDistBetween <const> = (180/3)
-local menuCrankDistBetween <const> = menuDistBetween * 0.75
-local offsetPerMenuItem <const> = menuDistBetween * -1
-menuAngleToNext = 0
-menuAngleToPrev = 0
-local menuMaxAngle <const> = #menuItems * menuDistBetween - 35
+local menuAngleLimit <const> = menuDistBetween / 2
 local menuCircRadius <const> = 115
+local menuCircPosition <const> = 450
 local numMenuPaddingFrames <const> = 5
 menuPaddingFrames = 0
+menuIdx = menuStartIndex
+menuAngle = 0
 
 function openMenu()
 	menuTimer = 10
@@ -33,57 +29,61 @@ function closeMenu()
 end
 
 function resetMenu()
-	menuAngle = menuDistBetween * (menuIdx-1)
+	menuAngle = 0
 	menuAngleToNext = 0
 	menuAngleToPrev = 0
 	menuPaddingFrames = 0
 end
 
 function updateInMenu()
-	local change = playdate.getCrankChange() / 2
-	if (change ~= 0) then
+	--input
+	local input = playdate.getCrankChange() / 2
+	if playdate.buttonIsPressed(playdate.kButtonUp) then
+		input -= 3
+	elseif playdate.buttonIsPressed(playdate.kButtonDown) then
+		input += 3
+	end
+	if (input ~= 0) then
 		menuPaddingFrames = numMenuPaddingFrames
-		menuAngle += change
-		if menuAngle > menuDistBetween * (#menuItems-1) then
-			menuAngle = menuDistBetween * (#menuItems-1)
-		end
-		if menuIdx < #menuItems and not (change < 0 and menuIdx == 1) then
-			menuAngleToNext += change
-		end
-		if menuIdx > 1 and not (change > 0 and menuIdx == #menuItems) then
-			menuAngleToPrev -= change
-		end
-		if (menuAngle < 0) then
-			menuAngle = 0
-		end
-		if menuAngle > menuMaxAngle then
-			menuAngle = menuMaxAngle
-		end
-		if (menuAngleToNext >= menuCrankDistBetween) then
-			if (menuIdx < #menuItems) then
+		menuAngle += input
+
+		if menuAngle > menuAngleLimit then
+			if menuIdx < #menuItems then
 				--print("-> moved next")
+				menuAngle -= menuAngleLimit
 				menuIdx += 1
-				menuAngle = menuDistBetween * (menuIdx-1)
-				menuAngleToNext = 0
-				menuAngleToPrev = 0
+			else --limit scroll
+				menuAngle = menuAngleLimit
 			end
-		elseif menuAngleToPrev >= menuCrankDistBetween then
+		elseif menuAngle < -menuAngleLimit then
 			if menuIdx > 1 then
 				--print("-> moved prev")
+				menuAngle += menuAngleLimit
 				menuIdx -= 1
-				menuAngle = menuDistBetween * (menuIdx-1)
-				menuAngleToPrev = 0
-				menuAngleToNext = 0
+			else --limit scroll
+				menuAngle = -menuAngleLimit
 			end
 		end
 	else
 		if menuPaddingFrames > 0 then
 			menuPaddingFrames -= 1
 		else
-
-			
+			if menuAngle > 0 then --are there only integer values? Dunno if this logic is fine for this. Adjust as necessary to have menuAngle slowly move back to 0.
+				menuAngle -= 1
+				if menuAngle < 0 then
+					menuAngle = 0
+				end
+			elseif menuAngle < 0 then
+				menuAngle += 1
+				if menuAngle > 0 then
+					menuAngle = 0
+				end
+			end
 		end
 	end
+
+
+
 	if playdate.isCrankDocked() and isCrankUp then
 		isCrankUp = false
 		closeMenu()
@@ -109,33 +109,65 @@ function updateMenuTimer()
 	end
 end
 
-function drawMenu()
-	local circRadius
-	if menuTimer > 0 then
-		if showingMenu then
-			circRadius = menuCircRadius * playdate.math.lerp(0, 1, (10-menuTimer)/10)
-		else
-			circRadius = menuCircRadius * playdate.math.lerp(0, 1, menuTimer/10)
-		end
-	else
-		circRadius = menuCircRadius
-	end
-	gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
-	gfx.fillCircleAtPoint(400, 120, circRadius)
-	gfx.setColor(gfx.kColorBlack)
 
-	for i=menuIdx-3, menuIdx+3 do
-		if i > 0 and i <= #menuItems then
-			local destinationIndex = i-1
-			local destDegrees = destinationIndex * offsetPerMenuItem + baseMenuItemOffset + menuAngle
-			local destRads = toRadians(destDegrees)
-			local menuIconDestX = circRadius * math.cos(destRads) + 400
-			local menuIconDestY = circRadius * math.sin(destRads) + 120
-			if menuIdx == i then
-				gfx.drawRect(menuIconDestX - 40, menuIconDestY - 40, 80, 80)
-			end
-			menuIcons[menuItems[i]]:draw(menuIconDestX - 33, menuIconDestY - 33)
-		end
+lastIdx = menuStartIndex --impossible value, probably set it to "current one" when opened
+local renderOrder <const> = {-2, 2, -1, 1, 0}
+
+local MENU_INFO_BOX_HEIGHT <const> = 100
+
+function drawMenu()
+    local circRadius
+    if menuTimer > 0 then
+        if showingMenu then
+            circRadius = menuCircRadius * playdate.math.lerp(0, 1, (10-menuTimer)/10)
+        else
+            circRadius = menuCircRadius * playdate.math.lerp(0, 1, menuTimer/10)
+        end
+    else
+        circRadius = menuCircRadius
+    end
+
+	gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
+    gfx.fillCircleAtPoint(menuCircPosition, 120, circRadius)
+    gfx.setColor(gfx.kColorBlack)
+
+    local lastIconX = 0
+    local lastIconY = 0
+    for idx, v in ipairs(renderOrder) do
+    	i = menuIdx + v
+        if i > 0 and i <= #menuItems then
+            local destinationOffset = i - menuIdx --if rendering "current" one it's 0
+            local destDegrees = destinationOffset * (-menuDistBetween) + menuAngle + baseMenuItemOffset --might need adjustment idk
+            local destRads = toRadians(destDegrees)
+            --local basicallyOffset = (180 - (math.abs(baseMenuItemOffset - destDegrees)))/180
+            --local basicallyOffset = (math.abs(i-menuIdx)) * 0.5
+
+            local menuIconScale = 1
+            local menuIconDestX = (circRadius) * math.cos(destRads) + menuCircPosition
+            local menuIconDestY = (circRadius) * math.sin(destRads) + 120
+
+            if menuIdx == i then
+                local squareSize = 75 * menuIconScale
+                if lastIdx == menuIdx then
+                    gfx.drawRect(menuIconDestX - (squareSize / 2), menuIconDestY - (squareSize / 2), squareSize, squareSize)
+                else --have square 1 frame of moving between (lazy method)
+                    lastIdx = menuIdx
+                    gfx.drawRect((lastIconX + menuIconDestX) / 2 - (squareSize / 2), (lastIconY + menuIconDestY) / 2 - (squareSize / 2), squareSize, squareSize)
+                end
+            end
+
+            menuIcons[menuItems[i]]:drawScaled(menuIconDestX - (33 * menuIconScale), menuIconDestY - (33 * menuIconScale), menuIconScale)
+
+            lastIconX = menuIconDestX
+            lastIconY = menuIconDestY
+        end
+    end
+
+    if (menuTimer == 0) or (menuTimer > 0 and showingMenu) then
+	    drawNiceRect(10, (240 - MENU_INFO_BOX_HEIGHT) - 10, 275, MENU_INFO_BOX_HEIGHT)
+	    gfx.drawText(playerName, 20, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 10)
+	    gfx.drawText("$" .. playerMoney, 225, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 10)
+	    gfx.drawText("Seen: " .. getDexProgress(1) .. "/" .. numMonsters, 20, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 30)
+	    gfx.drawText("Caught: " .. getDexProgress(2).. "/" .. numMonsters, 140, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 30)
 	end
-	gfx.setColor(gfx.kColorBlack)
 end

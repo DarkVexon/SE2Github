@@ -2,10 +2,14 @@ class('Monster').extends()
 
 monsterInfo = json.decodeFile("data/monsters.json")
 
+numMonsters = 0
 monsterImgs = {}
 for k, v in pairs(monsterInfo) do
+	numMonsters += 1
 	monsterImgs[k] = gfx.image.new("img/monster/" .. k)
 end
+
+unknownMonsterImg = gfx.image.new("img/monster/Unknown")
 
 local natureMultPerPoint <const> = 0.2
 
@@ -35,6 +39,11 @@ natures = {
 	["Crazed"] = {0, 0, -1, 1},
 	["Unlucky"] = {-1, -1, -1, -1}
 }
+
+function randomSpecies()
+	local keys = getTableKeys(monsterInfo)
+	return keys[math.random(#keys)]
+end
 
 function Monster:init(data)
 	self.randomnum = data["randomNum"]
@@ -74,11 +83,11 @@ function Monster:init(data)
 end
 
 function hpFromLevelFunc(base, level)
-	return math.floor(((base * level) / levelCap) + (10 - math.floor(level / 10)))
+	return math.floor((base * level) / levelCap) + 10
 end
 
 function otherStatFromLevelFunc(base, level)
-	return math.floor((base*level)/levelCap)
+	return math.floor((base*level) / levelCap) + 5
 end
 
 function getStats(species, level, nature, mark)
@@ -150,6 +159,7 @@ function randomEncounterMonster(species, levelRange)
 	monsterData["exp"] = 0
 	monsterData["nature"] = randomKey(natures)
 	if math.random(0, 10) == 0 then
+	--if true then
 		monsterData["mark"] = getMarkByName(randomKey(markInfo))
 	else
 		monsterData["mark"] = nil

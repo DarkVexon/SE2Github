@@ -1,4 +1,4 @@
-class('ToughMark').extends(MonsterMark)
+class('ToughMark').extends(Mark)
 
 function ToughMark:init()
 	ToughMark.super.init(self, "Tough")

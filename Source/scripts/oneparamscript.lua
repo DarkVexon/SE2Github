@@ -11,10 +11,10 @@ end
 
 -- SCRIPTS --
 
-function screenChangeScript(screen)
+function screenChangeScript(screen, callScriptAfter)
 	fadeOutTimer = 15
 	fadeDest = screen
-	scriptAfter = true
+	scriptAfter = callScriptAfter
 end
 
 function changeCombatPhaseScript(phase)

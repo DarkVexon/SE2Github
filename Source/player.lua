@@ -1,6 +1,6 @@
 playerName = "Dr. Qupo"
 playerMonsters = {
-	randomEncounterMonster("Mx Roboto", {10, 12})
+
 }
 playerMonsterStorage = {
 
@@ -9,8 +9,28 @@ playerItems = {
 	[Poutine()] = 1,
 	[CaptureCube()] = 2
 }
+playerMoney = 100
 
 playerDex = {}
 for i, k in ipairs(getTableKeys(monsterInfo)) do
-	table.insert(playerDex, math.random(0, 2))
+	playerDex[k] = 0
 end
+
+function getDexProgress(type)
+	local total = 0
+	for k, v in pairs(playerDex) do
+		if v >= type then
+			total += 1
+		end
+	end
+	return total
+end
+
+function addToParty(monster)
+	table.insert(playerMonsters, monster)
+	if playerDex[monster.speciesName] < 2 then
+		playerDex[monster.speciesName] = 2
+	end
+end
+
+addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))

@@ -10,7 +10,7 @@
   {
     "moveName": "Ember",
     "type": "fire",
-    "basePower": 25,
+    "basePower": 20,
     "description": "A small, fiery burst."
   },
   "Spark":
