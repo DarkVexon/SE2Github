@@ -7,7 +7,7 @@ end
 function SteelSoul:modifyIncomingDamage(damage, damageType)
 	if damage > self.owner.maxHp * 0.4 then
 		self:displaySelf()
-		damage = self.owner.maxHp * 0.4
+		damage = math.floor(self.owner.maxHp * 0.4)
 	end
 	return damage
 end

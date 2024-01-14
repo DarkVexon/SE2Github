@@ -35,8 +35,6 @@ function attemptToCapture(target)
 		addScript(TextScript("Capture was successful!"))
 		if playerDex[target.species] ~= 2 then
 			playerDex[target.species] = 2
-			dexSelectedSpecies = target.species
-			dexFromCapture = true
 			addScript(TextScript(target.name .. "'s information was added to the Monsterpedia."))
 			addScript(TransitionScript(openPostCaptureScreen))
 		else

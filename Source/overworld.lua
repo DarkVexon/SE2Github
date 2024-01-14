@@ -261,7 +261,8 @@ function mapRandomEncounter()
 	for k, v in pairs(randomEncounters) do
 		result -= v[3]
 		if result <= 0 then
-			addScript(RandomEncounterScript(v[1], v[2]))
+			--addScript(RandomEncounterScript(v[1], v[2]))
+			addScript(RandomEncounterScript(randomSpecies(), {playerMonsters[1].level-1, playerMonsters[1].level+1}))
 			nextScript()
 			break
 		end

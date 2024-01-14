@@ -13,20 +13,20 @@ end
 
 function openKeyboardMode()
 	addScript(StartAnimScript(MoveCapturedMonsterAnim(true)))
-	addScript(GameScript(function() playdate.keyboard.show(caughtMonster.name) keyboardShown = true end))
+	addScript(LambdaScript("Show keyboard", function() playdate.keyboard.show(caughtMonster.name) keyboardShown = true end))
 	addScript(StartAnimScript(MoveCapturedMonsterAnim(false)))
 	nextScript()
 end
 
 function postNicknameChoice()
 	if #playerMonsters < 4 then
-		addScript(GameScript(function() table.insert(playerMonsters, caughtMonster) nextScript() end))
+		addScript(LambdaScript("add monster to team", function() table.insert(playerMonsters, caughtMonster) nextScript() end))
 		addScript(TextScript("Welcome to the team, " .. caughtMonster.name .. "!"))
 	else
-		addScript(GameScript(function() table.insert(playerMonsterStorage, caughtMonster) nextScript() end))
+		addScript(LambdaScript("add monster to storage", function() table.insert(playerMonsterStorage, caughtMonster) nextScript() end))
 		addScript(TextScript(caughtMonster.name .. " was sent to the DOUBLE SHADOW GOVERNMENT!"))
 	end
-	addScript(OneParamScript(TransitionScript, openMainScreen))
+	addScript(TransitionScript(openMainScreen))
 	nextScript()
 end
 

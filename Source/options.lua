@@ -1,17 +1,36 @@
-local OPTIONS_MENU_FASTMODE_X <const> = 15
-local OPTIONS_MENU_FASTMODE_Y <const> = 40
-local NUMBER_OF_OPTIONS <const> = 1
+local OPTIONS_MENU_X <const> = 15
+local OPTIONS_MENU_Y <const> = 40
+local OPTIONS_MENU_DISTBETWEEN <const> = 25
+
+
 
 fastMode = false
+isDebug = false
 
-function setFastMode(newFastMode)
-	fastMode = newFastMode
+function getDebugMode()
+	return isDebug
+end
+
+function getFastMode()
+	return fastMode
+end
+
+function setFastMode()
+	fastMode = not fastMode
 	if newFastMode then
 		transitionTimer = 6
 	else
 		transitionTimer = 15
 	end
 end
+
+function setDebugMode()
+	isDebug = not isDebug
+end
+
+MENU_OPTIONS = {
+["Fast Mode"] = {getFastMode, setFastMode}, ["Debug Mode"] = {getDebugMode, setDebugMode}
+}
 
 function onOrOff(input)
 	if input then
@@ -28,20 +47,18 @@ end
 
 function updateOptionsMenu()
 	if playdate.buttonJustPressed(playdate.kButtonA) then
-		if optionsMenuSelectionIdx == 1 then
-			setFastMode(not fastMode)
-		end
+		valueAtIndex(MENU_OPTIONS, optionsMenuSelectionIdx)[2]()
 	elseif playdate.buttonJustPressed(playdate.kButtonB) then
 		startFade(openMainScreen)
 	end
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
 		optionsMenuSelectionIdx -= 1
 		if optionsMenuSelectionIdx == 0 then
-			optionsMenuSelectionIdx = NUMBER_OF_OPTIONS
+			optionsMenuSelectionIdx = numKeys(MENU_OPTIONS)
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
 		optionsMenuSelectionIdx += 1
-		if optionsMenuSelectionIdx > NUMBER_OF_OPTIONS then
+		if optionsMenuSelectionIdx > numKeys(MENU_OPTIONS) then
 			optionsMenuSelectionIdx = 1
 		end
 	end
@@ -50,11 +67,16 @@ end
 function drawOptionsMenu()
 	gfx.drawTextAligned("OPTIONS", 400/2, 10, kTextAlignment.center)
 
-	gfx.drawText("Fast Mode: " .. onOrOff(fastMode), OPTIONS_MENU_FASTMODE_X, OPTIONS_MENU_FASTMODE_Y)
-	if optionsMenuSelectionIdx == 1 then
-		gfx.setColor(gfx.kColorXOR)
-		gfx.fillRoundRect(OPTIONS_MENU_FASTMODE_X - 5, OPTIONS_MENU_FASTMODE_Y - 2, 153, 20, 2)
-		gfx.setColor(gfx.kColorBlack)
+	local index = 1
+	for k, v in pairs(MENU_OPTIONS) do
+		local result = v[1]
+		gfx.drawText(k .. ": " .. onOrOff(result()), OPTIONS_MENU_X, OPTIONS_MENU_Y + (index-1) * (OPTIONS_MENU_DISTBETWEEN))
+		if optionsMenuSelectionIdx == index then
+			gfx.setColor(gfx.kColorXOR)
+			gfx.fillRoundRect(OPTIONS_MENU_X - 5, OPTIONS_MENU_Y + (index-1) * (OPTIONS_MENU_DISTBETWEEN) - 2, 200, 20, 2)
+			gfx.setColor(gfx.kColorBlack)
+		end
+		index += 1
 	end
 
 	drawBackButton()

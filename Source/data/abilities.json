@@ -32,6 +32,6 @@
   "Snapper":
   {
     "abilityName": "Snapper",
-    "description": "Enters combat with a 20 damage Plant attack."
+    "description": "Enters combat with a 10 damage Plant attack."
   }
 }

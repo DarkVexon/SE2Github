@@ -140,7 +140,7 @@ function render()
 		drawPopupMenu()
 	end
 
-	if IS_DEBUG then
+	if isDebug then
 		drawDebugActionQueue()
 	end
 end

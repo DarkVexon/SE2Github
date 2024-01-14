@@ -32,45 +32,33 @@ function openDexSingleView()
 end
 
 function updateDexSingleView()
-	if textBoxShown then
-		updateTextBox()
-	else
-		if dexFromCapture then
-			if playdate.buttonJustPressed(playdate.kButtonA) then
-				dexFromCapture = false
-				gfx.setDrawOffset(0, 0)
-				nextScript()
-			end
-		else
-			if playdate.buttonJustPressed(playdate.kButtonB) then
-				startFade(openDexMenu)
-				gfx.setDrawOffset(0, 0)
-			end
-			if playdate.buttonJustPressed(playdate.kButtonUp) then
-				if dexSelectedIdx > 1 then
-					dexSelectedIdx -= 1
-					dexSelectedSpecies = dexItems[dexSelectedIdx]
-					gfx.setDrawOffset(0, 0)
-				end
-			elseif playdate.buttonJustPressed(playdate.kButtonDown) then
-				if dexSelectedIdx < #dexItems then
-					dexSelectedIdx += 1
-					dexSelectedSpecies = dexItems[dexSelectedIdx]
-					gfx.setDrawOffset(0, 0)
-				end
-			end
+	if playdate.buttonJustPressed(playdate.kButtonB) then
+		startFade(openDexMenu)
+		gfx.setDrawOffset(0, 0)
+	end
+	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		if dexSelectedIdx > 1 then
+			dexSelectedIdx -= 1
+			dexSelectedSpecies = dexItems[dexSelectedIdx]
+			gfx.setDrawOffset(0, 0)
 		end
-		local change, accel = playdate.getCrankChange()
-		if change ~= 0 then
-			dexSingleScrollAmt += change
-			if dexSingleScrollAmt < 0 then
-				dexSingleScrollAmt = 0
-			end
-			if dexSingleScrollAmt > DEX_MAX_SCROLL then
-				dexSingleScrollAmt = DEX_MAX_SCROLL
-			end
-			gfx.setDrawOffset(0, -dexSingleScrollAmt)
+	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		if dexSelectedIdx < #dexItems then
+			dexSelectedIdx += 1
+			dexSelectedSpecies = dexItems[dexSelectedIdx]
+			gfx.setDrawOffset(0, 0)
 		end
+	end
+	local change, accel = playdate.getCrankChange()
+	if change ~= 0 then
+		dexSingleScrollAmt += change
+		if dexSingleScrollAmt < 0 then
+			dexSingleScrollAmt = 0
+		end
+		if dexSingleScrollAmt > DEX_MAX_SCROLL then
+			dexSingleScrollAmt = DEX_MAX_SCROLL
+		end
+		gfx.setDrawOffset(0, -dexSingleScrollAmt)
 	end
 end
 
@@ -103,9 +91,5 @@ function drawDexSingleView()
 		gfx.drawTextInRect(monsterInfo[dexSelectedSpecies].description, DEX_DESCRIPTION_POS_X + DEX_DESCRIPTION_BOX_BUFFER, DEX_DESCRIPTION_POS_Y + DEX_DESCRIPTION_BOX_BUFFER, DEX_DESCRIPTION_BOX_WIDTH - (DEX_DESCRIPTION_BOX_BUFFER*2), DEX_DESCRIPTION_BOX_HEIGHT- (DEX_DESCRIPTION_BOX_BUFFER*2))
 	else
 		gfx.drawTextAligned("???", DEX_DESCRIPTION_POS_X + DEX_DESCRIPTION_BOX_BUFFER + (DEX_DESCRIPTION_BOX_WIDTH / 2), DEX_DESCRIPTION_POS_Y + DEX_DESCRIPTION_BOX_BUFFER*2, kTextAlignment.center)
-	end
-
-	if textBoxShown then
-		drawTextBox()
 	end
 end

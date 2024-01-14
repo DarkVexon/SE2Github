@@ -130,10 +130,10 @@ function drawDexMenu()
             if dexIdx == i then
                 local squareSize = 120 * dexIconScale
                 if lastIdx == dexIdx then
-                    gfx.drawRect(dexIconDestX - (squareSize / 2), dexIconDestY - (squareSize / 2), squareSize, squareSize)
+                    drawNiceRect(dexIconDestX - (squareSize / 2), dexIconDestY - (squareSize / 2), squareSize, squareSize)
                 else --have square 1 frame of moving between (lazy method)
                     lastIdx = dexIdx
-                    gfx.drawRect((lastIconX + dexIconDestX) / 2 - (squareSize / 2), (lastIconY + dexIconDestY) / 2 - (squareSize / 2), squareSize, squareSize)
+                    drawNiceRect((lastIconX + dexIconDestX) / 2 - (squareSize / 2), (lastIconY + dexIconDestY) / 2 - (squareSize / 2), squareSize, squareSize)
                 end
             end
 
@@ -143,8 +143,10 @@ function drawDexMenu()
                 unknownMonsterImg:drawScaled(dexIconDestX - (50 * dexIconScale), dexIconDestY - (50 * dexIconScale), dexIconScale)
             end
 
-            lastIconX = dexIconDestX
-            lastIconY = dexIconDestY
+            if lastIdx == i then
+	            lastIconX = dexIconDestX
+	            lastIconY = dexIconDestY
+	        end
         end
     end
     gfx.setColor(gfx.kColorBlack)

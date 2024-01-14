@@ -14,6 +14,16 @@ function keyAtIndex(test, index)
 	end
 end
 
+function valueAtIndex(test, wanted)
+	local index = 1
+	for k, v in pairs(test) do
+		if index == wanted then
+			return v
+		end
+		index += 1
+	end
+end
+
 function indexKey(test, key)
 	for i, v in ipairs(getTableKeys(test)) do
 		if v == key then
@@ -141,7 +151,7 @@ function drawXpBar(x, y, width, height, xp, max)
 end
 
 function printIfDebug(values)
-	if IS_DEBUG then
+	if isDebug then
 		print(values)
 	end
 end

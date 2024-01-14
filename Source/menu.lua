@@ -15,6 +15,7 @@ local menuCircPosition <const> = 450
 local numMenuPaddingFrames <const> = 5
 menuPaddingFrames = 0
 menuIdx = menuStartIndex
+lastIdx = menuStartIndex --impossible value, probably set it to "current one" when opened
 menuAngle = 0
 
 function openMenu()
@@ -110,7 +111,6 @@ function updateMenuTimer()
 end
 
 
-lastIdx = menuStartIndex --impossible value, probably set it to "current one" when opened
 local renderOrder <const> = {-2, 2, -1, 1, 0}
 
 local MENU_INFO_BOX_HEIGHT <const> = 100
@@ -149,21 +149,10 @@ function drawMenu()
             if menuIdx == i then
                 local squareSize = 75 * menuIconScale
                 if lastIdx == menuIdx then
-                	gfx.setColor(gfx.kColorWhite)
-                	gfx.fillRect(menuIconDestX - (squareSize / 2), menuIconDestY - (squareSize / 2), squareSize, squareSize)
-                	gfx.setColor(gfx.kColorBlack)
-                    gfx.drawRect(menuIconDestX - (squareSize / 2), menuIconDestY - (squareSize / 2), squareSize, squareSize)
+                    drawNiceRect(menuIconDestX - (squareSize / 2), menuIconDestY - (squareSize / 2), squareSize, squareSize)
                 else --have square 1 frame of moving between (lazy method)
-                	print("Square tween frame")
-                	print(lastIdx)
-                	print(lastIconX)
-                	print(menuIconDestX)
-                	print((lastIconX + menuIconDestX) / 2)
                     lastIdx = menuIdx
-					gfx.setColor(gfx.kColorWhite)
-					gfx.fillRect((lastIconX + menuIconDestX) / 2 - (squareSize / 2), (lastIconY + menuIconDestY) / 2 - (squareSize / 2), squareSize, squareSize)
-					gfx.setColor(gfx.kColorBlack)
-					gfx.drawRect((lastIconX + menuIconDestX) / 2 - (squareSize / 2), (lastIconY + menuIconDestY) / 2 - (squareSize / 2), squareSize, squareSize)
+					drawNiceRect((lastIconX + menuIconDestX) / 2 - (squareSize / 2), (lastIconY + menuIconDestY) / 2 - (squareSize / 2), squareSize, squareSize)
                 end
             end
 
