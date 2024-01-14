@@ -1,6 +1,7 @@
-class('HealingScript').extends(GameScript)
+class('HealingScript').extends(Script)
 
 function HealingScript:init(amount, target)
+	HealingScript.super.init(self, target.name .. " heals for " .. amount)
 	self.amount = amount
 	self.target = target
 end

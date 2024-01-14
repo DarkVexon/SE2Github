@@ -1,10 +1,11 @@
-class('MoveAttackScript').extends(GameScript)
+class('MoveAttackScript').extends(Script)
 
 -- DAMAGE TYPES
 -- 0: Normal
 -- 1: Special
 
 function MoveAttackScript:init(owner, move, target)
+	MoveAttackScript.super.init(self, owner.name .. " damaging " .. target.name .. " with " .. move.name)
 	self.owner = owner
 	self.move = move
 	self.target = target

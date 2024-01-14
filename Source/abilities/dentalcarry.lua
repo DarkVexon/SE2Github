@@ -9,9 +9,9 @@ function DentalCarry:onEnterCombat()
 end
 
 function DentalCarry:modifyIncomingDamage(damage, damageType)
-	if damageType == 0 and not self.activated then
+	if not self.activated then
 		self.activated = true
-		self:displaySelfTop()
+		self:displaySelf()
 		return 1
 	end
 	return damage

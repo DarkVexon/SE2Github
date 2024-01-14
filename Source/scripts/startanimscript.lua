@@ -1,6 +1,7 @@
-class('StartAnimScript').extends(GameScript)
+class('StartAnimScript').extends(Script)
 
 function StartAnimScript:init(anim)
+	StartAnimScript.super.init(self, "Animation start")
 	self.anim = anim
 end
 

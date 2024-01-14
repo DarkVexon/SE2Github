@@ -11,14 +11,7 @@ function Move:init(name)
 	self.description = targetMoveInfo["description"]
 end
 
-local isDebug <const> = true
 local sameTypeAsUserBonus <const> = 1.1
-
-function printIfDebug(values)
-	if isDebug then
-		print(values)
-	end
-end
 
 function Move:calculateDamage(owner, target)
 	printIfDebug("Using move " .. self.name .. ".")
@@ -33,8 +26,8 @@ function manualCalculateDamage(owner, target, power, type)
 	printIfDebug("Owner attack is " .. owner.attack .. ", target defense is " .. target.defense .. ".")
 	printIfDebug("Applying status effects to these values.")
 	for i, v in ipairs(owner.statuses) do
-		ownerAttack *= v:modifyAttack()
-		print("Status " .. v.name .. " modified attack by " .. v:modifyAttack() .. ". New value is " .. ownerAttack)
+		ownerAttack = v:modifyAttack(ownerAttack)
+		print("Status " .. v.name .. " modified attack. New value is " .. ownerAttack)
 	end
 	print("Modified attack is " .. ownerAttack .. ", modified defense is " .. targetDefense)
 	print("Multiplying by (" .. ownerAttack .. "/" .. targetDefense ..").")
@@ -45,9 +38,17 @@ function manualCalculateDamage(owner, target, power, type)
 		output *= sameTypeAsUserBonus
 		printIfDebug("New value: " .. output)
 	end
+	local typeMatchupOutcome = totalMult(type, target.types)
 	printIfDebug("Applying type bonuses.")
-	printIfDebug("Multiplier from type damage bonus: " .. totalMult(type, target.types))
-	output *= totalMult(type, target.types)
+	printIfDebug("Multiplier from type damage bonus: " .. typeMatchupOutcome)
+	if typeMatchupOutcome >= 2 then
+		addScript(TextScript("It's super effective!"))
+	elseif typeMatchupOutcome < 1 and typeMatchupOutcome > 0 then
+		addScript(TextScript("It's not very effective..."))
+	elseif typeMatchupOutcome == 0 then
+		addScript(TextScript("It had no effect!"))
+	end
+	output *= typeMatchupOutcome
 	printIfDebug("Output pre-floor: " .. output)
 	output = math.floor(output)
 	printIfDebug("Final output: " .. output)

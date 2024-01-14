@@ -1,6 +1,7 @@
-class('ApplyStatusScript').extends(GameScript)
+class('ApplyStatusScript').extends(Script)
 
 function ApplyStatusScript:init(target, status)
+	ApplyStatusScript.super.init(self, "Apply " .. status.name .. " to " .. target.name)
 	self.target = target
 	self.status = status
 end

@@ -1,7 +1,7 @@
 class('AttackAnim').extends(Animation)
 
 function AttackAnim:init(isEnemy)
-	FaintAnim.super.init(self)
+	AttackAnim.super.init(self)
 	self.isEnemy = isEnemy
 	self.totalTime = 10
 	self.time = self.totalTime

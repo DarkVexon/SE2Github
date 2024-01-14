@@ -7,8 +7,9 @@ end
 function Lovebug:whenHit(damage, type)
 	if type == 0 then
 		local toHit = self.owner:getFoe()
-		addScriptTop(ApplyStatusScript(toHit, OffenseDown()))
-		addScriptTop(OneParamScript(textScript, toHit:messageBoxName() .. "'s ATK was reduced!"))
-		self:displaySelfTop()
+		self:displaySelf()
+		addScript(ApplyStatusScript(toHit, OffenseDown(toHit)))
+		addScript(TextScript(toHit:messageBoxName() .. "'s ATK was reduced!"))
+		
 	end
 end

@@ -26,7 +26,7 @@ function postNicknameChoice()
 		addScript(GameScript(function() table.insert(playerMonsterStorage, caughtMonster) nextScript() end))
 		addScript(TextScript(caughtMonster.name .. " was sent to the DOUBLE SHADOW GOVERNMENT!"))
 	end
-	addScript(OneParamScript(screenChangeScript, openMainScreen))
+	addScript(OneParamScript(TransitionScript, openMainScreen))
 	nextScript()
 end
 

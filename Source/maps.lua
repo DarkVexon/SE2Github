@@ -5,8 +5,8 @@ outdoorsTiles = gfx.tilemap.new()
 outdoorsTable = gfx.imagetable.new("img/overworld/tile/outdoors-table-40-40")
 outdoorsTiles:setImageTable(outdoorsTable)
 tilesets["outdoors"] = outdoorsTiles
-impassableTiles["outdoors"] = {4, 5, 6, 7}
-randomEncounterTiles["outdoors"] = {3}
+impassableTiles["outdoors"] = {7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19}
+randomEncounterTiles["outdoors"] = {6}
 
 currentMap = nil
 currentTileset = nil
@@ -22,6 +22,7 @@ function loadMap(map, transloc)
 	impassables = impassableTiles[tilesToUse]
 	encounterTiles = randomEncounterTiles[tilesToUse]
 	randomEncounters = mapResult["encountertable"]
+	encounterChance = mapResult["encounterchance"]
 	clear(objs)
 	for i, v in ipairs(mapResult["npcs"]) do
 		loadNpc(v)

@@ -75,7 +75,7 @@ function drawSingleMonsterView()
 	end
 	gfx.drawText(nameDisplay, singleViewNameDrawX, singleViewNameDrawY)
 	gfx.drawText("LV. " .. singleViewMonster.level, singleViewLevelDrawX, singleViewLevelDrawY)
-	drawBar(singleViewLevelBarDrawX, singleViewLevelBarDrawY, singleViewLevelBarWidth, singleViewLevelBarHeight, singleViewMonster.exp - xpNeededForLevel(monsterInfo[singleViewMonster.speciesName]["lvlspeed"], singleViewMonster.level), xpNeededForLevel(monsterInfo[singleViewMonster.speciesName]["lvlspeed"], singleViewMonster.level+1) - xpNeededForLevel(monsterInfo[singleViewMonster.speciesName]["lvlspeed"], singleViewMonster.level))
+	drawBar(singleViewLevelBarDrawX, singleViewLevelBarDrawY, singleViewLevelBarWidth, singleViewLevelBarHeight, singleViewMonster:curXpProgress(), singleViewMonster:xpForNext())
 	drawHealthBar(singleViewHealthDrawX, singleViewHealthDrawY, singleViewHealthBarWidth, singleViewHealthBarHeight, singleViewMonster.curHp, singleViewMonster.maxHp)
 	renderTypesHoriz(singleViewMonster.types, singleViewTypesDrawX, singleViewTypesDrawY)
 

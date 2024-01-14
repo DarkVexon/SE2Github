@@ -12,7 +12,9 @@
       "1": "Nibble"
     },
     "article": "a ",
-    "description": "Exceedingly friendly and cuddly, ~s make for good starting partners."
+    "description": "Exceedingly friendly and cuddly, Palpillars make for good starting partners.",
+    "locationHint": "the northwest",
+    "location": "Routes 1 & 2"
   },
   "Dubldraker":
   {
@@ -27,7 +29,9 @@
       "1": "Nibble"
     },
     "article": "a ",
-    "description": "Its heads have different brains, but tend to get along. ~ is never lonely."
+    "description": "Its heads have different brains, but they get along, so Dubldraker is never lonely.",
+    "locationHint": "an island cave",
+    "location": "Drake Cavern"
   },
   "Bombeetl":
   {
@@ -43,7 +47,9 @@
       "11": "Nibble"
     },
     "article": "a ",
-    "description": "Stores acid in one organ and explosive powder in another. Stepping on a ~ is a ticket to the hospital."
+    "description": "Stores acid in one organ and explosive powder in another. Stepping on a Bombeetl is a one-way ticket to the hospital.",
+    "locationHint": "most grass",
+    "location": "Routes 1, 2, 3, & 5"
   },
   "Circe":
   {
@@ -58,7 +64,9 @@
       "1": "Nibble"
     },
     "article": "",
-    "description": "Exceedingly rare, ~ is said to be a type of demon which manifested into the human realm."
+    "description": "Exceedingly rare, Circe is said to be a type of demon which manifested into the human realm.",
+    "locationHint": "pieces of paper",
+    "location": "Big Show Studios"
   },
   "Mx. Roboto":
   {
@@ -73,7 +81,9 @@
       "1": "Spark"
     },
     "article": "",
-    "description": "Exceedingly chatty. ~ will discuss any topic at length except their origin."
+    "description": "They doggedly drive from one location to another.",
+    "locationHint": "factories",
+    "location": "Space Agency, Furniture Warehouse"
   },
   "Achewig":
   {
@@ -88,7 +98,9 @@
       "1": "Nibble"
     },
     "article": "an ",
-    "description": "An ~'s tooth signifies its stature. Wisdom teeth are the highest rank."
+    "description": "Glands near Achewig's incisors produce acid to help it gnaw through enamel. Every Achewig guards its tooth jealously. \n\nCompetition for molars and wisdom teeth is especially fierce.",
+    "locationHint": "northern grass",
+    "location": "Routes 2 & 4"
   },
   "Chompah":
   {
@@ -103,6 +115,8 @@
       "1": "Nibble"
     },
     "article": "a ",
-    "description": "A highly aggressive plant. Even the lightest breeze causes ~ to blindly attack."
+    "description": "A highly aggressive plant. Even the lightest breeze causes Chompah to blindly attack.",
+    "locationHint": "overgrowth",
+    "location": "Tolumnar Ruin"
   }
 }

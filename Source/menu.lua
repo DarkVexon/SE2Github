@@ -50,7 +50,7 @@ function updateInMenu()
 		if menuAngle > menuAngleLimit then
 			if menuIdx < #menuItems then
 				--print("-> moved next")
-				menuAngle -= menuAngleLimit
+				menuAngle -= menuAngleLimit * 2
 				menuIdx += 1
 			else --limit scroll
 				menuAngle = menuAngleLimit
@@ -58,7 +58,7 @@ function updateInMenu()
 		elseif menuAngle < -menuAngleLimit then
 			if menuIdx > 1 then
 				--print("-> moved prev")
-				menuAngle += menuAngleLimit
+				menuAngle += menuAngleLimit * 2
 				menuIdx -= 1
 			else --limit scroll
 				menuAngle = -menuAngleLimit
@@ -149,21 +149,37 @@ function drawMenu()
             if menuIdx == i then
                 local squareSize = 75 * menuIconScale
                 if lastIdx == menuIdx then
+                	gfx.setColor(gfx.kColorWhite)
+                	gfx.fillRect(menuIconDestX - (squareSize / 2), menuIconDestY - (squareSize / 2), squareSize, squareSize)
+                	gfx.setColor(gfx.kColorBlack)
                     gfx.drawRect(menuIconDestX - (squareSize / 2), menuIconDestY - (squareSize / 2), squareSize, squareSize)
                 else --have square 1 frame of moving between (lazy method)
+                	print("Square tween frame")
+                	print(lastIdx)
+                	print(lastIconX)
+                	print(menuIconDestX)
+                	print((lastIconX + menuIconDestX) / 2)
                     lastIdx = menuIdx
-                    gfx.drawRect((lastIconX + menuIconDestX) / 2 - (squareSize / 2), (lastIconY + menuIconDestY) / 2 - (squareSize / 2), squareSize, squareSize)
+					gfx.setColor(gfx.kColorWhite)
+					gfx.fillRect((lastIconX + menuIconDestX) / 2 - (squareSize / 2), (lastIconY + menuIconDestY) / 2 - (squareSize / 2), squareSize, squareSize)
+					gfx.setColor(gfx.kColorBlack)
+					gfx.drawRect((lastIconX + menuIconDestX) / 2 - (squareSize / 2), (lastIconY + menuIconDestY) / 2 - (squareSize / 2), squareSize, squareSize)
                 end
             end
 
-            menuIcons[menuItems[i]]:drawScaled(menuIconDestX - (33 * menuIconScale), menuIconDestY - (33 * menuIconScale), menuIconScale)
+            if lastIdx == i then
+				lastIconX = menuIconDestX
+				lastIconY = menuIconDestY
+			end
 
-            lastIconX = menuIconDestX
-            lastIconY = menuIconDestY
+            menuIcons[menuItems[i]]:drawScaled(menuIconDestX - (33 * menuIconScale), menuIconDestY - (33 * menuIconScale), menuIconScale)
         end
     end
 
     if (menuTimer == 0) or (menuTimer > 0 and showingMenu) then
+
+    	drawMonsterInfoBox(playerMonsters[1], 10, 10, false)
+
 	    drawNiceRect(10, (240 - MENU_INFO_BOX_HEIGHT) - 10, 275, MENU_INFO_BOX_HEIGHT)
 	    gfx.drawText(playerName, 20, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 10)
 	    gfx.drawText("$" .. playerMoney, 225, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 10)

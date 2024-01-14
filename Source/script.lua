@@ -1,11 +1,11 @@
-class('GameScript').extends()
+class('Script').extends()
 
-function GameScript:init(func)
-	self.func = func
+function Script:init(name)
+	self.name = name
 end
 
-function GameScript:execute()
-	self.func()
+function Script:execute()
+
 end
 
 function addScript(script)
@@ -20,18 +20,8 @@ scriptStack = {}
 
 -- SCRIPTS
 
-function healMonstersToOne()
-	for k, v in pairs(playerMonsters) do
-		if v.curHp == 0 then
-			v.curHp = 1
-		end
-	end
-end
-
 -- IMPORTS
 
-import "scripts/oneparamscript"
-import "scripts/twoparamscript"
 import "scripts/damagescript"
 import "scripts/queryscript"
 import "scripts/startanimscript"
@@ -40,4 +30,11 @@ import "scripts/moveattackscript"
 import "scripts/textscript"
 import "scripts/healingscript"
 import "scripts/calculateddamagescript"
-import "scripts/nonblockingtextscript"
+import "scripts/lambdascript"
+import "scripts/mapchangescript"
+import "scripts/randomencounterscript"
+import "scripts/startanimscript"
+import "scripts/timedtextscript"
+import "scripts/trainerbattlescript"
+import "scripts/TransitionScript"
+import "scripts/changecombatintrophasescript"

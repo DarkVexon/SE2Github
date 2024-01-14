@@ -11,7 +11,7 @@ function Door:canMoveHere()
 end
 
 function Door:onOverlap()
-	table.insert(scriptStack, TwoParamScript(mapChangeScript, self.targetMap, self.targetTransloc))
+	table.insert(MapChangeScript(self.targetMap, self.targetTransloc))
 	nextScript()
 end
 

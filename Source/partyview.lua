@@ -66,9 +66,10 @@ function drawMonsterInfoBox(monster, x, y, selected)
 	end
 	if monster ~= nil then
 		monster.img:draw(x+5, y+5)
-		gfx.drawText(monster.name, x + 110, y + 5)
+		gfx.drawText(monster.name, x + 105, y + 5)
 		gfx.drawText("LV. " .. monster.level, x + 125, y+25)
-		drawHealthBar(x + 105, y + 50, partyMenuHealthBarWidth, partyMenuHealthBarHeight, monster.curHp, monster.maxHp)
+		drawHealthBar(x + 105, y + 45, partyMenuHealthBarWidth, partyMenuHealthBarHeight, monster.curHp, monster.maxHp)
+		drawXpBar(x + 105, y + 80, partyMenuHealthBarWidth, partyMenuHealthBarHeight, monster:curXpProgress(), monster:xpForNext())
 	end
 end
 

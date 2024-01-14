@@ -11,9 +11,11 @@ playerItems = {
 }
 playerMoney = 100
 
+playerFlag = 1
+
 playerDex = {}
 for i, k in ipairs(getTableKeys(monsterInfo)) do
-	playerDex[k] = 0
+	playerDex[k] = 1
 end
 
 function getDexProgress(type)

@@ -100,6 +100,19 @@ function playdate.update()
 	end
 end
 
+local DEBUG_ACTION_QUEUE_X <const> = 5
+local DEBUG_ACTION_QUEUE_Y <const> = 5
+local DEBUG_ACTION_QUEUE_WIDTH <const> = 390
+local DEBUG_ACTION_QUEUE_HEIGHT <const> = 18
+local DEBUG_ACTION_QUEUE_SPACEBETWEEN <const> = 2
+
+function drawDebugActionQueue()
+	for i=1, #scriptStack do
+		drawNiceRect(DEBUG_ACTION_QUEUE_X, DEBUG_ACTION_QUEUE_Y + (i-1) * (DEBUG_ACTION_QUEUE_HEIGHT + DEBUG_ACTION_QUEUE_SPACEBETWEEN), DEBUG_ACTION_QUEUE_WIDTH, DEBUG_ACTION_QUEUE_HEIGHT)
+		gfx.drawText(i .. ": " .. scriptStack[i].name, DEBUG_ACTION_QUEUE_X + 1, DEBUG_ACTION_QUEUE_Y + (i-1) * (DEBUG_ACTION_QUEUE_HEIGHT + DEBUG_ACTION_QUEUE_SPACEBETWEEN) + 1)
+	end
+end
+
 function render()
 	gfx.clear()
 
@@ -125,6 +138,10 @@ function render()
 
 	if popupUp then
 		drawPopupMenu()
+	end
+
+	if IS_DEBUG then
+		drawDebugActionQueue()
 	end
 end
 

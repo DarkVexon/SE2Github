@@ -218,7 +218,7 @@ function Monster:levelUp()
 			addScriptTop(TextScript(self.name .. " learned " .. targetMove.name .. "!"))
 		else
 			learningMove = targetMove
-			addScriptTop(GameScript(function() turnExecuting = false showTissue(6) end))
+			addScriptTop(LambdaScript("Stop turn execution and popup move menu", function() turnExecuting = false showTissue(6) end))
 			addScriptTop(TextScript(self.name .. " wants to learn " .. targetMove.name .. "."))
 		end
 	end
@@ -236,6 +236,14 @@ function Monster:xpToNext()
 	return xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level+1)
 end
 
+function Monster:curXpProgress()
+	return self.exp - xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level)
+end
+
+function Monster:xpForNext()
+	return xpNeededForLevel(monsterInfo[self.speciesName]["lvlspeed"], self.level+1) - xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level)
+end
+
 function Monster:getExp(defeated, wasCaught)
 	local output = monsterInfo[defeated.species]["grantedExp"]
 	if isTrainerBattle then
@@ -248,7 +256,7 @@ function Monster:getExp(defeated, wasCaught)
 	output = math.floor(output)
 	self.exp += output
 	if self.exp > self:xpToNext() and self.level < levelCap then
-		addScriptTop(GameScript(function() self:levelUp() nextScript() end))
+		addScriptTop(LambdaScript("Level up", function() self:levelUp() nextScript() end))
 	end
 	addScriptTop(TextScript(self.name .. " gained " .. output .. " EXP!"))
 end
@@ -266,44 +274,52 @@ function Monster:heal(amount)
 end
 
 function Monster:takeDamage(amount, damageType, source)
-	amount = self.ability:modifyIncomingDamage(amount, damageType)
-
 	amount = math.floor(amount)
+	amount = self.ability:modifyIncomingDamage(amount, damageType)
 	amount = math.min(amount, self.curHp)
-	self.curHp -= amount
-	if self.curHp <= 0 then
-		self.curHp = 0
-	end
-	source.ability:onDealDamage(amount, damageType)
-	self.ability:whenHit(amount, damageType)
-	if amount ~= 0 then
-		addScriptTop(StartAnimScript(HpBarAnim(self)))
-	end
 
-	if self.curHp == 0 then
-		addScript(TextScript(self:messageBoxName() .. " is KOed!"))
-		self.ability:onDeath()
-		addScript(StartAnimScript(FaintAnim(self ~= playerMonster)))
-		if self == playerMonster then
-			if remainingMonsters(playerMonsters) > 0 then
-				if isTrainerBattle then
-					openLastResortMenu()
+	if amount > 0 then
+		self.curHp -= amount
+		if self.curHp <= 0 then
+			self.curHp = 0
+		end
+		source.ability:onDealDamage(amount, damageType)
+		self.ability:whenHit(amount, damageType)
+		if amount ~= 0 then
+			addScriptTop(StartAnimScript(HpBarAnim(self)))
+		end
+
+		if self.curHp == 0 then
+			addScript(TextScript(self:messageBoxName() .. " is KOed!"))
+			self.ability:onDeath()
+			addScript(StartAnimScript(FaintAnim(self ~= playerMonster)))
+			if self == playerMonster then
+				if remainingMonsters(playerMonsters) > 0 then
+					if isTrainerBattle then
+						openLastResortMenu()
+					else
+						promptForLastResort()
+					end
 				else
-					promptForLastResort()
+					if not combatIsEnding then
+						combatIsEnding = true
+						exitBattleViaLoss()
+					end
 				end
 			else
-				exitBattleViaLoss()
-			end
-		else
-			addScript(GameScript(function()
-					playerMonster:getExp(self)
-					nextScript()
-			end))
-			if remainingMonsters(enemyMonsters) > 0 then
-				swapEnemyMonsters(getNextMonster(enemyMonsters))
-				turnExecutionPhase = 7
-			else
-				exitBattleViaVictory()
+				addScript(LambdaScript("Gain exp", function()
+						playerMonster:getExp(self)
+						nextScript()
+				end))
+				if remainingMonsters(enemyMonsters) > 0 then
+					swapEnemyMonsters(getNextMonster(enemyMonsters))
+					turnExecutionPhase = 7
+				else
+					if not combatIsEnding then
+						combatIsEnding = true
+						exitBattleViaVictory()
+					end
+				end
 			end
 		end
 	end
@@ -311,4 +327,12 @@ end
 
 function Monster:chooseMove()
 	return self.moves[math.random(#self.moves)]
+end
+
+function getDefaultTypes(species)
+	return monsterInfo[species]["types"]
+end
+
+function getDefaultAbility(species)
+	return monsterInfo[species]["ability"]
 end

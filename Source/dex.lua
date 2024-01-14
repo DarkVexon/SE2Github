@@ -49,7 +49,7 @@ function updateDexMenu()
 			if dexAngle > dexAngleLimit then
 				if dexIdx < #dexItems then
 					--print("-> moved next")
-					dexAngle -= dexAngleLimit
+					dexAngle -= dexAngleLimit *2
 					dexIdx += 1
 				else --limit scroll
 					dexAngle = dexAngleLimit
@@ -57,7 +57,7 @@ function updateDexMenu()
 			elseif dexAngle < -dexAngleLimit then
 				if dexIdx > 1 then
 					--print("-> moved prev")
-					dexAngle += dexAngleLimit
+					dexAngle += dexAngleLimit *2
 					dexIdx -= 1
 				else --limit scroll
 					dexAngle = -dexAngleLimit
@@ -83,6 +83,7 @@ function updateDexMenu()
 
 		if playdate.buttonJustPressed(playdate.kButtonA) then
 			if playerDex[dexItems[dexIdx]] ~= 0 then
+				dexSelectedIdx = dexIdx
 				dexSelectedSpecies = dexItems[dexIdx]
 				startFade(openDexSingleView)
 			end
@@ -118,10 +119,11 @@ function drawDexMenu()
             local destinationOffset = i - dexIdx --if rendering "current" one it's 0
             local destDegrees = destinationOffset * (-dexDistBetween) + dexAngle + baseDexItemOffset --might need adjustment idk
             local destRads = toRadians(destDegrees)
-            --local basicallyOffset = (180 - (math.abs(baseDexItemOffset - destDegrees)))/180
-            local basicallyOffset = (math.abs(i-dexIdx)) * 0.5
+            local basicallyOffset = (180 - (math.abs(baseDexItemOffset - destDegrees)))/180
+            --local basicallyOffset = (math.abs(i-dexIdx)) * 0.5
 
-            local dexIconScale = playdate.math.lerp(1.0, 0.5, basicallyOffset)
+            --local dexIconScale = playdate.math.lerp(1.0, 0.5, basicallyOffset)
+            local dexIconScale = playdate.math.lerp(0, 1, basicallyOffset)
             local dexIconDestX = (circRadius) * math.cos(destRads) + circlePosition
             local dexIconDestY = (circRadius) * math.sin(destRads) + 120
 

@@ -1,9 +1,9 @@
 class("OffenseDown").extends(Status)
 
-function OffenseDown:init()
-	OffenseDown.super.init(self, "Offense Down", 0)
+function OffenseDown:init(target)
+	OffenseDown.super.init(self, "Offense Down", 0, target)
 end
 
-function OffenseDown:modifyAttack()
-	return 0.9
+function OffenseDown:modifyAttack(attack)
+	return attack - (self.owner.attack * 0.1)
 end

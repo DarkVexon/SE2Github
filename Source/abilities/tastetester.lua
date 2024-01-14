@@ -6,7 +6,7 @@ end
 
 function TasteTester:onDealDamage(damage, damageType)
 	if damageType == 0 then
-		addScriptTop(HealingScript(damage * 0.2, self.owner))
-		self:displaySelfTop()
+		self:displaySelf()
+		addScript(HealingScript(damage * 0.2, self.owner))
 	end
 end

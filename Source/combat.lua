@@ -56,6 +56,7 @@ tissueMenuShown = false
 combatMenuChoiceY = combatMenuOptionsStartY
 combatInfoPanY = 240
 turnExecuting = false
+combatIsEnding = false
 
 enemyMonsters = {}
 
@@ -204,29 +205,30 @@ function nextScript()
 		end
 	else
 		local nextFound = table.remove(scriptStack, 1)
-		print("Next script executing is a " .. nextFound.className)
+		print("SCRIPT EXECUTING: " .. nextFound.name)
+		print()
 		nextFound:execute()
 	end
 end
 
 function swapMonsters(newMonster)
 	if playerMonster.curHp > 0 then
-		addScript(OneParamScript(textScript, "Switch out, " .. playerMonster.name .. "!"))
+		addScript(TextScript("Switch out, " .. playerMonster.name .. "!"))
 	end
 	addScript(StartAnimScript(MoveOffOrOnAnim(false, false)))
-	addScript(OneParamScript(swapMonsterScript, newMonster))
+	addScript(SwapMonsterScript(newMonster, false))
 	addScript(StartAnimScript(MoveOffOrOnAnim(false, true)))
-	addScript(OneParamScript(textScript, "Let's go, " .. newMonster.name .. "!"))
+	addScript(TextScript("Let's go, " .. newMonster.name .. "!"))
 end
 
 function swapEnemyMonsters(newMonster)
 	if enemyMonster.curHp > 0 then
-		addScript(OneParamScript(textScript, curTrainerName .. " withdrew " .. enemyMonster.name .. "!"))
+		addScript(TextScript(curTrainerName .. " withdrew " .. enemyMonster.name .. "!"))
 	end
 	addScript(StartAnimScript(MoveOffOrOnAnim(true, false)))
-	addScript(OneParamScript(swapEnemyMonsterScript, newMonster))
+	addScript(SwapMonsterScript(newMonster, true))
 	addScript(StartAnimScript(MoveOffOrOnAnim(true, true)))
-	addScript(OneParamScript(textScript, curTrainerName .. " sent out " .. newMonster.name .. "!"))
+	addScript(TextScript(curTrainerName .. " sent out " .. newMonster.name .. "!"))
 end
 
 function getNextCombatActions()
@@ -344,6 +346,7 @@ function resetCombat()
 	combatMenuChoiceY = combatMenuOptionsStartY
 	combatInfoPanY = 240
 	turnExecuting = false
+	combatIsEnding = false
 	swapToExecution = false
 	turnExecutionPhase = turnExecutionFirstPhase
 	globalBuffer = 0
@@ -373,8 +376,8 @@ function showTissue(submenu)
 end
 
 function fleeCombat()
-	addScript(OneParamScript(textScript, "You flee!"))
-	addScript(OneParamScript(screenChangeScript, openMainScreen))
+	addScript(TextScript("You flee!"))
+	addScript(TransitionScript(openMainScreen))
 	turnExecuting = true
 	nextScript()
 end
@@ -572,13 +575,13 @@ function openLastResortMenu()
 end
 
 function exitBattleViaLoss()
-	addScript(OneParamScript(textScript, "You lose the battle!"))
-	addScript(OneParamScript(screenChangeScript, openMainScreen))
+	addScript(TextScript("You lose the battle!"))
+	addScript(TransitionScript(openMainScreen))
 end
 
 function exitBattleViaVictory()
-	addScript(OneParamScript(textScript, "You won the battle!"))
-	addScript(OneParamScript(screenChangeScript, openMainScreen))
+	addScript(TextScript("You won the battle!"))
+	addScript(TransitionScript(openMainScreen))
 end
 
 -- COMBAT INTRO PHASES
@@ -595,16 +598,16 @@ function updateCombatIntro()
 		enemyMonsterPosX = playdate.math.lerp(enemyMonsterStartX, enemyMonsterEndX, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
 		playerImgPosX = playdate.math.lerp(playerImgStartX1, playerImgEndX1, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
 		if combatIntroAnimTimer == 0 then
-			table.insert(scriptStack, OneParamScript(textScript, "You encounter " .. monsterInfo[enemyMonster.species]["article"] .. enemyMonster.name .. "!"))
-			table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 2))
+			addScript(TextScript("You encounter " .. monsterInfo[enemyMonster.species]["article"] .. enemyMonster.name .. "!"))
+			addScript(ChangeCombatIntroPhaseScript(2))
 			nextScript()
 		end
 	elseif combatIntroPhase == 2 then
 		combatIntroAnimTimer -= 1
 		playerImgPosX = playdate.math.lerp(playerImgEndX1, playerImgEndX2, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
 		if combatIntroAnimTimer == 0 then
-			table.insert(scriptStack, TwoParamScript(timedTextScript, "Go, " .. playerMonsters[1].name .. "!", 15))
-			table.insert(scriptStack, OneParamScript(changeCombatPhaseScript, 3))
+			addScript(TimedTextScript("Go, " .. playerMonsters[1].name .. "!", 15))
+			addScript(ChangeCombatIntroPhaseScript(3))
 			nextScript()
 		end
 	elseif combatIntroPhase == 3 then
@@ -613,11 +616,8 @@ function updateCombatIntro()
 		if combatIntroAnimTimer == 0 then
 			combatMenuChoiceIdx = 1
 			combatIntroPhase = 4
-			turnExecuting = true
 			playerMonster.ability:onEnterCombat()
 			enemyMonster.ability:onEnterCombat()
-			addScript(GameScript(function() addScript(GameScript(function() turnExecuting = false end)) nextScript() end))
-			nextScript()
 		end
 	elseif combatIntroPhase == 5 then
 		combatIntroAnimTimer -= 1
@@ -625,7 +625,7 @@ function updateCombatIntro()
 		playerImgPosX = playdate.math.lerp(playerImgStartX1, playerImgEndX1, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
 		if combatIntroAnimTimer == 0 then
 			addScript(TextScript(curTrainerName .. " challenges you!"))
-			addScript(OneParamScript(changeCombatPhaseScript, 6))
+			addScript(ChangeCombatIntroPhaseScript(6))
 			nextScript()
 		end
 	elseif combatIntroPhase == 6 then
@@ -634,7 +634,7 @@ function updateCombatIntro()
 		enemyMonsterPosX = playdate.math.lerp(400, enemyMonsterEndX, ((combatIntroAnimTimers[combatIntroPhase] - combatIntroAnimTimer) /combatIntroAnimTimers[combatIntroPhase]))
 		if combatIntroAnimTimer == 0 then
 			addScript(TextScript(curTrainerName .. " sent out " .. enemyMonster.name .. "!"))
-			addScript(OneParamScript(changeCombatPhaseScript, 2))
+			addScript(ChangeCombatIntroPhaseScript(2))
 			nextScript()
 		end
 	end

@@ -37,11 +37,10 @@ function attemptToCapture(target)
 			playerDex[target.species] = 2
 			dexSelectedSpecies = target.species
 			dexFromCapture = true
-			addScript(TwoParamScript(screenChangeScript, openDexSingleView, true))
-			addScript(NonblockingTextScript(target.name .. "'s information was added to the Monsterpedia."))
-			addScript(OneParamScript(screenChangeScript, openPostCaptureScreen))
+			addScript(TextScript(target.name .. "'s information was added to the Monsterpedia."))
+			addScript(TransitionScript(openPostCaptureScreen))
 		else
-			addScript(OneParamScript(screenChangeScript, openPostCaptureScreen))
+			addScript(TransitionScript(openPostCaptureScreen))
 		end
 	else
 		addScript(TextScript("Capture failed! Darn."))

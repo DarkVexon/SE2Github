@@ -6,6 +6,6 @@ function Signpost:init(x, y, text)
 end
 
 function Signpost:onInteract()
-	table.insert(scriptStack, OneParamScript(textScript, self.text))
+	addScript(TextScript(self.text))
 	nextScript()
 end

@@ -3,21 +3,21 @@
   {
     "moveName": "Nibble",
     "type": "teeth",
-    "basePower": 20,
+    "basePower": 10,
     "description": "A weak biting attack."
   },
   "Ember":
   {
     "moveName": "Ember",
     "type": "fire",
-    "basePower": 20,
+    "basePower": 10,
     "description": "A small, fiery burst."
   },
   "Spark":
   {
     "moveName": "Spark",
     "type": "tech",
-    "basePower": 20,
+    "basePower": 10,
     "description": "A tepid electric shock."
   }
 }

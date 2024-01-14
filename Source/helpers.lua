@@ -117,6 +117,7 @@ function drawSelectedRect(x, y, width, height)
 end
 
 local hpText <const> = gfx.imageWithText("HP:", 100, 50)
+local xpText<const> = gfx.imageWithText("XP: ", 100, 50)
 local hpTextWidth, hpTextHeight = hpText:getSize()
 
 function drawBar(x, y, width, height, cur, max)
@@ -132,4 +133,15 @@ function drawHealthBar(x, y, width, height, health, max)
 	hpText:draw(x, y)
 	drawBar(x + hpTextWidth, y + hpTextHeight/6, width, height, health, max)
 	gfx.drawText(health .. "/" .. max, x + hpTextWidth + HEALTH_BAR_SQUISH, y + hpTextHeight)
+end
+
+function drawXpBar(x, y, width, height, xp, max)
+	xpText:draw(x, y)
+	drawBar(x + hpTextWidth, y + hpTextHeight/6, width, height, xp, max)
+end
+
+function printIfDebug(values)
+	if IS_DEBUG then
+		print(values)
+	end
 end

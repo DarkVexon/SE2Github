@@ -5,12 +5,14 @@ local gridSize <const> = 40
 local gridWidth <const> = 400/40
 local gridHeight <const> = 240/40
 
-local cameraMoveSpeed <const> = 5
+local cameraMoveTime <const> = 10
 
-guyImgN = gfx.image.new("img/overworld/player/guy-n")
-guyImgE = gfx.image.new("img/overworld/player/guy-e")
-guyImgS = gfx.image.new("img/overworld/player/guy-s")
-guyImgW = gfx.image.new("img/overworld/player/guy-w")
+guyImgN = { gfx.image.new("img/overworld/player/guy-n1"), gfx.image.new("img/overworld/player/guy-n2"), gfx.image.new("img/overworld/player/guy-n3")}
+guyImgE = { gfx.image.new("img/overworld/player/guy-e1"), gfx.image.new("img/overworld/player/guy-e2")}
+guyImgS = { gfx.image.new("img/overworld/player/guy-s1"), gfx.image.new("img/overworld/player/guy-s2"), gfx.image.new("img/overworld/player/guy-s3")}
+guyImgW = { gfx.image.new("img/overworld/player/guy-w1"), gfx.image.new("img/overworld/player/guy-w2") }
+playerImg = guyImgN
+playerImgIndex = 1
 
 camWidth = 400/40
 camHeight = 240/40
@@ -22,10 +24,21 @@ showingMenu = false
 
 playerRenderPosX = 200
 playerRenderPosY = 80
+playerPrevRenderPosX = playerRenderPosX
+playerPrevRenderPosY = playerRenderPosY
 playerDestRenderPosX = playerRenderPosX
 playerDestRenderPosY = playerRenderPosY
+playerFooting = 1
 
 objs = {}
+
+function swapPlayerFooting()
+	if playerFooting == 1 then
+		playerFooting = 2
+	else
+		playerFooting = 1
+	end
+end
 
 function openMainScreen()
 	curScreen = 0
@@ -36,6 +49,8 @@ function hardSetupCameraOffsets()
 	cameraOffsetGridY = math.max(0, math.min(mapHeight - camHeight, playerY - cameraVertBuffer))
 	cameraOffsetX = cameraOffsetGridX * -40
 	cameraOffsetY = cameraOffsetGridY * -40
+	cameraPrevOffsetX = cameraOffsetX
+	cameraPrevOffsetY = cameraOffsetY
 	cameraDestOffsetX = cameraOffsetX
 	cameraDestOffsetY = cameraOffsetY
 	if (playerX < cameraHorizBuffer) then
@@ -55,9 +70,16 @@ function hardSetupCameraOffsets()
 		playerDestRenderPosY = (cameraVertBuffer- 1) * 40
 	end
 	playerRenderPosY = playerDestRenderPosY
+	playerPrevRenderPosX = playerRenderPosX
+	playerPrevRenderPosY = playerRenderPosY
+	cameraTimer = 0
 end
 
 function setupCameraOffset()
+	cameraPrevOffsetX = cameraOffsetX
+	cameraPrevOffsetY = cameraOffsetY
+	playerPrevRenderPosX = playerRenderPosX
+	playerPrevRenderPosY = playerRenderPosY
 	if (playerX < cameraHorizBuffer or (playerX == cameraHorizBuffer and playerFacing == 1)) then
 		playerDestRenderPosX = (playerX-1) * 40
 	elseif playerX > (mapWidth - (camWidth - cameraHorizBuffer)) or (playerX == (mapWidth - (camWidth - cameraHorizBuffer)) and playerFacing == 3) then
@@ -78,6 +100,12 @@ function setupCameraOffset()
 	end
 
 	movingCam = true
+	if playerFacing == 0 or playerFacing == 2 then
+		playerImgIndex = 1 + playerFooting
+	else
+		playerImgIndex = 2
+	end
+	cameraTimer = cameraMoveTime
 end
 
 function setPlayerFacing(facing)
@@ -120,7 +148,10 @@ function drawInOverworld()
 		v:render()
 	end
 
-	playerImg:draw(playerRenderPosX, playerRenderPosY)
+	--gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
+	gfx.fillEllipseInRect(playerRenderPosX, playerRenderPosY + 40 - 13, 40, 10)
+	--gfx.setColor(gfx.kColorBlack)
+	playerImg[playerImgIndex]:draw(playerRenderPosX, playerRenderPosY - 8)
 
 	if menuTimer > 0 or isMenuUp then
 		drawMenu()
@@ -192,6 +223,7 @@ end
 
 function playerMoveBy(x, y)
 	if (x ~= 0 or y ~= 0) then
+		swapPlayerFooting()
 		playerX += x
 		playerY += y
 		setupCameraOffset()
@@ -212,7 +244,7 @@ function getPlayerPointCoord()
 end
 
 function randomEncounterChance()
-	if math.random(0, 10) == 0 then
+	if math.random(0, encounterChance) == 0 then
 		return true
 	end
 	return false
@@ -229,7 +261,7 @@ function mapRandomEncounter()
 	for k, v in pairs(randomEncounters) do
 		result -= v[3]
 		if result <= 0 then
-			addScript(TwoParamScript(randomEncounterScript, v[1], v[2]))
+			addScript(RandomEncounterScript(v[1], v[2]))
 			nextScript()
 			break
 		end
@@ -260,58 +292,21 @@ function onMoveEnd()
 end
 
 function updateCameraOffset()
-	if playerRenderPosX == playerDestRenderPosX and playerRenderPosY == playerDestRenderPosY then
-		if (cameraOffsetX > cameraDestOffsetX) then
-			cameraOffsetX -= cameraMoveSpeed
-			if (cameraOffsetX < cameraDestOffsetX) then
-				cameraOffsetX = cameraDestOffsetX
-			end
-		elseif (cameraOffsetX < cameraDestOffsetX) then
-			cameraOffsetX += cameraMoveSpeed
-			if (cameraOffsetX > cameraDestOffsetX) then
-				cameraOffsetX = cameraDestOffsetX
-			end
+	if cameraTimer > 0 then
+		cameraTimer -= 1
+		if playerRenderPosX == playerDestRenderPosX and playerRenderPosY == playerDestRenderPosY then
+			cameraOffsetX = playdate.math.lerp(cameraPrevOffsetX, cameraDestOffsetX, timeLeft(cameraTimer, cameraMoveTime))
+			cameraOffsetY = playdate.math.lerp(cameraPrevOffsetY, cameraDestOffsetY, timeLeft(cameraTimer, cameraMoveTime))
+		elseif playerRenderPosX ~= playerDestRenderPosX or playerRenderPosY ~= playerDestRenderPosY then
+			playerRenderPosX = playdate.math.lerp(playerPrevRenderPosX, playerDestRenderPosX, timeLeft(cameraTimer, cameraMoveTime))
+			playerRenderPosY = playdate.math.lerp(playerPrevRenderPosY, playerDestRenderPosY, timeLeft(cameraTimer, cameraMoveTime))
 		end
-		if (cameraOffsetY > cameraDestOffsetY) then
-			cameraOffsetY -= cameraMoveSpeed
-			if (cameraOffsetY < cameraDestOffsetY) then
-				cameraOffsetY = cameraDestOffsetY
-			end
-		elseif (cameraOffsetY < cameraDestOffsetY) then
-			cameraOffsetY += cameraMoveSpeed
-			if (cameraOffsetY > cameraDestOffsetY) then
-				cameraOffsetY = cameraDestOffsetY
-			end
-		end
-		if (cameraOffsetX == cameraDestOffsetX and cameraOffsetY == cameraDestOffsetY) then
-			onMoveEnd()
-		end
-	end
 
-	if playerRenderPosX ~= playerDestRenderPosX or playerRenderPosY ~= playerDestRenderPosY then
-		if (playerRenderPosX > playerDestRenderPosX) then
-			playerRenderPosX -= cameraMoveSpeed
-			if (playerRenderPosX < playerDestRenderPosX) then
-				playerRenderPosX = playerDestRenderPosX
-			end
-		elseif playerRenderPosX < playerDestRenderPosX then
-			playerRenderPosX += cameraMoveSpeed
-			if (playerRenderPosX > playerDestRenderPosX) then
-				playerRenderPosX = playerDestRenderPosX
-			end
+		if cameraTimer == cameraMoveTime * 0.4 then
+			playerImgIndex = 1
 		end
-		if (playerRenderPosY > playerDestRenderPosY) then
-			playerRenderPosY -= cameraMoveSpeed
-			if (playerRenderPosY < playerDestRenderPosY) then
-				playerRenderPosY = playerDestRenderPosY
-			end
-		elseif playerRenderPosY < playerDestRenderPosY then
-			playerRenderPosY += cameraMoveSpeed
-			if (playerRenderPosY > playerDestRenderPosY) then
-				playerRenderPosY = playerDestRenderPosY
-			end
-		end
-		if (playerRenderPosX == playerDestRenderPosX and playerRenderPosY == playerDestRenderPosY) then
+
+		if cameraTimer == 0 then
 			onMoveEnd()
 		end
 	end

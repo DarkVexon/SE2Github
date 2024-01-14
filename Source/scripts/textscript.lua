@@ -1,6 +1,7 @@
-class('TextScript').extends(GameScript)
+class('TextScript').extends(Script)
 
 function TextScript:init(text)
+	TextScript.super.init(self, "Show text box: " .. text)
 	self.text = text
 end
 

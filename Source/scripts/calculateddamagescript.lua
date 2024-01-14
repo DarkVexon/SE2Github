@@ -1,10 +1,11 @@
-class('CalculatedDamageScript').extends(GameScript)
+class('CalculatedDamageScript').extends(Script)
 
 -- DAMAGE TYPES
 -- 0: Normal
 -- 1: Special
 
 function CalculatedDamageScript:init(owner, power, type, target)
+	CalculatedDamageScript.super.init(self, owner.name .. " attacks " .. target.name .. " for " .. power .. " " .. type .. ".")
 	self.owner = owner
 	self.power = power
 	self.type = type
