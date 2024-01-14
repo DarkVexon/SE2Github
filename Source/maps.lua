@@ -4,12 +4,18 @@ randomEncounterTiles = {}
 outdoorsTiles = gfx.tilemap.new()
 outdoorsTable = gfx.imagetable.new("img/overworld/tile/outdoors-table-40-40")
 outdoorsTiles:setImageTable(outdoorsTable)
+indoorsTiles = gfx.tilemap.new()
+indoorsTable = gfx.imagetable.new("img/overworld/tile/indoors-table-40-40")
+indoorsTiles:setImageTable(indoorsTable)
 tilesets["outdoors"] = outdoorsTiles
-impassableTiles["outdoors"] = {7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19}
-randomEncounterTiles["outdoors"] = {6}
+tilesets["indoors"] = indoorsTiles
+
+tilesetInfo = json.decodeFile("data/tiles.json")
 
 currentMap = nil
 currentTileset = nil
+
+
 
 function loadMap(map, transloc)
 	currentMap = map
@@ -19,8 +25,8 @@ function loadMap(map, transloc)
 	currentTileset = tilesets[tilesToUse]
 
 	mapWidth, mapHeight = tilesets[tilesToUse]:getSize()
-	impassables = impassableTiles[tilesToUse]
-	encounterTiles = randomEncounterTiles[tilesToUse]
+	impassables = tilesetInfo[tilesToUse]["impassable"]
+	encounterTiles = tilesetInfo[tilesToUse]["encounter"]
 	randomEncounters = mapResult["encountertable"]
 	encounterChance = mapResult["encounterchance"]
 	clear(objs)
@@ -30,6 +36,12 @@ function loadMap(map, transloc)
 	local targetTransloc = mapResult["translocs"][transloc]
 	playerX = targetTransloc[1]
 	playerY = targetTransloc[2]
+	mapBg = mapResult["background"]
+	if mapBg == "white" then
+		gfx.setBackgroundColor(gfx.kColorWhite)
+	elseif mapBg == "black" then
+		gfx.setBackgroundColor(gfx.kColorBlack)
+	end
 	setPlayerFacing(targetTransloc[3])
 	hardSetupCameraOffsets()
 end

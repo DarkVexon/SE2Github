@@ -1,4 +1,4 @@
-class('Door').extends(Object)
+class('Door').extends(NPC)
 
 function Door:init(x, y, map, transloc)
 	Door.super.init(self, "door", x, y)
@@ -11,7 +11,7 @@ function Door:canMoveHere()
 end
 
 function Door:onOverlap()
-	table.insert(MapChangeScript(self.targetMap, self.targetTransloc))
+	addScript(MapChangeScript(self.targetMap, self.targetTransloc))
 	nextScript()
 end
 

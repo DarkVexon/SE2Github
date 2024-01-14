@@ -23,7 +23,7 @@ end
 function openDexMenu()
 	curScreen = 7
 	dexIdx = 1
-	lastIdx = dexIdx
+	lastDexIdx = dexIdx
 	resetDex()
 	dexTimer = 10
 	showingDex = true
@@ -94,7 +94,7 @@ function updateDexMenu()
 end
 
 
-lastIdx = 0 --impossible value, probably set it to "current one" when opened
+lastDexIdx = 0 --impossible value, probably set it to "current one" when opened
 
 local renderOrder <const> = {-2, 2, -1, 1, 0}
 function drawDexMenu()
@@ -129,10 +129,10 @@ function drawDexMenu()
 
             if dexIdx == i then
                 local squareSize = 120 * dexIconScale
-                if lastIdx == dexIdx then
+                if lastDexIdx == dexIdx then
                     drawNiceRect(dexIconDestX - (squareSize / 2), dexIconDestY - (squareSize / 2), squareSize, squareSize)
                 else --have square 1 frame of moving between (lazy method)
-                    lastIdx = dexIdx
+                    lastDexIdx = dexIdx
                     drawNiceRect((lastIconX + dexIconDestX) / 2 - (squareSize / 2), (lastIconY + dexIconDestY) / 2 - (squareSize / 2), squareSize, squareSize)
                 end
             end
@@ -143,7 +143,7 @@ function drawDexMenu()
                 unknownMonsterImg:drawScaled(dexIconDestX - (50 * dexIconScale), dexIconDestY - (50 * dexIconScale), dexIconScale)
             end
 
-            if lastIdx == i then
+            if lastDexIdx == i then
 	            lastIconX = dexIconDestX
 	            lastIconY = dexIconDestY
 	        end

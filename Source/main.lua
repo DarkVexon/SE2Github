@@ -40,6 +40,7 @@ import "options"
 import "dex"
 import "player"
 import "dexsingleview"
+import "vfx"
 
 isCrankUp = false
 

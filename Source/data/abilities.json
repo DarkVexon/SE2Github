@@ -17,7 +17,7 @@
   "Taste Tester":
   {
     "abilityName": "Taste Tester",
-    "description": "Heal for 20% of dealt damage."
+    "description": "Heal for 25% of dealt damage."
   },
   "Steel Soul":
   {
@@ -33,5 +33,15 @@
   {
     "abilityName": "Snapper",
     "description": "Enters combat with a 10 damage Plant attack."
+  },
+  "Innovator":
+  {
+    "abilityName": "Innovator",
+    "description": "Copies the enemy's ability."
+  },
+  "Skitter":
+  {
+    "abilityName": "Skitter",
+    "description": "10% chance to dodge enemy move."
   }
 }

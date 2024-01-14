@@ -44,7 +44,7 @@
     "catchDifficulty": 50,
     "learnset": {
       "1": "Ember",
-      "11": "Nibble"
+      "3": "Nibble"
     },
     "article": "a ",
     "description": "Stores acid in one organ and explosive powder in another. Stepping on a Bombeetl is a one-way ticket to the hospital.",
@@ -68,7 +68,7 @@
     "locationHint": "pieces of paper",
     "location": "Big Show Studios"
   },
-  "Mx. Roboto":
+  "Mx Roboto":
   {
     "speciesName": "Mx. Roboto",
     "types": ["tech"],
@@ -83,7 +83,7 @@
     "article": "",
     "description": "They doggedly drive from one location to another.",
     "locationHint": "factories",
-    "location": "Space Agency, Furniture Warehouse"
+    "location": "Space Agency & Furniture Warehouse"
   },
   "Achewig":
   {
@@ -118,5 +118,40 @@
     "description": "A highly aggressive plant. Even the lightest breeze causes Chompah to blindly attack.",
     "locationHint": "overgrowth",
     "location": "Tolumnar Ruin"
+  },
+  "Leafjawbs":
+  {
+    "speciesName": "Leafjawbs",
+    "types": ["plant", "tech"],
+    "ability": "Innovator",
+    "stats": [140, 125, 100, 111],
+    "lvlspeed": "normal",
+    "grantedExp": 30,
+    "catchDifficulty": 30,
+    "learnset": {
+      "1": "Spark",
+      "4": "Mystery Box"
+    },
+    "article": "",
+    "description": "Don't panic if Leafjawbs offers you a strange device - it's likely using you for product testing.",
+    "locationHint": "workspaces",
+    "location": "Space Agency & Big Show Studios"
+  },
+  "Mawrachnid":
+  {
+    "speciesName": "Mawrachnid",
+    "types": ["bug", "fear"],
+    "ability": "Skitter",
+    "stats": [140, 150, 90, 135],
+    "lvlspeed": "normal",
+    "grantedExp": 50,
+    "catchDifficulty": 20,
+    "learnset": {
+      "1": "Nibble"
+    },
+    "article": "a ",
+    "description": "Web-weaver.",
+    "locationHint": "dusty places",
+    "location": "Abandoned Mansion & Big Show Studios"
   }
 }

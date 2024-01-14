@@ -5,7 +5,7 @@ local gridSize <const> = 40
 local gridWidth <const> = 400/40
 local gridHeight <const> = 240/40
 
-local cameraMoveTime <const> = 10
+local cameraMoveTime <const> = 4
 
 guyImgN = { gfx.image.new("img/overworld/player/guy-n1"), gfx.image.new("img/overworld/player/guy-n2"), gfx.image.new("img/overworld/player/guy-n3")}
 guyImgE = { gfx.image.new("img/overworld/player/guy-e1"), gfx.image.new("img/overworld/player/guy-e2")}
@@ -45,29 +45,34 @@ function openMainScreen()
 end
 
 function hardSetupCameraOffsets()
-	cameraOffsetGridX = math.max(0, math.min(mapWidth - camWidth, playerX - cameraHorizBuffer))
-	cameraOffsetGridY = math.max(0, math.min(mapHeight - camHeight, playerY - cameraVertBuffer))
+	if CAMERA_TRACKS then
+		cameraOffsetGridX = math.max(0, math.min(mapWidth - camWidth, playerX - cameraHorizBuffer))
+		cameraOffsetGridY = math.max(0, math.min(mapHeight - camHeight, playerY - cameraVertBuffer))
+	else
+		cameraOffsetGridX = playerX - cameraHorizBuffer
+		cameraOffsetGridY = playerY - cameraVertBuffer
+	end
 	cameraOffsetX = cameraOffsetGridX * -40
 	cameraOffsetY = cameraOffsetGridY * -40
 	cameraPrevOffsetX = cameraOffsetX
 	cameraPrevOffsetY = cameraOffsetY
 	cameraDestOffsetX = cameraOffsetX
 	cameraDestOffsetY = cameraOffsetY
-	if (playerX < cameraHorizBuffer) then
+	if (playerX < cameraHorizBuffer) and CAMERA_TRACKS then
 		playerDestRenderPosX = (playerX-1) * 40
-	elseif playerX > (mapWidth - (camWidth - cameraHorizBuffer)) then
+	elseif playerX > (mapWidth - (camWidth - cameraHorizBuffer)) and CAMERA_TRACKS then
 		playerDestRenderPosX = (playerX - mapWidth + (camWidth) - 1) * 40
 	else
 		playerDestRenderPosX = (cameraHorizBuffer - 1) * 40
 	end
 	playerRenderPosX = playerDestRenderPosX
 
-	if (playerY < cameraVertBuffer) then
+	if (playerY < cameraVertBuffer) and CAMERA_TRACKS then
 		playerDestRenderPosY = (playerY - 1) * 40
-	elseif playerY > (mapHeight - (camHeight - cameraVertBuffer)) then
+	elseif (playerY > (mapHeight - (camHeight - cameraVertBuffer))) and CAMERA_TRACKS then
 		playerDestRenderPosY = (playerY - mapHeight + (camHeight) - 1) * 40
 	else
-		playerDestRenderPosY = (cameraVertBuffer- 1) * 40
+		playerDestRenderPosY = (cameraVertBuffer - 1) * 40
 	end
 	playerRenderPosY = playerDestRenderPosY
 	playerPrevRenderPosX = playerRenderPosX
@@ -80,9 +85,9 @@ function setupCameraOffset()
 	cameraPrevOffsetY = cameraOffsetY
 	playerPrevRenderPosX = playerRenderPosX
 	playerPrevRenderPosY = playerRenderPosY
-	if (playerX < cameraHorizBuffer or (playerX == cameraHorizBuffer and playerFacing == 1)) then
+	if ((playerX < cameraHorizBuffer or (playerX == cameraHorizBuffer and playerFacing == 1))) and CAMERA_TRACKS then
 		playerDestRenderPosX = (playerX-1) * 40
-	elseif playerX > (mapWidth - (camWidth - cameraHorizBuffer)) or (playerX == (mapWidth - (camWidth - cameraHorizBuffer)) and playerFacing == 3) then
+	elseif (playerX > (mapWidth - (camWidth - cameraHorizBuffer)) or (playerX == (mapWidth - (camWidth - cameraHorizBuffer)) and playerFacing == 3)) and CAMERA_TRACKS then
 		playerDestRenderPosX = (playerX - mapWidth + (camWidth) - 1) * 40
 	else
 		cameraOffsetGridX = (playerX - cameraHorizBuffer)
@@ -90,9 +95,9 @@ function setupCameraOffset()
 	end
 
 
-	if (playerY < cameraVertBuffer or (playerY == cameraVertBuffer and playerFacing == 2)) then
+	if (playerY < cameraVertBuffer or (playerY == cameraVertBuffer and playerFacing == 2)) and CAMERA_TRACKS then
 		playerDestRenderPosY = (playerY - 1) * 40
-	elseif playerY > (mapHeight - (camHeight - cameraVertBuffer)) or (playerY == (mapHeight - (camHeight - cameraVertBuffer)) and playerFacing == 0) then
+	elseif (playerY > (mapHeight - (camHeight - cameraVertBuffer)) or (playerY == (mapHeight - (camHeight - cameraVertBuffer)) and playerFacing == 0)) and CAMERA_TRACKS then
 		playerDestRenderPosY = (playerY - mapHeight + (camHeight) - 1) * 40
 	else
 		cameraOffsetGridY = (playerY - cameraVertBuffer)
@@ -262,7 +267,8 @@ function mapRandomEncounter()
 		result -= v[3]
 		if result <= 0 then
 			--addScript(RandomEncounterScript(v[1], v[2]))
-			addScript(RandomEncounterScript(randomSpecies(), {playerMonsters[1].level-1, playerMonsters[1].level+1}))
+			addScript(RandomEncounterScript(randomSpecies(), {playerMonsters[1].level-2, playerMonsters[1].level}))
+			--addScript(RandomEncounterScript("Mawrachnid", {playerMonsters[1].level-1, playerMonsters[1].level+1}))
 			nextScript()
 			break
 		end

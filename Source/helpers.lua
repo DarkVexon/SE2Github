@@ -32,6 +32,14 @@ function indexKey(test, key)
 	end
 end
 
+function indexValue(test, key)
+	for i, v in ipairs(test) do
+		if v == key then
+			return i
+		end
+	end
+end
+
 function contains(test, item)
 	for i,v in ipairs(test) do
 		if (v==item) then

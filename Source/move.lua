@@ -64,11 +64,27 @@ function Move:getCopy()
 	return getMoveByName(self.id)
 end
 
+function Move:checkMiss(owner, target)
+	local missChance = 0
+	missChance = target.ability:modifyIncomingMiss(missChance)
+	if target.mark ~= nil then
+		missChance = target.mark:modifyIncomingMiss(missChance)
+	end
+	local result = math.random(0, 100)
+	if result <= missChance then
+		addScript(TextScript("But it missed!"))
+		return false
+	else
+		return true
+	end
+end
+
 -- import
 
 import "moves/nibble"
 import "moves/ember"
 import "moves/spark"
+import "moves/mysterybox"
 
 function getMoveByName(name)
 	if name == "Nibble" then
@@ -77,5 +93,12 @@ function getMoveByName(name)
 		return Ember()
 	elseif name == "Spark" then
 		return Spark()
+	elseif name == "Mystery Box" then
+		return MysteryBox()
 	end
+end
+
+function randomMove()
+	local keys = getTableKeys(moveInfo)
+	return getMoveByName(keys[math.random(#keys)])
 end

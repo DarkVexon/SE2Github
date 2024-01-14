@@ -1,19 +1,18 @@
-class('Object').extends()
+class('NPC').extends()
 
 objectImgs = {}
 
-function Object:loadImg()
-	if (containsKey(objectImgs, self.name)) then
-		self.img = objectImgs[self.name]
+function NPC:loadImg(imgName)
+	if (containsKey(objectImgs, imgName)) then
+		self.img = objectImgs[imgName]
 	else
-		objectImgs[self.name] = gfx.image.new("img/overworld/npc/" .. self.name)
-		self.img = objectImgs[self.name]
+		objectImgs[imgName] = gfx.image.new("img/overworld/npc/" .. imgName)
+		self.img = objectImgs[imgName]
 	end
 end
 
-function Object:init(name, x, y)
+function NPC:init(name, x, y)
 	self.name = name
-	self:loadImg()
 	self.posX = x
 	self.startX = x
 	self.posY = y
@@ -25,7 +24,7 @@ function Object:init(name, x, y)
 	self.speed = 4
 end
 
-function Object:updateVisualMotion()
+function NPC:updateVisualMotion()
 	if self.visX ~= self.visDestX then
 		if self.visX < self.visDestX then
 			self.visX += self.speed
@@ -42,7 +41,7 @@ function Object:updateVisualMotion()
 	end
 end
 
-function Object:moveBy(x, y)
+function NPC:moveBy(x, y)
 	if (x ~= 0 or y ~= 0) then
 		self.posX += x
 		self.posX += y
@@ -51,29 +50,31 @@ function Object:moveBy(x, y)
 	end
 end
 
-function Object:update()
+function NPC:update()
 	self:updateVisualMotion()
 end
 
-function Object:render()
-	if (cameraOffsetGridX <= self.posX+1 and cameraOffsetGridX + camWidth >= self.posX-1 and cameraOffsetGridY <= self.posY+1 and cameraOffsetGridY + camHeight >= self.posY-1) then
-		self.img:draw(self.visX + cameraOffsetX, self.visY + cameraOffsetY)
+function NPC:render()
+	if self.img ~= nil then
+		if (cameraOffsetGridX <= self.posX+1 and cameraOffsetGridX + camWidth >= self.posX-1 and cameraOffsetGridY <= self.posY+1 and cameraOffsetGridY + camHeight >= self.posY-1) then
+			self.img:draw(self.visX + cameraOffsetX, self.visY + cameraOffsetY)
+		end
 	end
 end
 
-function Object:canMoveHere()
+function NPC:canMoveHere()
 	return false
 end
 
-function Object:onInteract()
+function NPC:onInteract()
 
 end
 
-function Object:onOverlap()
+function NPC:onOverlap()
 
 end
 
-function Object:allowImmediateMovementAfterStep()
+function NPC:allowImmediateMovementAfterStep()
 	return true
 end
 

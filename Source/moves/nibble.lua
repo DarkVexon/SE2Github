@@ -5,6 +5,8 @@ function Nibble:init()
 end
 
 function Nibble:use(owner, target)
-	addScript(StartAnimScript(AttackAnim(owner ~= playerMonster)))
-	addScript(MoveAttackScript(owner, self, target))
+	if self:checkMiss(owner, target) then
+		addScript(StartAnimScript(AttackAnim(owner ~= playerMonster)))
+		addScript(MoveAttackScript(owner, self, target))
+	end
 end

@@ -26,58 +26,103 @@ typeImgWidth = widthOfWidest(types) + 10
 
 dealsDoubleTo = {
 	["fire"] = {"plant", "tech", "ice", "bug"},
-	["water"] = {"fire", "tech", "stone"},
+
+	["water"] = {"fire", "stone"},
+
 	["plant"] = {"water", "stone"},
-	["alien"] = {"alien", "knight"},
-	["tech"] = {"water", "magic", "poison"},
-	["fear"] = {"magic", "love"},
+
+	["alien"] = {"alien", "drake"},
+
+	["tech"] = {"water", "wind"},
+
+	["fear"] = {"magic"},
+
 	["drake"] = {"drake"},
-	["ice"] = {"plant", "wind"},
-	["magic"] = {"tech"},
+
+	["ice"] = {"plant", "wind", "drake"},
+
+	["magic"] = {},
+
 	["bug"] = {"plant"},
+
 	["stone"] = {"ice", "teeth"},
+
 	["wind"] = {"plant", "bug"},
+
 	["poison"] = {"plant"},
-	["love"] = {"fear"},
-	["knight"] = {"drake"},
-	["teeth"] = {}
+
+	["love"] = {"knight"},
+
+	["knight"] = {"drake", "fear"},
+
+	["teeth"] = {"plant", "alien", "ice"}
 }
 
 dealsHalfTo = {
-	["fire"] = {"fire", "water"},
+	["fire"] = {"fire", "water", "stone"},
+
 	["water"] = {"water", "plant"},
-	["plant"] = {"plant", "fire"},
+
+	["plant"] = {"plant", "fire", "wind", "bug", "tech"},
+
 	["alien"] = {},
+
 	["tech"] = {},
+
 	["fear"] = {},
+
 	["drake"] = {},
-	["ice"] = {},
+
+	["ice"] = {"fire"},
+
 	["magic"] = {},
+
 	["bug"] = {},
+
 	["stone"] = {},
+
 	["wind"] = {},
+
 	["poison"] = {},
+
 	["love"] = {},
+
 	["knight"] = {},
-	["teeth"] = {}
+
+	["teeth"] = {"tech", "stone"}
 }
 
 dealsNoneTo = {
 	["fire"] = {},
+
 	["water"] = {},
+
 	["plant"] = {},
+
 	["alien"] = {},
+
 	["tech"] = {},
-	["fear"] = {},
-	["drake"] = {},
+
+	["fear"] = {"tech"},
+
+	["drake"] = {"alien"},
+	
 	["ice"] = {},
+
 	["magic"] = {},
+
 	["bug"] = {},
+
 	["stone"] = {},
+
 	["wind"] = {},
+
 	["poison"] = {},
+
 	["love"] = {},
+
 	["knight"] = {},
+
 	["teeth"] = {}
 }
 

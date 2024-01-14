@@ -18,5 +18,10 @@
   {
     "markName": "Swole",
     "description": "+20% ATK"
+  },
+  "Dodgy":
+  {
+    "markName": "Dodgy",
+    "description": "+3% Dodge Chance"
   }
 }

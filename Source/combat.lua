@@ -29,7 +29,7 @@ local combatMenuOptionsStartY <const> = combatTextBoxPosY + 5
 local combatMenuOptionsHorizDist <const> = 200
 local combatMenuOptionsVertDist <const> = 20
 
-local enemyMonsterStartX <const> = -100
+enemyMonsterStartX = -100
 enemyMonsterEndX = 285
 local enemyMonsterY <const> = 85
 
@@ -38,7 +38,7 @@ local playerImgStartX1 <const> = 400
 local playerImgEndX1 <const> = 25
 local playerImgEndX2 <const> = -playerImgWidth
 
-local playerMonsterStartX <const> = -100
+playerMonsterStartX = -100
 PLAYER_MONSTER_X = 15
 local playerMonsterY <const> = 85
 
@@ -63,6 +63,10 @@ enemyMonsters = {}
 enemyEncounters = json.decodeFile("data/combats.json")
 
 trainerImgs = {}
+
+function addEffect(effect)
+	table.insert(curEffects, effect)
+end
 
 function loadCombat(encounter)
 	clear(enemyMonsters)
@@ -117,13 +121,15 @@ end
 -- Additionally, the "global buffer" allows
 -- for a little extra time before script resume.
 
-local AFTER_ANIM_CONCLUDE_WAIT <const> = 10
+local AFTER_ANIM_CONCLUDE_WAIT <const> = 1
 curAnim = nil
+
+curEffects = {}
 
 function updateCombatTurnExecution()
 	if globalBuffer > 0 then
 		globalBuffer -= 1
-		if globalBuffer == 0 then
+		if globalBuffer <= 0 then
 			nextScript()
 		end
 	else
@@ -200,8 +206,16 @@ end
 function nextScript()
 	print("Getting next script!")
 	if #scriptStack == 0 then
-		if turnExecuting and curScreen == 3 then
-			getNextCombatActions()
+		print("No scripts to call.")
+		if preEnemyCombatStart then
+			print("Next, we instead call enemy at combat start!")
+			preEnemyCombatStart = false
+			enemyMonster.ability:onEnterCombat()
+			nextScript()
+		else
+			if turnExecuting and curScreen == 3 then
+				getNextCombatActions()
+			end
 		end
 	else
 		local nextFound = table.remove(scriptStack, 1)
@@ -319,6 +333,9 @@ function beginCombat(combat)
 	resetCombat()
 end
 
+showPlayerMonster = true
+showEnemyMonster = true
+
 function resetCombat()
 	curScreen = 3
 	if isTrainerBattle then
@@ -337,6 +354,8 @@ function resetCombat()
 	playerImgPosX = playerImgStartX1
 	enemyTrainerPosX = enemyMonsterStartX
 	combatIntroAnimTimer = combatIntroAnimTimers[combatIntroPhase]
+	showPlayerMonster = true
+	showEnemyMonster = true
 
 	combatSubmenuChosen = 0
 	combatPrevSubmenu = -1
@@ -376,6 +395,9 @@ function showTissue(submenu)
 end
 
 function fleeCombat()
+	for k, v in pairs(playerMonsters) do
+		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
+	end
 	addScript(TextScript("You flee!"))
 	addScript(TransitionScript(openMainScreen))
 	turnExecuting = true
@@ -513,7 +535,7 @@ function updateCombatChoicePhase()
 			if swapToExecution then
 				swapToExecution = false
 				turnExecuting = true
-				getNextCombatActions()
+				nextScript()
 			end
 		end
 	else
@@ -575,11 +597,17 @@ function openLastResortMenu()
 end
 
 function exitBattleViaLoss()
+	for k, v in pairs(playerMonsters) do
+		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
+	end
 	addScript(TextScript("You lose the battle!"))
 	addScript(TransitionScript(openMainScreen))
 end
 
 function exitBattleViaVictory()
+	for k, v in pairs(playerMonsters) do
+		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
+	end
 	addScript(TextScript("You won the battle!"))
 	addScript(TransitionScript(openMainScreen))
 end
@@ -616,8 +644,9 @@ function updateCombatIntro()
 		if combatIntroAnimTimer == 0 then
 			combatMenuChoiceIdx = 1
 			combatIntroPhase = 4
+			preEnemyCombatStart = true
 			playerMonster.ability:onEnterCombat()
-			enemyMonster.ability:onEnterCombat()
+			nextScript()
 		end
 	elseif combatIntroPhase == 5 then
 		combatIntroAnimTimer -= 1
@@ -654,6 +683,17 @@ function updateInCombat()
 				updateCombatChoicePhase()
 			end
 		end
+	end
+
+	local toRemove = {}
+	for i, v in ipairs(curEffects) do
+		v:update()
+		if v.isDone then
+			table.insert(toRemove, v)
+		end
+	end
+	for i, v in ipairs(toRemove) do
+		table.remove(curEffects, indexValue(curEffects, v))
 	end
 end
 
@@ -802,10 +842,22 @@ function drawCombatIntro()
 end
 
 function drawCombatInterface()
-	enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
+	if showEnemyMonster then
+		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
+	end
 	drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
-	playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
+	if showPlayerMonster then
+		playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
+	end
 	drawCombatMonsterData(PLAYER_MONSTER_INFO_DRAWX, PLAYER_MONSTER_INFO_DRAWY, playerMonster)
+
+	if curAnim ~= nil then
+		curAnim:render()
+	end
+
+	for k, v in pairs(curEffects) do
+		v:render()
+	end
 
 	if textBoxShown then
 		drawCombatTextBox()

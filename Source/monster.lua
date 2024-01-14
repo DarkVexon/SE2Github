@@ -221,7 +221,7 @@ function Monster:levelUp()
 			addScriptTop(TextScript(self.name .. " wants to learn " .. targetMove.name .. "."))
 		end
 	end
-	addScriptTop(GameScript(
+	addScriptTop(LambdaScript("show level info",
 		function()
 			turnExecuting = false
 			showTissue(5)
@@ -240,7 +240,7 @@ function Monster:curXpProgress()
 end
 
 function Monster:xpForNext()
-	return xpNeededForLevel(monsterInfo[self.speciesName]["lvlspeed"], self.level+1) - xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level)
+	return xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level+1) - xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level)
 end
 
 function Monster:getExp(defeated, wasCaught)
@@ -272,9 +272,22 @@ function Monster:heal(amount)
 	end
 end
 
+function Monster:isFriendly()
+	return playerMonster == self
+end
+
+function Monster:getCoords()
+	if self:isFriendly() then
+		return playerMonsterPosX + 50, playerMonsterPosY + 50
+	else
+		return enemyMonsterPosX + 50, enemyMonsterPosY + 50
+	end
+end
+
 function Monster:takeDamage(amount, damageType, source)
-	amount = math.floor(amount)
 	amount = self.ability:modifyIncomingDamage(amount, damageType)
+
+	amount = math.floor(amount)
 	amount = math.min(amount, self.curHp)
 
 	if amount > 0 then
@@ -320,6 +333,12 @@ function Monster:takeDamage(amount, damageType, source)
 					end
 				end
 			end
+		end
+
+		local myX, myY = self:getCoords()
+		addEffect(DamagePaf(not self:isFriendly()))
+		for i=1, 8 do
+			addEffect(DamageOutwardLine(myX, myY))
 		end
 	end
 end

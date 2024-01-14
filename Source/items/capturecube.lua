@@ -27,7 +27,7 @@ function attemptToCapture(target)
 	end
 	output = math.floor(output)
 	local foundValue = math.random(1, 100)
-	if foundValue >= output then
+	if foundValue <= output then
 		caughtMonster = target
 		if (playerDex[caughtMonster.speciesName]) < 2 then
 			playerDex[caughtMonster.speciesName] = 2

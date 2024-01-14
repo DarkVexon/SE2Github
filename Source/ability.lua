@@ -44,6 +44,14 @@ function Ability:onEnterCombat()
 
 end
 
+function Ability:getCopy(owner)
+	return getAbilityByName(self.id, owner)
+end
+
+function Ability:modifyIncomingMiss(missChance)
+	return missChance
+end
+
 -- IMPORTS
 import "abilities/lovebug"
 import "abilities/backforseconds"
@@ -52,6 +60,8 @@ import "abilities/tastetester"
 import "abilities/steelsoul"
 import "abilities/dentalcarry"
 import "abilities/snapper"
+import "abilities/innovator"
+import "abilities/skitter"
 
 function getAbilityByName(name, owner)
 	if name == "Lovebug" then
@@ -68,5 +78,9 @@ function getAbilityByName(name, owner)
 		return DentalCarry(owner)
 	elseif name == "Snapper" then
 		return Snapper(owner)
+	elseif name == "Innovator" then
+		return Innovator(owner)
+	elseif name == "Skitter" then
+		return Skitter(owner)
 	end
 end

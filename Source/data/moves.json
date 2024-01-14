@@ -19,5 +19,11 @@
     "type": "tech",
     "basePower": 10,
     "description": "A tepid electric shock."
+  },
+  "Mystery Box":
+  {
+    "moveName": "Mystery Box",
+    "type": "magic",
+    "description": "Pull a random other move from the box."
   }
 }

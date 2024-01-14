@@ -15,7 +15,7 @@ local menuCircPosition <const> = 450
 local numMenuPaddingFrames <const> = 5
 menuPaddingFrames = 0
 menuIdx = menuStartIndex
-lastIdx = menuStartIndex --impossible value, probably set it to "current one" when opened
+lastIdx = menuIdx
 menuAngle = 0
 
 function openMenu()

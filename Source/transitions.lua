@@ -36,9 +36,17 @@ function renderFade()
 	end
 end
 
-
 function onEndFadeOut()
 	fadeDest()
+	if curScreen == 0 then
+		if mapBg == "white" then
+			gfx.setBackgroundColor(gfx.kColorWhite)
+		elseif mapBg == "black" then
+			gfx.setBackgroundColor(gfx.kColorBlack)
+		end
+	else
+		gfx.setBackgroundColor(gfx.kColorWhite)
+	end
 	if scriptAfter then
 		scriptAfter = false
 		nextScript()

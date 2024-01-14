@@ -20,11 +20,16 @@ function Mark:applyToStats(stats)
 
 end
 
+function Mark:modifyIncomingMiss(missChance)
+	return missChance
+end
+
 -- IMPORTS
 import "marks/tough"
 import "marks/big"
 import "marks/swole"
 import "marks/speedy"
+import "marks/dodgy"
 
 function getMarkByName(name)
 	if name == "Tough" then
