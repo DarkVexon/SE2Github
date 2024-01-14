@@ -35,4 +35,4 @@ function addToParty(monster)
 	end
 end
 
-addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
+addToParty(randomEncounterMonster("Dubldraker", {7, 10}))

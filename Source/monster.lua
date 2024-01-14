@@ -182,7 +182,6 @@ function Monster:useMove(move, target)
 	local outputText = self:messageBoxName() .. " used " .. move.name .. "!"
 	addScript(TextScript(outputText))
 	move:use(self, target)
-	local char = self
 	self.ability:onUseMove(move, target)
 end
 

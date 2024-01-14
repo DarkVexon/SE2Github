@@ -6,13 +6,20 @@ function BackForSeconds:init(owner)
 end
 
 function BackForSeconds:onUseMove(move, target)
-	if move.basePower > 0 and self.canTrigger then
+	if self.canTrigger and move.basePower > 0 and not combatIsEnding then
 		self.canTrigger = false
-		self:displaySelf()
-		local dupe = move:getCopy()
-		dupe.basePower *= 0.3
-		dupe.name = "Mini-" .. dupe.name
-		self.owner:useMove(dupe, target)
-		self.canTrigger = true
+		addScript(LambdaScript("dubldraker followup", 
+			function()
+				if not combatIsEnding then
+					self:displaySelf()
+					local dupe = move:getCopy()
+					dupe.basePower *= 0.3
+					dupe.name = "Mini-" .. dupe.name
+					self.owner:useMove(dupe, target)
+					self.canTrigger = true
+				end
+				nextScript()
+			end
+			))
 	end
 end

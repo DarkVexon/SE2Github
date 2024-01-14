@@ -10,6 +10,6 @@ function Snapper:onEnterCombat()
 	turnExecuting = true
 	addScript(StartAnimScript(AttackAnim(self.owner ~= playerMonster)))
 	addScript(CalculatedDamageScript(self.owner, 20, "plant", toHit))
-	addScript(LambdaScript("add turn execution to bot", function () addScript(LambdaScript("turn off execution", function () turnExecuting=false end)) nextScript() end))
+	addScript(LambdaScript("add turn execution to bot", function() if not combatIsEnding then addScript(LambdaScript("turn off execution", function() turnExecuting = false end)) end nextScript() end))
 	nextScript()
 end
