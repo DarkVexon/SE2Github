@@ -127,6 +127,7 @@ function updatePartyViewMenu()
 				else
 					singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
 					if #playerMonsters == 1 then
+						fromStorageView = false
 						startFade(openSingleMonsterView)
 					else
 						local index = 1

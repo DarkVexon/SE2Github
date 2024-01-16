@@ -157,7 +157,7 @@
   "Sootiwi":
   {
     "speciesName": "Sootiwi",
-    "types": ["fire", "wing"],
+    "types": ["fire"],
     "ability": "Fast as Fire",
     "stats": [155, 135, 100, 120],
     "lvlspeed": "normal",
@@ -204,5 +204,54 @@
     "description": ".sehcuot ti gnihtyreve sesrever hcihw retsnom railucep A",
     "locationHint": "ycengA ecapS",
     "location": "Space Agency"
+  },
+  "Hungwy":
+  {
+    "speciesName": "Hungwy",
+    "types": ["teeth", "fear"],
+    "ability": "Devourer",
+    "stats": [125, 231, 111, 155],
+    "lvlspeed": "normal",
+    "grantedExp": 53,
+    "learnset": {
+      "1": "Nibble"
+    },
+    "article": "a ",
+    "description": "Hungry for food.",
+    "locationHint": "dark places",
+    "location": "Abandoned Mansion"
+  },
+  "Skwizard":
+  {
+    "speciesName": "Skwizard",
+    "types": ["magic"],
+    "ability": "Wand Waver",
+    "stats": [130, 130, 125, 120],
+    "lvlspeed": "normal",
+    "grantedExp": 43,
+    "learnset": {
+      "1": "Nibble",
+      "2": "Meditate"
+    },
+    "article": "a ",
+    "description": "Protective of their wands.",
+    "locationHint": "rocky areas",
+    "location": "Stone Outcrop"
+  },
+  "Wheart":
+  {
+    "speciesName": "Wheart",
+    "types": ["water", "love"],
+    "ability": "Spring Spout",
+    "stats": [310, 99, 101, 101],
+    "lvlspeed": "normal",
+    "grantedExp": 50,
+    "learnset": {
+      "1": "Water Gun"
+    },
+    "article": "a ",
+    "description": "A friendly whale.",
+    "locationHint": "the ocean",
+    "location": "The Ocean"
   }
 }

@@ -710,6 +710,8 @@ function updateInCombat()
 		end
 	end
 
+	playerMonster.ability:update()
+	enemyMonster.ability:update()
 	for i, v in ipairs(playerMonster.statuses) do
 		v:update()
 	end
@@ -890,10 +892,12 @@ function drawCombatInterface()
 		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
 	end
 	drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
+	enemyMonster.ability:render()
 	if showPlayerMonster then
 		playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
 	end
 	drawCombatMonsterData(PLAYER_MONSTER_INFO_DRAWX, PLAYER_MONSTER_INFO_DRAWY, playerMonster)
+	playerMonster.ability:render()
 
 	for i, v in ipairs(playerMonster.statuses) do
 		if not v.renderBehind then

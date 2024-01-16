@@ -18,7 +18,7 @@ function Tablecube:onInteract()
 		playerFlag = 3
 		caughtMonster = randomEncounterMonster(randomSpecies(), {5, 5})
 		-- TODO: First monster has special mark.
-		addScript(TextScript("A Capture Cube, containing a Kenermon. The DOUBLE SHADOW GOVERNMENT (2SG from now on) left it for you."))
+		addScript(TextScript("A Capture Cube, containing a Kenermon. The KENEDAR BIOLOGY GROUP left it for you."))
 		addScript(TextScript("Looks like it contains a ... " .. caughtMonster.name .. ". Adorable!"))
 		addScript(TransitionScript(openPostCaptureScreen))
 		addScript(DestroyNPCScript(self))
@@ -28,11 +28,11 @@ function Tablecube:onInteract()
 		for i=1, 7 do
 			addRetScript(MoveNPCScript(newRival, 0, -1))
 		end
-		addRetScript(TextScript("RIVAL: Hey, the 2SG gave you a Kenermon (KNM for short now) too? Let's battle!"))
+		addRetScript(TextScript("RIVAL: Hey, the Biology Group gave you a Kenemon too? Let's battle!"))
 		addRetScript(TrainerBattleScript("rivalfight1"))
 		addRetScript(LambdaScript("after battle", 
 			function ()
-				addRetScript(TextScript("RIVAL: That was a good battle. OK, see ya."))
+				addRetScript(TextScript("RIVAL: So what if you won? I'm still going to record all the KENEMON first. See ya!"))
 				for i=1, 5 do
 					addRetScript(MoveNPCScript(newRival, 0, 1))
 				end
@@ -40,9 +40,7 @@ function Tablecube:onInteract()
 				nextScript()
 			end
 		))
-
+		
 		nextScript()
-
-
 	end
 end

@@ -93,6 +93,9 @@ import "abilities/skitter"
 import "abilities/fastasfire"
 import "abilities/crybaby"
 import "abilities/upsidedown"
+import "abilities/devourer"
+import "abilities/wandwaver"
+import "abilities/springspout"
 
 function getAbilityByName(name, owner)
 	if name == "Lovebug" then
@@ -119,5 +122,11 @@ function getAbilityByName(name, owner)
 		return Crybaby(owner)
 	elseif name == "UpsideDown" then
 		return UpsideDown(owner)
+	elseif name == "Devourer" then
+		return Devourer(owner)
+	elseif name == "Wand Waver" then
+		return WandWaver(owner)
+	elseif name == "Spring Spout" then
+		return SpringSpout(owner)
 	end
 end

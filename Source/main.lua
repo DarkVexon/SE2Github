@@ -41,6 +41,7 @@ import "dex"
 import "player"
 import "dexsingleview"
 import "vfx"
+import "storageview"
 
 isCrankUp = false
 
@@ -60,6 +61,7 @@ curScreen = 0
 -- 6: Options menu screen
 -- 7: Monsterdex total screen
 -- 8: Monsterdex single screen
+-- 9: Monster storage view screen
 
 skipNextRender = false
 
@@ -91,6 +93,8 @@ function playdate.update()
 				updateDexMenu()
 			elseif curScreen == 8 then
 				updateDexSingleView()
+			elseif curScreen == 9 then
+				updateStorageView()
 			end
 		end
 
@@ -136,6 +140,8 @@ function render()
 		drawDexMenu()
 	elseif curScreen == 8 then
 		drawDexSingleView()
+	elseif curScreen == 9 then
+		drawStorageView()
 	end
 
 	if popupUp then
@@ -144,7 +150,7 @@ function render()
 
 	if isDebug then
 		drawDebugActionQueue()
-		playdate.drawFPS(5, 5)
+		--playdate.drawFPS(5, 5)
 	end
 end
 

@@ -50,7 +50,6 @@ singleViewScrollAmt = 0
 
 function openSingleMonsterView()
 	curScreen = 2
-	monsterSingleViewSelection = 1
 	singleViewScrollAmt = 0
 end
 
@@ -114,19 +113,25 @@ function updateSingleMonsterViewMenu()
 	if playdate.buttonJustPressed(playdate.kButtonB) then
 		gfx.setDrawOffset(0, 0)
 		skipNextRender = true
-		startFade(openMonsterScreen)
-	end
-	if playdate.buttonJustPressed(playdate.kButtonLeft) then
-		monsterScreenSelectionIdx -= 1
-		if monsterScreenSelectionIdx < 1 then
-			monsterScreenSelectionIdx = #playerMonsters
+		if fromStorageView then
+			startFade(openStorageView)
+		else
+			startFade(openMonsterScreen)
 		end
-		singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
-	elseif playdate.buttonJustPressed(playdate.kButtonRight) then
-		monsterScreenSelectionIdx += 1
-		if monsterScreenSelectionIdx > #playerMonsters then
-			monsterScreenSelectionIdx = 1
-		end
-		singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
+		
+		
 	end
+	-- if playdate.buttonJustPressed(playdate.kButtonLeft) then
+	-- 	monsterScreenSelectionIdx -= 1
+	-- 	if monsterScreenSelectionIdx < 1 then
+	-- 		monsterScreenSelectionIdx = #playerMonsters
+	-- 	end
+	-- 	singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
+	-- elseif playdate.buttonJustPressed(playdate.kButtonRight) then
+	-- 	monsterScreenSelectionIdx += 1
+	-- 	if monsterScreenSelectionIdx > #playerMonsters then
+	-- 		monsterScreenSelectionIdx = 1
+	-- 	end
+	-- 	singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
+	-- end
 end

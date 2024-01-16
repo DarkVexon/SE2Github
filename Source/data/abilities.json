@@ -58,5 +58,20 @@
   {
     "abilityName": "Upside-Down",
     "description": "Changes to ATK, DEF, and SPD are inverted."
+  },
+  "Devourer":
+  {
+    "abilityName": "Devourer",
+    "description": "+50% ATK when enemy below 50% HP."
+  },
+  "Wand Waver":
+  {
+    "abilityName": "Wand Waver",
+    "description": "After 2 non-attacks, free 15 damage Magic attack."
+  },
+  "Spring Spout":
+  {
+    "abilityName": "Spring Spout",
+    "description": "At end of turn, heal ALL allies 5% max HP."
   }
 }

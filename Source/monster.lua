@@ -379,6 +379,7 @@ end
 
 function Monster:getCalculatedAttack()
 	local retVal = self.attack
+	retVal = self.ability:modifyAttack(retVal)
 	for i, v in ipairs(self.statuses) do
 		retVal = v:modifyAttack(retVal)
 		print("Status " .. v.name .. " modified attack. New value is " .. retVal)
@@ -388,6 +389,7 @@ end
 
 function Monster:getCalculatedDefense()
 	local retVal = self.defense
+	retVal = self.ability:modifyDefense(retVal)
 	for i, v in ipairs(self.statuses) do
 		retVal = v:modifyDefense(retVal)
 		print("Status " .. v.name .. " modified defense. New value is " .. retVal)
@@ -397,6 +399,7 @@ end
 
 function Monster:getCalculatedSpeed()
 	local retVal = self.speed
+	retVal = self.ability:modifySpeed(retVal)
 	for i, v in ipairs(self.statuses) do
 		retVal = v:modifySpeed(retVal)
 		print("Status " .. v.name .. " modified speed. New value is " .. retVal)

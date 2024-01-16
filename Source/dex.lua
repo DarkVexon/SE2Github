@@ -3,6 +3,12 @@ for i, k in ipairs(getTableKeys(monsterInfo)) do
 	table.insert(dexItems, k)
 end
 
+local MAINDEX_BASICINFO_X <const> = 20
+local MAINDEX_BASICINFO_Y <const> = 100
+local MAINDEX_BASICINFO_WIDTH <const> = 180
+local MAINDEX_BASICINFO_HEIGHT <const> = 20
+local MAINDEX_TYPEINFO_OFFSETY <const> = 25
+
 local baseDexItemOffset <const> = 180
 local dexDistBetween <const> = (180/4)
 local dexAngleLimit <const> = dexDistBetween / 2
@@ -12,6 +18,7 @@ local circlePosition <const> = 450
 dexIdx = 1
 dexAngle = 0
 dexPaddingFrames = 0
+dexNameShowFrames = 0
 
 function resetDex()
 	dexAngle = 0
@@ -51,6 +58,7 @@ function updateDexMenu()
 					--print("-> moved next")
 					dexAngle -= dexAngleLimit *2
 					dexIdx += 1
+					--dexNameShowFrames = 10
 				else --limit scroll
 					dexAngle = dexAngleLimit
 				end
@@ -59,6 +67,7 @@ function updateDexMenu()
 					--print("-> moved prev")
 					dexAngle += dexAngleLimit *2
 					dexIdx -= 1
+					--dexNameShowFrames = 10
 				else --limit scroll
 					dexAngle = -dexAngleLimit
 				end
@@ -89,6 +98,10 @@ function updateDexMenu()
 			end
 		elseif playdate.buttonJustPressed(playdate.kButtonB) then
 			startFade(openMainScreen)
+		end
+
+		if dexNameShowFrames > 0 then
+			dexNameShowFrames -= 1
 		end
 	end
 end
@@ -143,6 +156,25 @@ function drawDexMenu()
                 unknownMonsterImg:drawScaled(dexIconDestX - (50 * dexIconScale), dexIconDestY - (50 * dexIconScale), dexIconScale)
             end
 
+            if dexIdx == i then
+			     if dexNameShowFrames == 0 then
+			     	if playerDex[dexItems[i]] == 0 then
+						gfx.drawText("#" .. dexIdx .. " Unknown", MAINDEX_BASICINFO_X, MAINDEX_BASICINFO_Y)
+			     	else
+			     		gfx.drawText("#" .. dexIdx .. " " .. monsterInfo[dexItems[i]].speciesName, MAINDEX_BASICINFO_X, MAINDEX_BASICINFO_Y)
+			     	end
+					
+					gfx.drawLine(MAINDEX_BASICINFO_X, MAINDEX_BASICINFO_Y + MAINDEX_BASICINFO_HEIGHT, MAINDEX_BASICINFO_X + MAINDEX_BASICINFO_WIDTH, MAINDEX_BASICINFO_Y + MAINDEX_BASICINFO_HEIGHT)
+					gfx.drawLine(MAINDEX_BASICINFO_X + MAINDEX_BASICINFO_WIDTH - 2, MAINDEX_BASICINFO_Y + MAINDEX_BASICINFO_HEIGHT, dexIconDestX - 75, dexIconDestY)
+
+					if playerDex[dexItems[i]] == 2 then
+						renderTypesHoriz(getDefaultTypes(dexItems[i]), MAINDEX_BASICINFO_X, MAINDEX_BASICINFO_Y + MAINDEX_TYPEINFO_OFFSETY)
+					end
+			    else
+
+			    end
+            end
+
             if lastDexIdx == i then
 	            lastIconX = dexIconDestX
 	            lastIconY = dexIconDestY
@@ -150,4 +182,5 @@ function drawDexMenu()
         end
     end
     gfx.setColor(gfx.kColorBlack)
+
 end

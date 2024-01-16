@@ -5,7 +5,7 @@ local OPTIONS_MENU_DISTBETWEEN <const> = 25
 
 
 fastMode = false
-isDebug = true
+isDebug = false
 
 function getDebugMode()
 	return isDebug

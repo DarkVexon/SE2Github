@@ -298,7 +298,7 @@ function mapRandomEncounter()
 		result -= v[3]
 		if result <= 0 then
 			--addScript(RandomEncounterScript(v[1], v[2]))
-			addScript(RandomEncounterScript(randomSpecies(), {playerMonsters[1].level-2, playerMonsters[1].level}))
+			addScript(RandomEncounterScript(randomSpecies(), {5, 6}))
 			--addScript(RandomEncounterScript("Bombeetl", {playerMonsters[1].level-2, playerMonsters[1].level}))
 			nextScript()
 			break

@@ -3,7 +3,14 @@ playerMonsters = {
 
 }
 playerMonsterStorage = {
-
+	randomEncounterMonster(randomSpecies(), {5, 5}),
+	randomEncounterMonster(randomSpecies(), {5, 5}),
+	randomEncounterMonster(randomSpecies(), {5, 5}),
+	randomEncounterMonster(randomSpecies(), {5, 5}),
+	randomEncounterMonster(randomSpecies(), {5, 5}),
+	randomEncounterMonster(randomSpecies(), {5, 5}),
+	randomEncounterMonster(randomSpecies(), {5, 5}),
+	randomEncounterMonster(randomSpecies(), {5, 5})
 }
 playerItems = {
 	[Poutine()] = 1,
@@ -37,6 +44,18 @@ function addToParty(monster)
 	end
 end
 
+function removeFromParty(monster)
+	local monIdx = indexValue(playerMonsters, monster)
+	if monIdx ~= -1 then
+		for i=monIdx, 4 do 
+			playerMonsters[i] = playerMonsters[i+1]
+		end
+	end
+end
+
+addToParty(randomEncounterMonster("Wheart", {5, 5}))
 addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
---addToParty(randomEncounterMonster("Bombeetl", {5, 5}))
+addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
+addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
+--addToParty(randomEncounterMonster("Hungwy", {5, 5}))
 --playerMonsters[1].exp = playerMonsters[1]:xpToNext()-1

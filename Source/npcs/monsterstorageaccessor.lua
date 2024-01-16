@@ -13,7 +13,7 @@ end
 
 function MonsterStorageAccessor:onInteract()
 	if #playerMonsterStorage > 0 then
-		--TODO: Monster storage accessor
+		startFade(openStorageView)
 	else
 		addScript(TextScript("And this is where I'd access stored Kenemon... if I HAD any!!!"))
 		nextScript()

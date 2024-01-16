@@ -18,7 +18,7 @@ function NoCreaturesGoBack:onOverlap()
 		if playerFlag == 1 then
 			addScript(TextScript("You should probably check out that mysterious letter."))
 		elseif playerFlag == 2 then
-			addScript(TextScript("You should probably see what the DOUBLE SHADOW GOVERNMENT has for you in the SCIENCE LAB."))
+			addScript(TextScript("You should probably see what the KENEDAR BIOLOGY GROUP has for you in the SCIENCE LAB."))
 		end
 		addScript(LambdaScript("Move player up", function () attemptMoveUp() nextScript() end))
 		nextScript()

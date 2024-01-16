@@ -82,7 +82,7 @@ function drawTextBox()
 	gfx.drawTextInRect(textBoxDisplayedText, GLOBAL_BEZEL + textBoxTextBufferSize, textBoxPosY + textBoxTextBufferSize, textBoxWidth - (textBoxTextBufferSize*2), textBoxHeight - (textBoxTextBufferSize*2))
 	
 	if textBoxScrollDone and textBoxTimer == 0 and not followTextBoxWithPopup then
-		downFacingTriangle(400 - (GLOBAL_BEZEL * 3), textBoxPosY + (GLOBAL_BEZEL * 5)+ (math.sin(bobTime * 3)), 10)
+		downFacingTriangle(400 - (GLOBAL_BEZEL * 3), textBoxPosY + (GLOBAL_BEZEL * 5) + (math.sin(bobTime * 3)), 10)
 	end
 end
 

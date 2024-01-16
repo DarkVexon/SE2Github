@@ -84,6 +84,7 @@ import "npcs/letter"
 import "npcs/tablecube"
 import "npcs/rivalfirstencounter"
 import "npcs/trainer"
+import "npcs/monsterstorageaccessor"
 
 function loadNpc(info)
 	local npcType = info[1]
@@ -104,6 +105,8 @@ function loadNpc(info)
 		newNpc = Tablecube(info[2], info[3])
 	elseif npcType == "trainer" then
 		newNpc = Trainer(info[2], info[3], info[4], info[5], info[6], info[7], info[8])
+	elseif npcType == "monsterstorageaccessor" then
+		newNpc = MonsterStorageAccessor(info[2], info[3])
 	end
 	if newNpc:shouldSpawn() then
 		table.insert(objs, newNpc)

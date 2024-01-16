@@ -32,5 +32,18 @@
     "type": "wing",
     "basePower": 8,
     "description": "A small hit with beak or mouth."
+  },
+  "Meditate":
+  {
+    "moveName": "Meditate",
+    "type": "magic",
+    "description": "Increase ATK by 40%."
+  },
+  "Water Gun":
+  {
+    "moveName": "Water Gun",
+    "type": "water",
+    "basePower": 8,
+    "description": "A small, watery blast."
   }
 }

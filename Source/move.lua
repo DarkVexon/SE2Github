@@ -91,6 +91,8 @@ import "moves/ember"
 import "moves/spark"
 import "moves/mysterybox"
 import "moves/peck"
+import "moves/meditate"
+import "moves/watergun"
 
 function getMoveByName(name)
 	if name == "Nibble" then
@@ -103,6 +105,10 @@ function getMoveByName(name)
 		return MysteryBox()
 	elseif name == "Peck" then
 		return Peck()
+	elseif name == "Meditate" then
+		return Meditate()
+	elseif name == "Water Gun" then
+		return WaterGun()
 	end
 end
 
