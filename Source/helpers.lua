@@ -38,6 +38,11 @@ function indexValue(test, key)
 			return i
 		end
 	end
+	return -1
+end
+
+function randomFloat(lower, greater)
+    return lower + math.random() * (greater - lower);
 end
 
 function contains(test, item)

@@ -14,6 +14,28 @@ function Status:modifyAttack(attack)
 	return attack
 end
 
+function Status:modifySpeed(speed)
+	return speed
+end
+
+function Status:modifyDefense(defense)
+	return defense
+end
+
+function Status:update()
+
+end
+
+function Status:render()
+
+end
+
 -- IMPORTS
 
-import "statuses/offensedown"
+import "statuses/orbitingstatus"
+import "statuses/attackdown"
+import "statuses/speedup"
+import "statuses/defensedown"
+import "statuses/speeddown"
+import "statuses/defenseup"
+import "statuses/attackup"

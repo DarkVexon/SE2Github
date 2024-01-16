@@ -52,6 +52,34 @@ function Ability:modifyIncomingMiss(missChance)
 	return missChance
 end
 
+function Ability:atEndOfTurn()
+
+end
+
+function Ability:modifyAttack(attack)
+	return attack
+end
+
+function Ability:modifyDefense(defense)
+	return defense
+end
+
+function Ability:modifySpeed(speed)
+	return speed
+end
+
+function Ability:update()
+
+end
+
+function Ability:render()
+
+end
+
+function Ability:receiveStatusApplied(incomingStatus)
+
+end
+
 -- IMPORTS
 import "abilities/lovebug"
 import "abilities/backforseconds"
@@ -62,6 +90,9 @@ import "abilities/dentalcarry"
 import "abilities/snapper"
 import "abilities/innovator"
 import "abilities/skitter"
+import "abilities/fastasfire"
+import "abilities/crybaby"
+import "abilities/upsidedown"
 
 function getAbilityByName(name, owner)
 	if name == "Lovebug" then
@@ -82,5 +113,11 @@ function getAbilityByName(name, owner)
 		return Innovator(owner)
 	elseif name == "Skitter" then
 		return Skitter(owner)
+	elseif name == "Fast as Fire" then
+		return FastAsFire(owner)
+	elseif name == "Crybaby" then
+		return Crybaby(owner)
+	elseif name == "UpsideDown" then
+		return UpsideDown(owner)
 	end
 end

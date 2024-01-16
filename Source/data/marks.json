@@ -23,5 +23,10 @@
   {
     "markName": "Dodgy",
     "description": "+3% Dodge Chance"
+  },
+  "Sharp":
+  {
+    "markName": "Sharp",
+    "description": "+5% Crit Chance"
   }
 }

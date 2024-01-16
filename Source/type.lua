@@ -15,7 +15,7 @@ types = {
 	"magic",
 	"bug",
 	"stone",
-	"wind",
+	"wing",
 	"poison",
 	"love",
 	"knight",
@@ -33,13 +33,13 @@ dealsDoubleTo = {
 
 	["alien"] = {"alien", "drake"},
 
-	["tech"] = {"water", "wind"},
+	["tech"] = {"water", "wing"},
 
-	["fear"] = {"magic"},
+	["fear"] = {"magic", "fear"},
 
 	["drake"] = {"drake"},
 
-	["ice"] = {"plant", "wind", "drake"},
+	["ice"] = {"plant", "wing", "drake"},
 
 	["magic"] = {},
 
@@ -47,13 +47,13 @@ dealsDoubleTo = {
 
 	["stone"] = {"ice", "teeth"},
 
-	["wind"] = {"plant", "bug"},
+	["wing"] = {"plant", "bug"},
 
 	["poison"] = {"plant"},
 
 	["love"] = {"knight"},
 
-	["knight"] = {"drake", "fear"},
+	["knight"] = {"drake", "fear", "knight"},
 
 	["teeth"] = {"plant", "alien", "ice"}
 }
@@ -63,7 +63,7 @@ dealsHalfTo = {
 
 	["water"] = {"water", "plant"},
 
-	["plant"] = {"plant", "fire", "wind", "bug", "tech"},
+	["plant"] = {"plant", "fire", "wing", "bug", "tech"},
 
 	["alien"] = {},
 
@@ -81,7 +81,7 @@ dealsHalfTo = {
 
 	["stone"] = {},
 
-	["wind"] = {},
+	["wing"] = {"stone"},
 
 	["poison"] = {},
 
@@ -115,7 +115,7 @@ dealsNoneTo = {
 
 	["stone"] = {},
 
-	["wind"] = {},
+	["wing"] = {},
 
 	["poison"] = {},
 

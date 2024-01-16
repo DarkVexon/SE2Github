@@ -2,7 +2,7 @@
 "tiles": "indoors",
          "data":[
 4,4,4,4,4,4,4,4,
-2,2,2,2,2,2,2,2,
+2,7,8,2,2,2,2,2,
 2,2,2,2,2,2,2,2,
 2,2,2,2,2,2,2,2,
 2,3,3,2,2,2,2,2,
@@ -11,12 +11,15 @@
 "width": 8,
 "npcs":
 	[
+		["letter", 2, 2, "ORDER OF THE DOUBLE SHADOW GOVERNMENT OF KENEDAR: Thank you for accepting. Monster in science lab."],
 		["door", 2, 6, "testtown", 2],
-		["door", 3, 6, "testtown", 2]
+		["door", 3, 6, "testtown", 2],
+		["healmachine", 5, 2]
 	],
 "translocs":
 	[
-		[3, 5, 0]
+		[3, 3, 0],
+		[2, 5, 0]
 	],
 	"background": "black"
 }

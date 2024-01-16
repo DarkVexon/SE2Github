@@ -24,21 +24,28 @@ function Mark:modifyIncomingMiss(missChance)
 	return missChance
 end
 
+function Mark:modifyOutgoingCrit(critChance)
+	return critChance
+end
+
 -- IMPORTS
 import "marks/tough"
 import "marks/big"
 import "marks/swole"
 import "marks/speedy"
 import "marks/dodgy"
+import "marks/sharp"
 
 function getMarkByName(name)
 	if name == "Tough" then
-		return ToughMark()
+		return Tough()
 	elseif name == "Big" then
-		return BigMark()
+		return Big()
 	elseif name == "Swole" then
-		return SwoleMark()
+		return Swole()
 	elseif name == "Speedy" then
-		return SpeedyMark()
+		return Speedy()
+	elseif name == "Sharp" then
+		return Sharp()
 	end
 end

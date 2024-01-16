@@ -12,6 +12,7 @@ playerItems = {
 playerMoney = 100
 
 playerFlag = 1
+playerRetreatMap = "testtownroom1"
 
 playerDex = {}
 for i, k in ipairs(getTableKeys(monsterInfo)) do
@@ -36,5 +37,5 @@ function addToParty(monster)
 end
 
 addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
-playerMonsters[1].exp = playerMonsters[1]:xpToNext()-1
---addToParty(randomEncounterMonster("Mawrachnid", {5, 5}))
+--addToParty(randomEncounterMonster("Bombeetl", {5, 5}))
+--playerMonsters[1].exp = playerMonsters[1]:xpToNext()-1

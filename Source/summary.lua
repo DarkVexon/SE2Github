@@ -17,7 +17,7 @@ local singleViewHealthDrawY <const> = 50
 local singleViewHealthBarWidth <const> = 80
 local singleViewHealthBarHeight <const> = 12
 
-local singleViewTypesDrawX <const> = 245
+local singleViewTypesDrawX <const> = 243
 local singleViewTypesDrawY <const> = 35
 
 local singleViewStatsDrawX <const> = 10

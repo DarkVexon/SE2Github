@@ -45,6 +45,7 @@ import "vfx"
 isCrankUp = false
 
 function initialize()
+	
 	gfx.setLineWidth(LINE_WIDTH)
 	loadMap("testtown", 1)
 end
@@ -143,6 +144,7 @@ function render()
 
 	if isDebug then
 		drawDebugActionQueue()
+		playdate.drawFPS(5, 5)
 	end
 end
 

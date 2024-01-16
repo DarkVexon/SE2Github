@@ -1,9 +1,9 @@
-class('ToughMark').extends(Mark)
+class('Tough').extends(Mark)
 
-function ToughMark:init()
-	ToughMark.super.init(self, "Tough")
+function Tough:init()
+	Tough.super.init(self, "Tough")
 end
 
-function ToughMark:applyToStats(stats)
+function Tough:applyToStats(stats)
 	stats[3] = stats[3] * 1.2
 end

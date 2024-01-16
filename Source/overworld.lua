@@ -5,7 +5,8 @@ local gridSize <const> = 40
 local gridWidth <const> = 400/40
 local gridHeight <const> = 240/40
 
-local cameraMoveTime <const> = 4
+local cameraMoveTime <const> = 10
+local cameraMoveTime_Run <const> = 5
 
 guyImgN = { gfx.image.new("img/overworld/player/guy-n1"), gfx.image.new("img/overworld/player/guy-n2"), gfx.image.new("img/overworld/player/guy-n3")}
 guyImgE = { gfx.image.new("img/overworld/player/guy-e1"), gfx.image.new("img/overworld/player/guy-e2")}
@@ -32,6 +33,8 @@ playerFooting = 1
 
 objs = {}
 
+returnScripts = {}
+
 function swapPlayerFooting()
 	if playerFooting == 1 then
 		playerFooting = 2
@@ -42,6 +45,11 @@ end
 
 function openMainScreen()
 	curScreen = 0
+	for i, v in ipairs(returnScripts) do
+		addScript(v)
+	end
+	clear(returnScripts)
+	nextScript()
 end
 
 function hardSetupCameraOffsets()
@@ -105,12 +113,6 @@ function setupCameraOffset()
 	end
 
 	movingCam = true
-	if playerFacing == 0 or playerFacing == 2 then
-		playerImgIndex = 1 + playerFooting
-	else
-		playerImgIndex = 2
-	end
-	cameraTimer = cameraMoveTime
 end
 
 function setPlayerFacing(facing)
@@ -172,66 +174,95 @@ function canMoveThere(x, y)
 		return false
 	end
 	local result = currentTileset:getTileAtPosition(x, y)
-	if (contains(impassables, result)) then
+	if (not contains(passables, result)) then
 		return false
 	end
 	for i, v in ipairs(objs) do
-		if (v.posX == x and v.posY == y and not v:canMoveHere()) then
+		if (v:occupies(x, y) and not v:canMoveHere()) then
 			return false
 		end
 	end
 	return true
 end
 
-function checkMovement() 
-	if (playdate.buttonIsPressed(playdate.kButtonUp)) then
-		setPlayerFacing(0)
-		if (canMoveThere(playerX, playerY-1)) then
-			playerMoveBy(0, -1)
-			return
-		end
-	end
-	if (playdate.buttonIsPressed(playdate.kButtonDown)) then
-		setPlayerFacing(2)
-		if (canMoveThere(playerX, playerY+1)) then
-			playerMoveBy(0, 1)
-			return
-		end
-	end
-	if (playdate.buttonIsPressed(playdate.kButtonLeft)) then
-		setPlayerFacing(3)
-		if (canMoveThere(playerX - 1, playerY)) then
-			playerMoveBy(-1, 0)
-			return
-		end
-	end
-	if (playdate.buttonIsPressed(playdate.kButtonRight)) then
-		setPlayerFacing(1)
-		if (canMoveThere(playerX + 1, playerY)) then
-			playerMoveBy(1, 0)
-			return
-		end
-	end
-	if (playdate.buttonJustPressed(playdate.kButtonA)) then
-		local tarX, tarY = getPlayerPointCoord()
-		for i, v in ipairs(objs) do
-			if (v.posX == tarX and v.posY == tarY) then
-				v:onInteract()
+function checkMovement()
+	if #scriptStack == 0 then
+		if (playdate.buttonJustPressed(playdate.kButtonA)) then
+			local tarX, tarY = getPlayerPointCoord()
+			for i, v in ipairs(objs) do
+				if (v.posX == tarX and v.posY == tarY) then
+					v:onInteract()
+				end
 			end
+		elseif (playdate.buttonIsPressed(playdate.kButtonUp)) then
+			attemptMoveUp()
+		elseif (playdate.buttonIsPressed(playdate.kButtonDown)) then
+			attemptMoveDown()
+		elseif (playdate.buttonIsPressed(playdate.kButtonLeft)) then
+			attemptMoveLeft()
+		elseif (playdate.buttonIsPressed(playdate.kButtonRight)) then
+			attemptMoveRight()
+		end
+
+		if not playdate.isCrankDocked() and not isCrankUp then
+			isCrankUp = true
+			openMenu()
 		end
 	end
-	if not playdate.isCrankDocked() and not isCrankUp then
-		isCrankUp = true
-		openMenu()
+end
+
+function attemptMoveUp()
+	setPlayerFacing(0)
+	if (canMoveThere(playerX, playerY-1)) then
+		playerMoveBy(0, -1)
+		return
+	end
+end
+
+function attemptMoveDown()
+	setPlayerFacing(2)
+	if (canMoveThere(playerX, playerY+1)) then
+		playerMoveBy(0, 1)
+		return
+	end
+end
+
+function attemptMoveLeft()
+	setPlayerFacing(3)
+	if (canMoveThere(playerX - 1, playerY)) then
+		playerMoveBy(-1, 0)
+		return
+	end
+end
+
+function attemptMoveRight()
+	setPlayerFacing(1)
+	if (canMoveThere(playerX + 1, playerY)) then
+		playerMoveBy(1, 0)
+		return
 	end
 end
 
 function playerMoveBy(x, y)
 	if (x ~= 0 or y ~= 0) then
+		playerPrevX = playerX
+		playerPrevY = playerY
 		swapPlayerFooting()
 		playerX += x
 		playerY += y
+		if playerFacing == 0 or playerFacing == 2 then
+			playerImgIndex = 1 + playerFooting
+		else
+			playerImgIndex = 2
+		end
 		setupCameraOffset()
+		if playdate.buttonIsPressed(playdate.kButtonB) then
+			cameraTimer = cameraMoveTime_Run
+			cameraMaxTimer = cameraTimer
+		else
+			cameraTimer = cameraMoveTime
+			cameraMaxTimer = cameraTimer
+		end		
 	end
 end
 
@@ -268,7 +299,7 @@ function mapRandomEncounter()
 		if result <= 0 then
 			--addScript(RandomEncounterScript(v[1], v[2]))
 			addScript(RandomEncounterScript(randomSpecies(), {playerMonsters[1].level-2, playerMonsters[1].level}))
-			--addScript(RandomEncounterScript("Mawrachnid", {playerMonsters[1].level-1, playerMonsters[1].level+1}))
+			--addScript(RandomEncounterScript("Bombeetl", {playerMonsters[1].level-2, playerMonsters[1].level}))
 			nextScript()
 			break
 		end
@@ -276,11 +307,13 @@ function mapRandomEncounter()
 end
 
 function onMoveEnd()
+	playerImgIndex  = 1
 	local landedTile = currentTileset:getTileAtPosition(playerX, playerY)
 	movingCam = false
 	allowImmediateMovementCheck = true
 	for k, v in ipairs(objs) do
-		if v.posX == playerX and v.posY == playerY then
+		v:onPlayerEndMove()
+		if v:occupies(playerX, playerY) then
 			v:onOverlap()
 			if not v:allowImmediateMovementAfterStep() then
 				allowImmediateMovementCheck = false
@@ -302,14 +335,14 @@ function updateCameraOffset()
 	if cameraTimer > 0 then
 		cameraTimer -= 1
 		if playerRenderPosX == playerDestRenderPosX and playerRenderPosY == playerDestRenderPosY then
-			cameraOffsetX = playdate.math.lerp(cameraPrevOffsetX, cameraDestOffsetX, timeLeft(cameraTimer, cameraMoveTime))
-			cameraOffsetY = playdate.math.lerp(cameraPrevOffsetY, cameraDestOffsetY, timeLeft(cameraTimer, cameraMoveTime))
+			cameraOffsetX = playdate.math.lerp(cameraPrevOffsetX, cameraDestOffsetX, timeLeft(cameraTimer, cameraMaxTimer))
+			cameraOffsetY = playdate.math.lerp(cameraPrevOffsetY, cameraDestOffsetY, timeLeft(cameraTimer, cameraMaxTimer))
 		elseif playerRenderPosX ~= playerDestRenderPosX or playerRenderPosY ~= playerDestRenderPosY then
-			playerRenderPosX = playdate.math.lerp(playerPrevRenderPosX, playerDestRenderPosX, timeLeft(cameraTimer, cameraMoveTime))
-			playerRenderPosY = playdate.math.lerp(playerPrevRenderPosY, playerDestRenderPosY, timeLeft(cameraTimer, cameraMoveTime))
+			playerRenderPosX = playdate.math.lerp(playerPrevRenderPosX, playerDestRenderPosX, timeLeft(cameraTimer, cameraMaxTimer))
+			playerRenderPosY = playdate.math.lerp(playerPrevRenderPosY, playerDestRenderPosY, timeLeft(cameraTimer, cameraMaxTimer))
 		end
 
-		if cameraTimer == cameraMoveTime * 0.4 then
+		if cameraTimer == cameraMaxTimer * 0.4 then
 			playerImgIndex = 1
 		end
 

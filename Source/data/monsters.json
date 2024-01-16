@@ -153,5 +153,56 @@
     "description": "Web-weaver.",
     "locationHint": "dusty places",
     "location": "Abandoned Mansion & Big Show Studios"
+  },
+  "Sootiwi":
+  {
+    "speciesName": "Sootiwi",
+    "types": ["fire", "wing"],
+    "ability": "Fast as Fire",
+    "stats": [155, 135, 100, 120],
+    "lvlspeed": "normal",
+    "grantedExp": 30,
+    "catchDifficulty": 50,
+    "learnset": {
+      "1": "Peck"
+    },
+    "article": "a ",
+    "description": "Sootiwi's wings are formed of flame. Youthful Sootiwi burn blue, while aged specimens enter ever-deeper reds.",
+    "locationHint": "hot places",
+    "location": "Volcanus"
+  },
+  "Yunyun":
+  {
+    "speciesName": "Yunyun",
+    "types": ["plant", "drake"],
+    "ability": "Crybaby",
+    "stats": [120, 120, 80, 150],
+    "lvlspeed": "normal",
+    "grantedExp": 25,
+    "catchDifficulty": 25,
+    "learnset": {
+      "1": "Nibble"
+    },
+    "article": "a ",
+    "description": "Smells stinky.",
+    "locationHint": "grass near water",
+    "location": "Routes 2 & 5"
+  },
+  "Topsywurmy":
+  {
+    "speciesName": "Topsywurmy",
+    "types": ["alien", "drake"],
+    "ability": "UpsideDown",
+    "stats": [222, 122, 122, 22],
+    "lvlspeed": "normal",
+    "grantedExp": 22,
+    "catchDifficulty": 22,
+    "learnset": {
+      "1": "Nibble"
+    },
+    "article": "a ",
+    "description": ".sehcuot ti gnihtyreve sesrever hcihw retsnom railucep A",
+    "locationHint": "ycengA ecapS",
+    "location": "Space Agency"
   }
 }

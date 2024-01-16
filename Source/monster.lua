@@ -46,7 +46,11 @@ function randomSpecies()
 end
 
 function Monster:init(data)
-	self.randomnum = data["randomNum"]
+	if data["randomNum"] == nil then
+		self.randomnum = 1
+	else
+		self.randomnum = data["randomNum"]
+	end
 	self.species = data["species"]
 	self.speciesName = monsterInfo[self.species]["speciesName"]
 	self.img = monsterImgs[self.species]
@@ -66,7 +70,12 @@ function Monster:init(data)
 		local move = getMoveByName(v)
 		table.insert(self.moves, move)
 	end
-	self.nature = data["nature"]
+	if data["nature"] == nil then
+		self.nature = randomKey(natures)
+	else
+		self.nature = data["nature"]
+	end
+	
 	self.mark = data["mark"]
 	self.item = data["item"]
 	self.curStatus = data["curStatus"]
@@ -203,7 +212,10 @@ function Monster:levelUp()
 	local prevSpeed = self.speed
 	self.level += 1
 	self:reloadStats()
-	self.curHp += (self.maxHp - prevMaxHp)
+	if self.curHp > 0 then
+		self.curHp += (self.maxHp - prevMaxHp)
+		self.dispHp = self.curHp
+	end
 	local gridRows = {}
 	levelHeader = prevLevel .. " -> " .. self.level
 	table.insert(gridRows, "HP: " .. prevMaxHp .. " -> " .. self.maxHp)
@@ -313,23 +325,33 @@ function Monster:takeDamage(amount, damageType, source)
 						promptForLastResort()
 					end
 				else
-					if not combatIsEnding then
-						combatIsEnding = true
-						exitBattleViaLoss()
+					if not isCombatEnding then
+						isCombatEnding = true
+						addScript(LambdaScript("put loss of combat bot", 
+							function ()
+								exitBattleViaLoss()
+								nextScript()
+							end
+						))
 					end
 				end
 			else
 				addScript(LambdaScript("Gain exp", function()
-						playerMonster:getExp(self)
-						nextScript()
+					playerMonster:getExp(self)
+					nextScript()
 				end))
 				if remainingMonsters(enemyMonsters) > 0 then
 					swapEnemyMonsters(getNextMonster(enemyMonsters))
 					turnExecutionPhase = 7
 				else
-					if not combatIsEnding then
-						combatIsEnding = true
-						exitBattleViaVictory()
+					if not isCombatEnding then
+						isCombatEnding = true
+						addScript(LambdaScript("put win of combat bot", 
+							function ()
+								exitBattleViaVictory()
+								nextScript()
+							end
+						))
 					end
 				end
 			end
@@ -353,4 +375,38 @@ end
 
 function getDefaultAbility(species)
 	return monsterInfo[species]["ability"]
+end
+
+function Monster:getCalculatedAttack()
+	local retVal = self.attack
+	for i, v in ipairs(self.statuses) do
+		retVal = v:modifyAttack(retVal)
+		print("Status " .. v.name .. " modified attack. New value is " .. retVal)
+	end
+	return retVal
+end
+
+function Monster:getCalculatedDefense()
+	local retVal = self.defense
+	for i, v in ipairs(self.statuses) do
+		retVal = v:modifyDefense(retVal)
+		print("Status " .. v.name .. " modified defense. New value is " .. retVal)
+	end
+	return retVal
+end
+
+function Monster:getCalculatedSpeed()
+	local retVal = self.speed
+	for i, v in ipairs(self.statuses) do
+		retVal = v:modifySpeed(retVal)
+		print("Status " .. v.name .. " modified speed. New value is " .. retVal)
+	end
+	return retVal
+end
+
+function Monster:removeStatus(status)
+	local foundIdx = indexValue(self.statuses, status)
+	if foundIdx >= 1 then
+		table.remove(self.statuses, foundIdx)
+	end
 end

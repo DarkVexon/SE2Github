@@ -2,12 +2,33 @@
   "signposty": {
     "img": "signposty",
     "name": "SIGNPOSTY THE GREAT",
+    "payout": 20,
     "1": {
-      "randomNum": 1042,
       "species": "Bombeetl",
       "level": 7,
+      "moves": ["Nibble"]
+    }
+  },
+  "rivalfight1": {
+    "img": "slimeboy",
+    "name": "Slime Boy",
+    "payout": 25,
+    "1": {
+      "species": "Leafjawbs",
+      "level": 4,
+      "moves": ["Spark"],
+      "nature": "Unlucky"
+    }
+  },
+  "trainertest": {
+    "img": "slimeboy",
+    "name": "Slimyslime",
+    "payout": 10,
+    "1": {
+      "species": "Palpillar",
+      "level": 5,
       "moves": ["Nibble"],
-      "nature": "Thoughtful"
+      "nature": "Unlucky"
     }
   }
 }

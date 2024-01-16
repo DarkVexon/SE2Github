@@ -25,7 +25,7 @@ function loadMap(map, transloc)
 	currentTileset = tilesets[tilesToUse]
 
 	mapWidth, mapHeight = tilesets[tilesToUse]:getSize()
-	impassables = tilesetInfo[tilesToUse]["impassable"]
+	passables = tilesetInfo[tilesToUse]["passable"]
 	encounterTiles = tilesetInfo[tilesToUse]["encounter"]
 	randomEncounters = mapResult["encountertable"]
 	encounterChance = mapResult["encounterchance"]
@@ -36,6 +36,8 @@ function loadMap(map, transloc)
 	local targetTransloc = mapResult["translocs"][transloc]
 	playerX = targetTransloc[1]
 	playerY = targetTransloc[2]
+	playerPrevX = playerX
+	playerPrevY = playerY
 	mapBg = mapResult["background"]
 	if mapBg == "white" then
 		gfx.setBackgroundColor(gfx.kColorWhite)
@@ -48,4 +50,7 @@ end
 
 function loadNextMap()
 	loadMap(nextMap, nextTransloc)
+	if curScreen ~= 0 then
+		openMainScreen()
+	end
 end

@@ -10,4 +10,5 @@ function MapChangeScript:execute()
 	startFade(loadNextMap)
 	nextMap = self.map
 	nextTransloc = self.transloc
+	nextScript()
 end

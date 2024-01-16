@@ -1,9 +1,9 @@
-class('BigMark').extends(Mark)
+class('Big').extends(Mark)
 
-function BigMark:init()
-	BigMark.super.init(self, "Big")
+function Big:init()
+	Big.super.init(self, "Big")
 end
 
-function BigMark:applyToStats(stats)
+function Big:applyToStats(stats)
 	stats[1] = stats[1] * 1.2
 end

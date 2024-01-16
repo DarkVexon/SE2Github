@@ -23,6 +23,9 @@ function openMonsterScreen()
 	if curScreen == 0 then
 		monsterScreenSelectionIdx = 1
 	end
+	if #playerMonsters == 0 then
+		monsterScreenSelectionIdx = 0
+	end
 	curScreen = 1
 end
 
@@ -98,7 +101,7 @@ function updatePartyViewMenu()
 	elseif playdate.buttonJustPressed(playdate.kButtonLeft) then
 		moveHorizInPartyView()
 	end
-	if playdate.buttonJustPressed(playdate.kButtonA) then
+	if playdate.buttonJustPressed(playdate.kButtonA) and #playerMonsters > 0 then
 		if selectedMonsterSwapIndex ~= nil then
 			if selectedMonsterSwapIndex == monsterScreenSelectionIdx then
 				selectedMonsterSwapIndex = nil

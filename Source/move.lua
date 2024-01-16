@@ -21,15 +21,9 @@ end
 function manualCalculateDamage(owner, target, power, type)
 	local output = power
 	printIfDebug("Using " .. "move" .. " with base power " .. power .. ".")
-	local ownerAttack = owner.attack
-	local targetDefense = target.defense
+	local ownerAttack = owner:getCalculatedAttack()
+	local targetDefense = target:getCalculatedDefense()
 	printIfDebug("Owner attack is " .. owner.attack .. ", target defense is " .. target.defense .. ".")
-	printIfDebug("Applying status effects to these values.")
-	for i, v in ipairs(owner.statuses) do
-		ownerAttack = v:modifyAttack(ownerAttack)
-		print("Status " .. v.name .. " modified attack. New value is " .. ownerAttack)
-	end
-	print("Modified attack is " .. ownerAttack .. ", modified defense is " .. targetDefense)
 	print("Multiplying by (" .. ownerAttack .. "/" .. targetDefense ..").")
 	output *= (ownerAttack / targetDefense)
 	printIfDebug("Power after modification: " .. output)
@@ -49,6 +43,17 @@ function manualCalculateDamage(owner, target, power, type)
 		addScript(TextScript("It had no effect!"))
 	end
 	output *= typeMatchupOutcome
+	local critChance = 0
+	if owner.mark ~= nil then
+		critChance = owner.mark:modifyOutgoingCrit(critChance)
+	end
+	local critRoll = math.random(100)
+	if critRoll <= critChance then
+		printIfDebug("Rolled a crit! Doubling damage.")
+		addScript(TextScript("Critical Hit!!!"))
+		output *= 2
+		printIfDebug("New total: " .. output)
+	end
 	printIfDebug("Output pre-floor: " .. output)
 	output = math.floor(output)
 	printIfDebug("Final output: " .. output)
@@ -85,6 +90,7 @@ import "moves/nibble"
 import "moves/ember"
 import "moves/spark"
 import "moves/mysterybox"
+import "moves/peck"
 
 function getMoveByName(name)
 	if name == "Nibble" then
@@ -95,6 +101,8 @@ function getMoveByName(name)
 		return Spark()
 	elseif name == "Mystery Box" then
 		return MysteryBox()
+	elseif name == "Peck" then
+		return Peck()
 	end
 end
 

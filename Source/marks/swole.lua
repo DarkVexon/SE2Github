@@ -1,9 +1,9 @@
-class('SwoleMark').extends(Mark)
+class('Swole').extends(Mark)
 
-function SwoleMark:init()
-	SwoleMark.super.init(self, "Swole")
+function Swole:init()
+	Swole.super.init(self, "Swole")
 end
 
-function SwoleMark:applyToStats(stats)
+function Swole:applyToStats(stats)
 	stats[2] = stats[2] * 1.2
 end

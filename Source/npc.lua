@@ -22,44 +22,24 @@ function NPC:init(name, x, y)
 	self.visX = self.visDestX
 	self.visY = self.visDestY
 	self.speed = 4
-end
-
-function NPC:updateVisualMotion()
-	if self.visX ~= self.visDestX then
-		if self.visX < self.visDestX then
-			self.visX += self.speed
-		elseif self.visX > self.visDestX then
-			self.visX -= self.speed
-		end
-	end
-	if self.visY ~= self.visDestY then
-		if self.visY < self.visDestY then
-			self.visY += self.speed
-		elseif self.visY > self.visDestY then
-			self.visY -= self.speed
-		end
-	end
-end
-
-function NPC:moveBy(x, y)
-	if (x ~= 0 or y ~= 0) then
-		self.posX += x
-		self.posX += y
-		self.visDestX = (self.posX-1) * 40
-		self.visDestY = (self.posY-1) * 40
-	end
-end
-
-function NPC:update()
-	self:updateVisualMotion()
+	self.width = 0
+	self.height = 0
 end
 
 function NPC:render()
 	if self.img ~= nil then
-		if (cameraOffsetGridX <= self.posX+1 and cameraOffsetGridX + camWidth >= self.posX-1 and cameraOffsetGridY <= self.posY+1 and cameraOffsetGridY + camHeight >= self.posY-1) then
+		if self:shouldRender() then
 			self.img:draw(self.visX + cameraOffsetX, self.visY + cameraOffsetY)
 		end
 	end
+end
+
+function NPC:update()
+
+end
+
+function NPC:shouldRender()
+	return (cameraOffsetGridX <= self.posX+1 and cameraOffsetGridX + camWidth >= self.posX-1 and cameraOffsetGridY <= self.posY+1 and cameraOffsetGridY + camHeight >= self.posY-1)
 end
 
 function NPC:canMoveHere()
@@ -78,20 +58,54 @@ function NPC:allowImmediateMovementAfterStep()
 	return true
 end
 
+function NPC:shouldSpawn()
+	return true
+end
+
+function NPC:occupies(x, y)
+	if self.width == 0 and self.height == 0 then
+		return self.posX == x and self.posY == y
+	else
+		return x >= self.posX and x <= self.posX + self.width and y >= self.posY and y <= self.posY + self.width
+	end
+end
+
+function NPC:onPlayerEndMove()
+
+end
+
 -- IMPORTS
 import "npcs/signpost"
 import "npcs/person"
 import "npcs/door"
-
-
+import "npcs/healingmachine"
+import "npcs/nocreaturesgoback"
+import "npcs/letter"
+import "npcs/tablecube"
+import "npcs/rivalfirstencounter"
+import "npcs/trainer"
 
 function loadNpc(info)
 	local npcType = info[1]
+	local newNpc
 	if npcType == "signpost" then
-		table.insert(objs, Signpost(info[2], info[3], info[4]))
+		newNpc = Signpost(info[2], info[3], info[4])
 	elseif npcType == "person" then
-		table.insert(objs, Person(info[2], info[3], info[4], info[5]))
+		newNpc = Person(info[2], info[3], info[4], info[5])
 	elseif npcType == "door" then
-		table.insert(objs, Door(info[2], info[3], info[4], info[5]))
+		newNpc = Door(info[2], info[3], info[4], info[5])
+	elseif npcType == "healmachine" then
+		newNpc = HealingMachine(info[2], info[3])
+	elseif npcType == "nocreaturesgoback" then
+		newNpc = NoCreaturesGoBack(info[2], info[3])
+	elseif npcType == "letter" then
+		newNpc = Letter(info[2], info[3], info[4])
+	elseif npcType == "tablecube" then
+		newNpc = Tablecube(info[2], info[3])
+	elseif npcType == "trainer" then
+		newNpc = Trainer(info[2], info[3], info[4], info[5], info[6], info[7], info[8])
+	end
+	if newNpc:shouldSpawn() then
+		table.insert(objs, newNpc)
 	end
 end

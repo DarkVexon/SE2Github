@@ -29,8 +29,8 @@ function attemptToCapture(target)
 	local foundValue = math.random(1, 100)
 	if foundValue <= output then
 		caughtMonster = target
-		if (playerDex[caughtMonster.speciesName]) < 2 then
-			playerDex[caughtMonster.speciesName] = 2
+		if (playerDex[caughtMonster.species]) < 2 then
+			playerDex[caughtMonster.species] = 2
 		end
 		addScript(TextScript("Capture was successful!"))
 		if playerDex[target.species] ~= 2 then

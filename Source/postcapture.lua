@@ -13,7 +13,7 @@ end
 
 function openKeyboardMode()
 	addScript(StartAnimScript(MoveCapturedMonsterAnim(true)))
-	addScript(LambdaScript("Show keyboard", function() playdate.keyboard.show(caughtMonster.name) keyboardShown = true end))
+	addScript(LambdaScript("Show keyboard", function() playdate.keyboard.show() keyboardShown = true end))
 	addScript(StartAnimScript(MoveCapturedMonsterAnim(false)))
 	nextScript()
 end
@@ -21,7 +21,11 @@ end
 function postNicknameChoice()
 	if #playerMonsters < 4 then
 		addScript(LambdaScript("add monster to team", function() table.insert(playerMonsters, caughtMonster) nextScript() end))
-		addScript(TextScript("Welcome to the team, " .. caughtMonster.name .. "!"))
+		if #playerMonsters == 0 then
+			addScript(TextScript("With " .. caughtMonster.name .. " in your Monsterbelt, you're ready to explore."))
+		else
+			addScript(TextScript("Welcome to the team, " .. caughtMonster.name .. "!"))
+		end
 	else
 		addScript(LambdaScript("add monster to storage", function() table.insert(playerMonsterStorage, caughtMonster) nextScript() end))
 		addScript(TextScript(caughtMonster.name .. " was sent to the DOUBLE SHADOW GOVERNMENT!"))
@@ -31,7 +35,7 @@ function postNicknameChoice()
 end
 
 function setupPostCapturePrompts()
-	addScript(QueryScript("Want to nickname the caught " .. caughtMonster.name .. "?", {"Yes", "No"}, {openKeyboardMode, postNicknameChoice}))
+	addScript(QueryScript("Want to nickname the " .. caughtMonster.name .. "?", {"Yes", "No"}, {openKeyboardMode, postNicknameChoice}))
 end
 
 function updatePostCaptureScreen()
@@ -50,7 +54,11 @@ end
 
 function onKbHide()
 	keyboardShown = false
-	caughtMonster.name = playdate.keyboard.text
+	if playdate.keyboard.text == "" then
+		caughtMonster.name = caughtMonster.speciesName
+	else
+		caughtMonster.name = playdate.keyboard.text
+	end
 	postNicknameChoice()
 end
 

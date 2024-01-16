@@ -12,6 +12,10 @@ function addScript(script)
 	table.insert(scriptStack, script)
 end
 
+function addRetScript(script)
+	table.insert(returnScripts, script)
+end
+
 function addScriptTop(script)
 	table.insert(scriptStack, 1, script)
 end
@@ -39,3 +43,6 @@ import "scripts/trainerbattlescript"
 import "scripts/transitionscript"
 import "scripts/changecombatintrophasescript"
 import "scripts/swapmonsterscript"
+import "scripts/spawnnpcscript"
+import "scripts/movenpcscript"
+import "scripts/destroynpcscript"

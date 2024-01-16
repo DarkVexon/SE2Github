@@ -73,7 +73,8 @@ function loadCombat(encounter)
 	local newEncounter = enemyEncounters[encounter]
 	for i=1, 4 do
 		if newEncounter[i .. ""] ~= nil then
-			table.insert(enemyMonsters, Monster(newEncounter[i .. ""]))
+			local nextMonster = Monster(newEncounter[i .. ""])
+			table.insert(enemyMonsters, nextMonster)
 		end
 	end
 	curTrainerName = newEncounter["name"]
@@ -289,25 +290,25 @@ function getNextCombatActions()
 		end
 	elseif turnExecutionPhase == 5 then
 		turnExecutionPhase += 1
-		if enemyMonster.speed > playerMonster.speed then
+		if enemyMonster:getCalculatedSpeed() > playerMonster:getCalculatedSpeed() then
 			enemyMonsterMoveCheck()
 		else
 			playerMonsterMoveCheck()
 		end
 	elseif turnExecutionPhase == 6 then
 		turnExecutionPhase += 1
-		if enemyMonster.speed > playerMonster.speed then
+		if enemyMonster:getCalculatedSpeed() > playerMonster:getCalculatedSpeed() then
 			playerMonsterMoveCheck()
 		else
 			enemyMonsterMoveCheck()
 		end
 	elseif turnExecutionPhase == 7 then
 		turnExecutionPhase += 1
-		-- TODO: Player end turn phase
+		playerMonster.ability:atEndOfTurn()
 		nextScript()
 	elseif turnExecutionPhase == 8 then
 		turnExecutionPhase += 1
-		-- TODO: Enemy end turn phase
+		enemyMonster.ability:atEndOfTurn()
 		nextScript()
 	elseif turnExecutionPhase == 9 then
 		turnExecuting = false
@@ -551,7 +552,11 @@ function updateCombatChoicePhase()
 			end
 			if playdate.buttonJustPressed(playdate.kButtonA) then
 				if combatMenuChoiceIdx == 4 then
-					fleeCombat()
+					if isTrainerBattle then
+						showTextBox("You can't flee from a battle with someone else!")
+					else
+						fleeCombat()
+					end
 				else
 					showTissue(combatMenuChoiceIdx)
 				end
@@ -600,16 +605,38 @@ function exitBattleViaLoss()
 	for k, v in pairs(playerMonsters) do
 		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
 	end
+	clear(returnScripts)
 	addScript(TextScript("You lose the battle!"))
-	addScript(TransitionScript(openMainScreen))
+	if isTrainerBattle and playerMoney > 0 then
+		local moneyPaid = playerMoney * 0.25
+		addScript(TextScript("You pay out $" .. moneyPaid .. " to " .. curTrainerName .. "!"))
+		playerMoney -= moneyMade
+	end
+	addScript(MapChangeScript(playerRetreatMap, 1))
+	addScript(LambdaScript("post loss heal", function () fullyRestoreMonsters() nextScript() end))
+	addScript(TextScript("Having rushed away, you restore your team's energy."))
+	isCombatEnding = false
 end
 
 function exitBattleViaVictory()
 	for k, v in pairs(playerMonsters) do
 		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
 	end
-	addScript(TextScript("You won the battle!"))
-	addScript(TransitionScript(openMainScreen))
+	if playerMonster.curHp == 0 then
+		clear(returnScripts)
+		addScript(MapChangeScript(playerRetreatMap, 1))
+		addScript(LambdaScript("post loss heal", function () fullyRestoreMonsters() nextScript() end))
+		addScript(TextScript("Having rushed away, you restore your team's energy."))
+	else
+		addScript(TextScript("You won the battle!"))
+		if isTrainerBattle then
+			local moneyMade = enemyEncounters[curCombat]["payout"]
+			addScript(TextScript(curTrainerName .. " pays out $" .. moneyMade .. "!"))
+			playerMoney += moneyMade
+		end
+		addScript(TransitionScript(openMainScreen))
+	end
+	isCombatEnding = false
 end
 
 -- COMBAT INTRO PHASES
@@ -683,6 +710,13 @@ function updateInCombat()
 				updateCombatChoicePhase()
 			end
 		end
+	end
+
+	for i, v in ipairs(playerMonster.statuses) do
+		v:update()
+	end
+	for i, v in ipairs(enemyMonster.statuses) do
+		v:update()
 	end
 
 	local toRemove = {}
@@ -828,10 +862,10 @@ function drawCombatIntro()
 		drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
 		playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
 	elseif combatIntroPhase == 5 then
-		curTrainerImg:draw(enemyTrainerPosX, enemyMonsterPosY - 30)
+		curTrainerImg:draw(enemyTrainerPosX, enemyMonsterPosY - 50)
 		playerCombatImg:draw(playerImgPosX, 65)
 	elseif combatIntroPhase == 6 then
-		curTrainerImg:draw(enemyTrainerPosX, enemyMonsterPosY- 30)
+		curTrainerImg:draw(enemyTrainerPosX, enemyMonsterPosY- 50)
 		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
 		playerCombatImg:draw(playerImgPosX, 65)
 	end
@@ -842,6 +876,18 @@ function drawCombatIntro()
 end
 
 function drawCombatInterface()
+
+	for i, v in ipairs(playerMonster.statuses) do
+		if v.renderBehind then
+			v:render()
+		end
+	end
+	for i, v in ipairs(enemyMonster.statuses) do
+		if v.renderBehind then
+			v:render()
+		end
+	end
+
 	if showEnemyMonster then
 		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
 	end
@@ -851,6 +897,16 @@ function drawCombatInterface()
 	end
 	drawCombatMonsterData(PLAYER_MONSTER_INFO_DRAWX, PLAYER_MONSTER_INFO_DRAWY, playerMonster)
 
+	for i, v in ipairs(playerMonster.statuses) do
+		if not v.renderBehind then
+			v:render()
+		end
+	end
+	for i, v in ipairs(enemyMonster.statuses) do
+		if not v.renderBehind then
+			v:render()
+		end
+	end
 	if curAnim ~= nil then
 		curAnim:render()
 	end
