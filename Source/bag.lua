@@ -94,5 +94,10 @@ function updateBagViewScreen()
 	end
 	if playdate.buttonJustPressed(playdate.kButtonB) then
 		startFade(openMainScreen)
+	elseif playdate.buttonJustPressed(playdate.kButtonA) then
+		local itemFound = keyAtIndex(playerItems, bagMenuIdx)
+		if itemFound.canUseFromBag then
+			keyAtIndex(playerItems, bagMenuIdx):use()
+		end
 	end
 end

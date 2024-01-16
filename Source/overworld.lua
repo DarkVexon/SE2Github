@@ -6,7 +6,7 @@ local gridWidth <const> = 400/40
 local gridHeight <const> = 240/40
 
 local cameraMoveTime <const> = 10
-local cameraMoveTime_Run <const> = 5
+local cameraMoveTime_Run <const> = 6
 
 guyImgN = { gfx.image.new("img/overworld/player/guy-n1"), gfx.image.new("img/overworld/player/guy-n2"), gfx.image.new("img/overworld/player/guy-n3")}
 guyImgE = { gfx.image.new("img/overworld/player/guy-e1"), gfx.image.new("img/overworld/player/guy-e2")}
@@ -342,7 +342,7 @@ function updateCameraOffset()
 			playerRenderPosY = playdate.math.lerp(playerPrevRenderPosY, playerDestRenderPosY, timeLeft(cameraTimer, cameraMaxTimer))
 		end
 
-		if cameraTimer == cameraMaxTimer * 0.4 then
+		if cameraTimer == cameraMaxTimer * 0.5 then
 			playerImgIndex = 1
 		end
 

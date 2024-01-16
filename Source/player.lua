@@ -7,7 +7,8 @@ playerMonsterStorage = {
 }
 playerItems = {
 	[Poutine()] = 1,
-	[CaptureCube()] = 2
+	[CaptureCube()] = 2,
+	[MoveTeacher("Mystery Box")] = 2
 }
 playerMoney = 100
 
@@ -16,7 +17,7 @@ playerRetreatMap = "testtownroom1"
 
 playerDex = {}
 for i, k in ipairs(getTableKeys(monsterInfo)) do
-	playerDex[k] = 0
+	playerDex[k] = 2
 end
 
 function getDexProgress(type)

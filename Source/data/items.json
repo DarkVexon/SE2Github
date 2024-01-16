@@ -4,17 +4,20 @@
     "itemName": "Poutine",
     "description": "Heals 20 HP.",
     "canUseInBag": true,
-    "canUseInBattle": true,
-    "isKey": false,
-    "useOnce": true
+    "canUseInBattle": true
   },
   "Capture Cube":
   {
     "itemName": "Catchcube",
     "description": "Attempt to capture a wild enemy monster.",
     "canUseInBag": false,
-    "canUseInBattle": true,
-    "isKey": false,
-    "useOnce": true
+    "canUseInBattle": true
+  },
+  "Move Teacher":
+  {
+    "itemName": "Move Teacher",
+    "description": "Use this to teach a Kenermon a move.",
+    "canUseInBag": true,
+    "canUseInBattle": false
   }
 }

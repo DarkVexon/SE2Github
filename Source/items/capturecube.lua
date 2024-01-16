@@ -6,6 +6,7 @@ end
 
 function CaptureCube:canUse()
 	if isTrainerBattle then
+		showTextBox("You can't throw Capture Cubes at others' Kenemon!")
 		return false
 	else
 		return CaptureCube.super.canUse(self)
@@ -16,6 +17,7 @@ function CaptureCube:use()
 	self:displaySelf(playerName)
 	-- TODO: Cool anim
 	attemptToCapture(enemyMonster)
+	self:consumeOne()
 end
 
 function attemptToCapture(target)

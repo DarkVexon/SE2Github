@@ -4,10 +4,7 @@ local monsterInfoBoxHeight <const> = 110
 local partyMenuHealthBarWidth <const> = 50
 local partyMenuHealthBarHeight <const> = 12
 
-
-
 monsterScreenSelectionIdx = 1
-
 
 local monsterMenuPopupOptions <const> = {"Info", "Swap"}
 
@@ -86,43 +83,61 @@ function drawMonsterMenu()
 	end
 
 	drawBackButton()
+
+	if textBoxShown then
+		drawTextBox()
+	end
 end
 
 function updatePartyViewMenu()
-	if playdate.buttonJustPressed(playdate.kButtonB) then
-		startFade(openMainScreen)
-	end
-	if playdate.buttonJustPressed(playdate.kButtonUp) then
-		moveVertInPartyView()
-	elseif playdate.buttonJustPressed(playdate.kButtonRight) then
-		moveHorizInPartyView()
-	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
-		moveVertInPartyView()
-	elseif playdate.buttonJustPressed(playdate.kButtonLeft) then
-		moveHorizInPartyView()
-	end
-	if playdate.buttonJustPressed(playdate.kButtonA) and #playerMonsters > 0 then
-		if selectedMonsterSwapIndex ~= nil then
-			if selectedMonsterSwapIndex == monsterScreenSelectionIdx then
-				selectedMonsterSwapIndex = nil
-			else
-				local holdingCell = playerMonsters[selectedMonsterSwapIndex]
-				playerMonsters[selectedMonsterSwapIndex] = playerMonsters[monsterScreenSelectionIdx]
-				playerMonsters[monsterScreenSelectionIdx] = holdingCell
-				selectedMonsterSwapIndex = nil
+	if textBoxShown then
+		updateTextBox()
+	else
+		if playdate.buttonJustPressed(playdate.kButtonB) then
+			if invItemToUseOnMonster ~= nil then
+				invItemToUseOnMonster = nil
 			end
-		else
-			singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
-			if #playerMonsters == 1 then
-				startFade(openSingleMonsterView)
+			startFade(openMainScreen)
+		end
+		if playdate.buttonJustPressed(playdate.kButtonUp) then
+			moveVertInPartyView()
+		elseif playdate.buttonJustPressed(playdate.kButtonRight) then
+			moveHorizInPartyView()
+		elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+			moveVertInPartyView()
+		elseif playdate.buttonJustPressed(playdate.kButtonLeft) then
+			moveHorizInPartyView()
+		end
+		if playdate.buttonJustPressed(playdate.kButtonA) and #playerMonsters > 0 then
+			if invItemToUseOnMonster ~= nil then
+				if invItemToUseOnMonster:canUseOnTarget(playerMonsters[monsterScreenSelectionIdx]) then
+					invItemToUseOnMonster:useOutsideCombat(playerMonsters[monsterScreenSelectionIdx])
+					invItemToUseOnMonster = nil
+				end
 			else
-				local index = 1
-				for y=0, 1 do
-					for x=0, 1 do
-						if index == monsterScreenSelectionIdx then
-							setupPopupMenu(monsterMenuOuterBuffer + (x * (monsterInfoBoxWidth +  monsterMenuOuterBuffer )) + 70, monsterMenuOuterBuffer + (y * (monsterInfoBoxHeight +  monsterMenuOuterBuffer )) + 50, monsterMenuPopupOptions, {onSelectMonsterInfoPopup, onSelectMonsterSwapPopup}, true)
+				if selectedMonsterSwapIndex ~= nil then
+					if selectedMonsterSwapIndex == monsterScreenSelectionIdx then
+						selectedMonsterSwapIndex = nil
+					else
+						local holdingCell = playerMonsters[selectedMonsterSwapIndex]
+						playerMonsters[selectedMonsterSwapIndex] = playerMonsters[monsterScreenSelectionIdx]
+						playerMonsters[monsterScreenSelectionIdx] = holdingCell
+						selectedMonsterSwapIndex = nil
+					end
+				else
+					singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
+					if #playerMonsters == 1 then
+						startFade(openSingleMonsterView)
+					else
+						local index = 1
+						for y=0, 1 do
+							for x=0, 1 do
+								if index == monsterScreenSelectionIdx then
+									setupPopupMenu(monsterMenuOuterBuffer + (x * (monsterInfoBoxWidth +  monsterMenuOuterBuffer )) + 70, monsterMenuOuterBuffer + (y * (monsterInfoBoxHeight +  monsterMenuOuterBuffer )) + 50, monsterMenuPopupOptions, {onSelectMonsterInfoPopup, onSelectMonsterSwapPopup}, true)
+								end
+								index += 1
+							end
 						end
-						index += 1
 					end
 				end
 			end

@@ -273,9 +273,6 @@ function getNextCombatActions()
 		turnExecutionPhase += 1
 		if playerChosenItem ~= nil then
 			playerChosenItem:use()
-			if playerChosenItem.useOnce then
-				playerChosenItem:consumeOne()
-			end
 			playerChosenItem = nil
 			nextScript()
 		else
@@ -500,8 +497,9 @@ function updateItemSelect()
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) and numKeys(playerItems) > 0 then
-		playerChosenItem = keyAtIndex(playerItems, tissueSelectionIdx + tissueIndexOffset)
-		if playerChosenItem:canUse() then
+		local targetItem = keyAtIndex(playerItems, tissueSelectionIdx + tissueIndexOffset)
+		if targetItem:canUse() then
+			playerChosenItem = targetItem
 			hideTissue()
 			swapToExecution = true
 			turnExecutionPhase = turnExecutionFirstPhase
@@ -916,6 +914,9 @@ function drawCombatInterface()
 	end
 
 	if textBoxShown then
+		if tissueMenuShown then
+			drawCombatChoicePhase()
+		end
 		drawCombatTextBox()
 	else
 		drawCombatChoicePhase()

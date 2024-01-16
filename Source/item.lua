@@ -7,10 +7,8 @@ function Item:init(name)
 	self.id = name
 	self.name = data["itemName"]
 	self.description = data["description"]
-	self.canUseFromBag = data["canUseFromBag"]
+	self.canUseFromBag = data["canUseInBag"]
 	self.canUseInBattle = data["canUseInBattle"]
-	self.isKey = data["isKey"]
-	self.useOnce = data["useOnce"]
 end
 
 function Item:canUse()
@@ -45,8 +43,10 @@ function Item:consumeOne()
 end
 
 -- IMPORTS
+import "items/useonmonsteritem"
 import "items/poutine"
 import "items/capturecube"
+import "items/moveteacher"
 
 function getItemByName(name)
 

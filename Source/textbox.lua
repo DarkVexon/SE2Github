@@ -26,11 +26,12 @@ function showTimedTextBox(text, time)
 	textBoxTimer = time
 end
 
-function showQueryTextBox(text, options, funcs)
+function showQueryTextBox(text, options, funcs, canCancel)
 	showTextBox(text)
 	followTextBoxWithPopup = true
 	textBoxFollowUpOptions = options
 	textBoxFollowUpFuncs = funcs
+	textBoxFollowUpCanCancel = canCancel
 end
 
 function hideTextBox()
@@ -48,7 +49,7 @@ function updateTextBox()
 				hideTextBox()
 			end
 		elseif followTextBoxWithPopup then
-			setupPopupMenu(queryDropdownX, queryDropdownY, textBoxFollowUpOptions, textBoxFollowUpFuncs, false)
+			setupPopupMenu(queryDropdownX, queryDropdownY, textBoxFollowUpOptions, textBoxFollowUpFuncs, textBoxFollowUpCanCancel)
 		else
 			if playdate.buttonJustPressed(playdate.kButtonA) then
 				hideTextBox()
