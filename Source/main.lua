@@ -43,6 +43,7 @@ import "player"
 import "dexsingleview"
 import "vfx"
 import "storageview"
+import "shop"
 
 isCrankUp = false
 
@@ -62,6 +63,7 @@ curScreen = 0
 -- 7: Monsterdex total screen
 -- 8: Monsterdex single screen
 -- 9: Monster storage view screen
+-- 10: Shop screen
 
 skipNextRender = false
 
@@ -95,6 +97,8 @@ function playdate.update()
 				updateDexSingleView()
 			elseif curScreen == 9 then
 				updateStorageView()
+			elseif curScreen == 10 then
+				updateShop()
 			end
 		end
 
@@ -142,6 +146,8 @@ function render()
 		drawDexSingleView()
 	elseif curScreen == 9 then
 		drawStorageView()
+	elseif curScreen == 10 then
+		drawShop()
 	end
 
 	if popupUp then

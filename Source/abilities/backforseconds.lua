@@ -6,11 +6,11 @@ function BackForSeconds:init(owner)
 end
 
 function BackForSeconds:onUseMove(move, target)
-	if self.canTrigger and move.basePower > 0 and not combatIsEnding then
+	if self.canTrigger and move.basePower > 0 and not isCombatEnding then
 		self.canTrigger = false
 		addScript(LambdaScript("dubldraker followup", 
 			function()
-				if not combatIsEnding then
+				if not isCombatEnding then
 					self:displaySelf()
 					local dupe = move:getCopy()
 					dupe.basePower *= 0.3

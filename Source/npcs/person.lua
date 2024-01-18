@@ -44,8 +44,8 @@ function Person:init(name, x, y, facing)
 	Person.super.init(self, name, x, y)
 	self:loadImg(name)
 	self.footing = 1
-	self.facing = facing
 	self.imgIndex = 1
+	self:setFacing(facing)
 	self.moveTime = 0
 	self.callScriptAfterMove = false
 end
@@ -85,6 +85,9 @@ function Person:attemptMoveRight()
 end
 
 function Person:canMoveThere(x, y)
+	if playerX == x and playerY == y then
+		return false
+	end
 	return canMoveThere(x, y)
 end
 

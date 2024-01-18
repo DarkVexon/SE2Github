@@ -6,7 +6,7 @@ playerMonsterStorage = {
 
 }
 playerItems = {
-
+	["Capture Cube"] = 10
 }
 playerMoney = 100
 
@@ -33,7 +33,7 @@ end
 
 function addToParty(monster)
 	table.insert(playerMonsters, monster)
-	if playerDex[monster.species] < 2 then
+	if playerDex[monster.species] ~= nil and playerDex[monster.species] < 2 then
 		playerDex[monster.species] = 2
 	end
 end
@@ -55,8 +55,8 @@ function removeFromParty(monster)
 	end
 end
 
---addToParty(randomEncounterMonster("Palpillar", {12, 15}))
---addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
+--addToParty(randomEncounterMonster("Error", {40, 50}))
+addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
 --addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
 --addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
 --addToParty(randomEncounterMonster("Hungwy", {5, 5}))

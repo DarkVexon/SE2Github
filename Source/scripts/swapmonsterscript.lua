@@ -9,7 +9,7 @@ end
 function SwapMonsterScript:execute()
 	sendInMonster(self.nextMon)
 	if self.enemySwap then
-		enemyMonster = newMonster
+		enemyMonster = self.nextMon
 		enemyMonster.ability:onEnterCombat()
 	else
 		playerMonster = self.nextMon

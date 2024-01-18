@@ -184,7 +184,7 @@
       "1": "Nibble"
     },
     "article": "a ",
-    "description": "Smells stinky.",
+    "description": "The stalks on Yunyuns’ backs are almost indistinguishable from blooming alliums. They like to burrow in shallow riverbanks and loamy soil. \n\nIf uprooted, a Yunyun wails inconsolably and emits irritating, sulfureous compounds.",
     "locationHint": "grass near water",
     "location": "Routes 2 & 5"
   },
@@ -229,6 +229,7 @@
     "stats": [130, 130, 125, 120],
     "lvlspeed": "normal",
     "grantedExp": 43,
+    "catchDifficulty": 40,
     "learnset": {
       "1": "Nibble",
       "2": "Meditate"
@@ -246,6 +247,7 @@
     "stats": [310, 99, 101, 101],
     "lvlspeed": "normal",
     "grantedExp": 50,
+    "catchDifficulty": 30,
     "learnset": {
       "1": "Water Gun"
     },
@@ -262,6 +264,7 @@
     "stats": [250, 125, 125, 82],
     "lvlspeed": "normal",
     "grantedExp": 60,
+    "catchDifficulty": 15,
     "learnset": {
       "1": "Slash"
     },
@@ -278,6 +281,7 @@
     "stats": [195, 120, 145, 78],
     "lvlspeed": "normal",
     "grantedExp": 39,
+    "catchDifficulty": 25,
     "learnset": {
       "1": "Spark",
       "3": "Meditate"
@@ -295,6 +299,7 @@
     "stats": [120, 110, 100, 130],
     "lvlspeed": "normal",
     "grantedExp": 35,
+    "catchDifficulty": 50,
     "learnset": {
       "1": "Peck"
     },
@@ -302,5 +307,22 @@
     "description": "???",
     "locationHint": "near treetops",
     "location": "Sorlim Forest"
+  },
+  "Fritzle":
+  {
+    "speciesName": "Fritzle",
+    "types": ["drake"],
+    "ability": "Iridescence",
+    "stats": [125, 125, 125, 80],
+    "lvlspeed": "normal",
+    "grantedExp": 40,
+    "catchDifficulty": 33,
+    "learnset": {
+      "1": "Nibble"
+    },
+    "article": "a ",
+    "description": "???",
+    "locationHint": "very rarely",
+    "location": "Unknown"
   }
 }

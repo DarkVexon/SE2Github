@@ -19,7 +19,7 @@ function Tablecube:onInteract()
 		caughtMonster = randomEncounterMonster(randomSpecies(), {5, 5})
 		-- TODO: First monster has special mark.
 		addScript(TextScript("A Capture Cube, containing a Kenermon. The KENEDAR BIOLOGY GROUP left it for you."))
-		addScript(TextScript("Looks like it contains a ... " .. caughtMonster.name .. ". Adorable!"))
+		addScript(TextScript("Looks like it contains " .. monsterInfo[caughtMonster.species].article .. " ... " .. caughtMonster.name .. ". Adorable!"))
 		addScript(TransitionScript(openPostCaptureScreen))
 		addScript(DestroyNPCScript(self))
 

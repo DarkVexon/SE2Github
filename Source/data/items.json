@@ -8,7 +8,7 @@
   },
   "Capture Cube":
   {
-    "itemName": "Catchcube",
+    "itemName": "Capture Cube",
     "description": "Attempt to capture a wild enemy monster.",
     "canUseInBag": false,
     "canUseInBattle": true

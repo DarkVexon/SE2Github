@@ -94,24 +94,32 @@ end
 
 function moveHorizInCombatChoice()
 	if combatMenuChoiceIdx == 1 then
+		menuClicky()
 		combatMenuChoiceIdx = 2
 	elseif combatMenuChoiceIdx == 2 then
+		menuClicky()
 		combatMenuChoiceIdx = 1
 	elseif combatMenuChoiceIdx == 3 then
+		menuClicky()
 		combatMenuChoiceIdx = 4
 	elseif combatMenuChoiceIdx == 4 then
+		menuClicky()
 		combatMenuChoiceIdx = 3
 	end
 end
 
 function moveVertInCombatChoice()
 	if combatMenuChoiceIdx == 1 then
+		menuClicky()
 		combatMenuChoiceIdx = 3
 	elseif combatMenuChoiceIdx == 2 then
+		menuClicky()
 		combatMenuChoiceIdx = 4
 	elseif combatMenuChoiceIdx == 3 then
+		menuClicky()
 		combatMenuChoiceIdx = 1
 	elseif combatMenuChoiceIdx == 4 then
+		menuClicky()
 		combatMenuChoiceIdx = 2
 	end
 end
@@ -657,7 +665,7 @@ function exitBattleViaLoss()
 	if isTrainerBattle and playerMoney > 0 then
 		local moneyPaid = playerMoney * 0.25
 		addScript(TextScript("You pay out $" .. moneyPaid .. " to " .. curTrainerName .. "!"))
-		playerMoney -= moneyMade
+		playerMoney -= moneyPaid
 	end
 	addScript(MapChangeScript(playerRetreatMap, 1))
 	addScript(LambdaScript("post loss heal", function () fullyRestoreMonsters() nextScript() end))

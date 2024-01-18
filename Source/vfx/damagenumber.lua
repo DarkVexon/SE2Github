@@ -2,7 +2,7 @@ class('DamageNumber').extends(VFX)
 
 function DamageNumber:init(x, y, number, invert)
 	DamageNumber.super.init(self)
-	self.lifetime = 25
+	self.lifetime = 60
 	self.posX = x
 	self.posY = y
 	self.speedX = math.random(1, 4)
@@ -24,8 +24,8 @@ function DamageNumber:update()
 end
 
 function DamageNumber:render()
-	gfx.setImageDrawMode(playdate.graphics.kDrawModeFillWhite)
+	--gfx.setImageDrawMode(playdate.graphics.kDrawModeFillWhite)
 	gfx.drawText(self.number, self.posX, self.posY)
-	gfx.setImageDrawMode(playdate.graphics.kDrawModeCopy)
-	smallerFont:drawText(self.number, self.posX, self.posY)
+	--gfx.setImageDrawMode(playdate.graphics.kDrawModeCopy)
+	--smallerFont:drawText(self.number, self.posX, self.posY)
 end

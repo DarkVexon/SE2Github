@@ -40,6 +40,20 @@ natures = {
 	["Unlucky"] = {-1, -1, -1, -1}
 }
 
+function glitchMonsterImg()
+	local glitcherImg = gfx.image.new(100, 100)
+	gfx.pushContext(glitcherImg)
+	for x=0, 1 do
+		for y=0, 1 do
+			local tarSpecies = randomSpecies()
+			local tarImg = monsterImgs[tarSpecies]
+			tarImg:draw(-50 + 100*x, -50 + 100*y)
+		end
+	end
+	gfx.popContext()
+	return glitcherImg
+end
+
 function randomSpecies()
 	local keys = getTableKeys(monsterInfo)
 	return keys[math.random(#keys)]
@@ -52,6 +66,7 @@ function Monster:init(data)
 		self.randomnum = data["randomNum"]
 	end
 	self.species = data["species"]
+
 	self.speciesName = monsterInfo[self.species]["speciesName"]
 	self.img = monsterImgs[self.species]
 	if data["name"] == nil then
@@ -204,8 +219,8 @@ function Monster:useMove(move, target)
 	else
 		addScript(TextScript("But it failed!"))
 	end
-	addScript(LambdaScript("trigger on use move", function () self.ability:onUseMove(move, target) nextScript() end))
-	--self.ability:onUseMove(move, target)
+	--addScript(LambdaScript("trigger on use move", function () self.ability:onUseMove(move, target) nextScript() end))
+	self.ability:onUseMove(move, target)
 end
 
 function Monster:getFoe()

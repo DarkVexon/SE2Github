@@ -35,14 +35,15 @@ function manualCalculateDamage(owner, target, power, type)
 		printIfDebug("New value: " .. output)
 	end
 	local typeMatchupOutcome = totalMult(type, target.types)
+	typeMatchupOutcome *= target.ability:modifyTypeMatchup(type)
 	printIfDebug("Applying type bonuses.")
 	printIfDebug("Multiplier from type damage bonus: " .. typeMatchupOutcome)
 	if typeMatchupOutcome >= 2 then
-		addScript(TextScript("It's super effective!"))
+		addScriptTop(TextScript("It's super effective!"))
 	elseif typeMatchupOutcome < 1 and typeMatchupOutcome > 0 then
-		addScript(TextScript("It's not very effective..."))
+		addScriptTop(TextScript("It's not very effective..."))
 	elseif typeMatchupOutcome == 0 then
-		addScript(TextScript("It had no effect!"))
+		addScriptTop(TextScript("It had no effect!"))
 	end
 	if target.item ~= nil then
 		typeMatchupOutcome = target.item:receiveTypeMatchupOutcome(typeMatchupOutcome)
@@ -55,7 +56,7 @@ function manualCalculateDamage(owner, target, power, type)
 	local critRoll = math.random(100)
 	if critRoll <= critChance then
 		printIfDebug("Rolled a crit! Doubling damage.")
-		addScript(TextScript("Critical Hit!!!"))
+		table.insert(scriptStack, 2, TextScript("Critical Hit!!!"))
 		output *= 2
 		printIfDebug("New total: " .. output)
 	end

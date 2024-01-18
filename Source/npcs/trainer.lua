@@ -26,7 +26,7 @@ function Trainer:checkForEyeContact()
 		local testYOffset = v[2] * distOut
 		local testX = self.posX + testXOffset
 		local testY = self.posY + testYOffset
-		if not self:canMoveThere(testX, testY) or testX < 0 or testX > mapWidth or testY < 0 or testY > mapWidth then
+		if not (playerX == testX and playerY == testY) and (not self:canMoveThere(testX, testY) or testX < 0 or testX > mapWidth or testY < 0 or testY > mapWidth) then
 			canContinue = false
 			break
 		else
@@ -40,6 +40,10 @@ function Trainer:checkForEyeContact()
 			end
 		end
 		distOut += 1
+		if distOut > 5 then 
+			canContinue = false
+			break
+		end
 	end
 end
 
@@ -54,13 +58,13 @@ function Trainer:onInteract()
 end
 
 function Trainer:onEndMove()
-	if not self.wasFought then
+	if not contains(playerBeatenTrainers, self.flagID) then
 		self:checkForEyeContact()
 	end
 end
 
 function Trainer:onPlayerEndMove()
-	if not self.wasFought then
+	if not contains(playerBeatenTrainers, self.flagID) then
 		self:checkForEyeContact()
 	end
 end

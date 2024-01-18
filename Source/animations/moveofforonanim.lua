@@ -10,7 +10,7 @@ end
 
 function MoveOffOrOnAnim:update()
 	if self.time == self.totalTime and self.isOn then
-		if isEnemy then
+		if self.isEnemy then
 			enemyMonsterPosY = enemyMonsterY
 		else
 			playerMonsterPosY = playerMonsterY

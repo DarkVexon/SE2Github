@@ -67,7 +67,7 @@
   "Wand Waver":
   {
     "abilityName": "Wand Waver",
-    "description": "After 2 non-attacks, free 15 damage Magic attack."
+    "description": "2 non-attacks causes 15 damage Magic attack."
   },
   "Spring Spout":
   {
@@ -88,5 +88,10 @@
   {
     "abilityName": "Puffed Plumage",
     "description": "Wing attacks apply 2 Charmed."
+  },
+  "Iridescence":
+  {
+    "abilityName": "Iridescence",
+    "description": "Resists Fire, Water, and Plant."
   }
 }

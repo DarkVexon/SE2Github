@@ -11,13 +11,14 @@
 "width": 8,
 "npcs":
 	[
-		["door", 3, 6, "testtown", 2],
-		["door", 4, 6, "testtown", 2]
+		["door", 3, 6, "testtown", 5],
+		["door", 4, 6, "testtown", 5],
+		["shopopener", 1, 1]
 	],
 "translocs":
 	[
-		[3, 6, 0],
-		[4, 6, 0]
+		[3, 5, 0],
+		[4, 5, 0]
 	],
 	"background": "black"
 }

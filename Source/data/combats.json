@@ -11,7 +11,7 @@
   },
   "rivalfight1": {
     "img": "slimeboy",
-    "name": "Slime Boy",
+    "name": "Rival",
     "payout": 25,
     "1": {
       "species": "Leafjawbs",
@@ -22,13 +22,63 @@
   },
   "trainertest": {
     "img": "slimeboy",
-    "name": "Slimyslime",
+    "name": "Timmy",
     "payout": 10,
     "1": {
       "species": "Tumight",
       "level": 5,
       "moves": ["Slash"],
       "nature": "Unlucky"
+    }
+  },
+  "trainer2": {
+    "img": "slimeboy",
+    "name": "Sammy",
+    "payout": 15,
+    "1": {
+      "species": "Bombeetl",
+      "level": 5,
+      "moves": ["Nibble", "Ember"]
+    }
+  },
+  "trainer3": {
+    "img": "slimeboy",
+    "name": "Fortuno",
+    "payout": 25,
+    "1": {
+      "species": "Palpillar",
+      "level": 4,
+      "moves": ["Nibble"]
+    },
+    "2": {
+      "species": "Skwizard",
+      "level": 5,
+      "moves": ["Meditate", "Nibble"]
+    },
+    "3": {
+      "species": "Chompah",
+      "level": 4,
+      "moves": ["Nibble"]
+    }
+  },
+  "trainer4": {
+    "img": "slimeboy",
+    "name": "Mr. Pip",
+    "payout": 40,
+    "1": {
+      "species": "Fritzle",
+      "level": 7,
+      "moves": ["Nibble"]
+    }
+  },
+  "trainer5": {
+    "img": "slimeboy",
+    "name": "Johnny",
+    "payout": 10,
+    "1": {
+      "species": "Gnobnak",
+      "level": 8,
+      "moves": ["Spark", "Meditate", "Mystery Box"]
     }
   }
 }

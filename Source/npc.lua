@@ -87,6 +87,7 @@ import "npcs/trainer"
 import "npcs/monsterstorageaccessor"
 import "npcs/founditem"
 import "npcs/wanderingperson"
+import "npcs/shopopener"
 
 function loadNpc(info)
 	local npcType = info[1]
@@ -113,6 +114,8 @@ function loadNpc(info)
 		newNpc = FoundItem(info[2], info[3], info[4], info[5])
 	elseif npcType == "wanderingperson" then
 		newNpc = WanderingPerson(info[2], info[3], info[4], info[5], info[6])
+	elseif npcType == "shopopener" then
+		newNpc = ShopOpener(info[2], info[3])
 	end
 	if newNpc:shouldSpawn() then
 		table.insert(objs, newNpc)

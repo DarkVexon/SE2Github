@@ -84,6 +84,10 @@ function Ability:modifyOutgoingDamage(damage, damageType)
 
 end
 
+function Ability:modifyTypeMatchup(type)
+	return 1
+end
+
 -- IMPORTS
 import "abilities/lovebug"
 import "abilities/backforseconds"
@@ -103,6 +107,7 @@ import "abilities/springspout"
 import "abilities/muffledneighing"
 import "abilities/alienated"
 import "abilities/puffedplumage"
+import "abilities/iridescence"
 
 function getAbilityByName(name, owner)
 	if name == "Lovebug" then
@@ -141,5 +146,12 @@ function getAbilityByName(name, owner)
 		return Alienated(owner)
 	elseif name == "Puffed Plumage" then
 		return PuffedPlumage(owner)
+	elseif name == "Iridescence" then
+		return Iridescence(owner)
 	end
+end
+
+function randomAbility(owner)
+	--TODO TOO LAZY
+	return getAbilityByName("Devourer", owner)
 end

@@ -124,6 +124,10 @@ function rightFacingTriangle(x, y, size)
 	gfx.fillTriangle(x, y, x + size, y + size/2, x, y + size)
 end
 
+function leftFacingTriangle(x, y, size)
+	gfx.fillTriangle(x, y, x - size, y + size/2, x, y + size)
+end
+
 function downFacingTriangle(x, y, size)
 	gfx.fillTriangle(x, y, x + size, y, x + size/2, y + size)
 end

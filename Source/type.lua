@@ -171,3 +171,18 @@ function renderTypesHoriz(types, x, y)
 		renderType(v, (x + ((i-1) * typeImgWidth) + ((i-1) * typeBetweenBufferHoriz)), y)
 	end
 end
+
+function randomTypeCombo()
+	local typeResult = {}
+	if math.random(0, 15) == 15 then
+		table.insert(typeResult, types[math.random(#types)])
+	else
+		local allTypes = {}
+		for i, v in ipairs(types) do
+			table.insert(allTypes, v)
+		end
+		for i=1, 2 do
+			table.insert(typeResult, table.remove(allTypes, math.random(#allTypes)))
+		end
+	end
+end

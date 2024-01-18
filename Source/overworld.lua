@@ -66,7 +66,7 @@ function hardSetupAreaName()
 end
 
 local AREA_SHOW_TIME = 15
-local AREA_HOLD_TIME = 50
+local AREA_HOLD_TIME = 25
 areaIsShowing = false
 areaShowTimer = 0
 
@@ -364,8 +364,9 @@ function mapRandomEncounter()
 		result -= v[3]
 		if result <= 0 then
 			--addScript(RandomEncounterScript(v[1], v[2]))
-			addScript(RandomEncounterScript(randomSpecies(), {5, 6}))
-			--addScript(RandomEncounterScript("Topsywurmy", {playerMonsters[1].level-2, playerMonsters[1].level}))
+			addScript(RandomEncounterScript(randomSpecies(), {playerMonsters[1].level-2, playerMonsters[1].level}))
+			--addScript(RandomEncounterScript("Yunyun", {3, 5}))
+			--addScript(RandomEncounterScript("Chompah", {playerMonsters[1].level-2, playerMonsters[1].level}))
 			nextScript()
 			break
 		end
