@@ -147,7 +147,7 @@ function drawBar(x, y, width, height, cur, max)
 	gfx.fillRoundRect(x + HEALTH_BAR_SQUISH, y, width, height, HEALTH_BAR_SQUISH)
 	if (cur > 0) then
 		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRoundRect(x + (HEALTH_BAR_SQUISH/2) + HEALTH_BAR_SQUISH, y + (HEALTH_BAR_SQUISH/2), (width * playdate.math.lerp(0, 1, cur/max)) - HEALTH_BAR_SQUISH, height - HEALTH_BAR_SQUISH, HEALTH_BAR_SQUISH)
+		gfx.fillRoundRect(x + (HEALTH_BAR_SQUISH/2) + HEALTH_BAR_SQUISH, y + (HEALTH_BAR_SQUISH/2), ((width - HEALTH_BAR_SQUISH) * playdate.math.lerp(0, 1, cur/max)), height - HEALTH_BAR_SQUISH, HEALTH_BAR_SQUISH)
 		gfx.setColor(gfx.kColorBlack)
 	end
 end
@@ -167,4 +167,15 @@ function printIfDebug(values)
 	if isDebug then
 		print(values)
 	end
+end
+
+local switchSfx = sfx.sampleplayer.new("sfx/switch")
+local hitSfx = sfx.sampleplayer.new("sfx/hit")
+
+function menuClicky()
+	switchSfx:play()
+end
+
+function hitSound()
+	hitSfx:play()
 end

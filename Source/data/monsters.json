@@ -217,7 +217,7 @@
       "1": "Nibble"
     },
     "article": "a ",
-    "description": "Hungry for food.",
+    "description": "Peeping noises emanate from somewhere in the mass of hair and gristle. If meat is dangled above it, Hungwy will hop and shake feverishly. \n \nOnce you feed a begging Hungwy, it will always remember your scent.",
     "locationHint": "dark places",
     "location": "Abandoned Mansion"
   },
@@ -253,5 +253,54 @@
     "description": "A friendly whale.",
     "locationHint": "the ocean",
     "location": "The Ocean"
+  },
+  "Tumight":
+  {
+    "speciesName": "Tumight",
+    "types": ["fear", "knight"],
+    "ability": "Muffled Neighing",
+    "stats": [250, 125, 125, 82],
+    "lvlspeed": "normal",
+    "grantedExp": 60,
+    "learnset": {
+      "1": "Slash"
+    },
+    "article": "some ",
+    "description": "???",
+    "locationHint": "???",
+    "location": "Unknown"
+  },
+  "Gnobnak":
+  {
+    "speciesName": "Gnobnak",
+    "types": ["alien"],
+    "ability": "Alienated",
+    "stats": [195, 120, 145, 78],
+    "lvlspeed": "normal",
+    "grantedExp": 39,
+    "learnset": {
+      "1": "Spark",
+      "3": "Meditate"
+    },
+    "article": "a ",
+    "description": "???",
+    "locationHint": "near space",
+    "location": "Space Agency"
+  },
+  "Yearnindov":
+  {
+    "speciesName": "Yearnindov",
+    "types": ["love", "wing"],
+    "ability": "Puffed Plumage",
+    "stats": [120, 110, 100, 130],
+    "lvlspeed": "normal",
+    "grantedExp": 35,
+    "learnset": {
+      "1": "Peck"
+    },
+    "article": "a ",
+    "description": "???",
+    "locationHint": "near treetops",
+    "location": "Sorlim Forest"
   }
 }

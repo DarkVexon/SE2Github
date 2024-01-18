@@ -6,7 +6,7 @@ end
 
 function Meditate:use(owner, target)
 	addScript(TextScript(owner:messageBoxName() .. "'s Attack increased!"))
-	for i=1, 4 do
+	for i=1, 2 do
 		addScript(ApplyStatusScript(owner, AttackUp(owner)))
 	end
 end

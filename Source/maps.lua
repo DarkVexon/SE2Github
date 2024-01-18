@@ -29,6 +29,7 @@ function loadMap(map, transloc)
 	encounterTiles = tilesetInfo[tilesToUse]["encounter"]
 	randomEncounters = mapResult["encountertable"]
 	encounterChance = mapResult["encounterchance"]
+	dividers = mapResult["dividers"]
 	clear(objs)
 	for i, v in ipairs(mapResult["npcs"]) do
 		loadNpc(v)

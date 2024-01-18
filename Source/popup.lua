@@ -38,17 +38,20 @@ end
 
 function updatePopupMenu()
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		menuClicky()
 		popupMenuSelectionIdx -= 1
 		if popupMenuSelectionIdx == 0 then
 			popupMenuSelectionIdx = #popupOptions
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		menuClicky()
 		popupMenuSelectionIdx += 1
 		if popupMenuSelectionIdx > #popupOptions then
 			popupMenuSelectionIdx = 1
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) then
+		menuClicky()
 		if followTextBoxWithPopup then
 			followTextBoxWithPopup = false
 			textBoxShown = false
@@ -56,6 +59,7 @@ function updatePopupMenu()
 		popupFuncs[popupMenuSelectionIdx]()
 		popupUp = false
 	elseif playdate.buttonJustPressed(playdate.kButtonB) and canCancelPopup then
+		menuClicky()
 		popupUp = false
 	end
 end

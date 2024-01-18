@@ -9,6 +9,6 @@ function Lovebug:whenHit(damage, type)
 		local toHit = self.owner:getFoe()
 		self:displaySelf()
 		addScript(ApplyStatusScript(toHit, AttackDown(toHit)))
-		addScript(TextScript(toHit:messageBoxName() .. "'s ATK was reduced!"))
+		addScript(TextScript(toHit:messageBoxName() .. "'s ATK was lowered!"))
 	end
 end

@@ -5,5 +5,5 @@ function AttackDown:init(target)
 end
 
 function AttackDown:modifyAttack(attack)
-	return attack - (self.owner.attack * 0.1)
+	return attack - (self.owner.attack * 0.2)
 end

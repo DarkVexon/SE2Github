@@ -35,6 +35,8 @@ objs = {}
 
 returnScripts = {}
 
+curAreaName = "Colus Town"
+
 function swapPlayerFooting()
 	if playerFooting == 1 then
 		playerFooting = 2
@@ -50,6 +52,36 @@ function openMainScreen()
 	end
 	clear(returnScripts)
 	nextScript()
+end
+
+function hardSetupAreaName()
+	if dividers ~= nil then
+		for k,v in ipairs(dividers) do
+			if playerX >= v[2] and playerX <= v[2] + v[4] and playerY >= v[3] and playerY <= v[3] + v[5] then
+				curAreaName = v[1]
+				break
+			end
+		end
+	end
+end
+
+local AREA_SHOW_TIME = 15
+local AREA_HOLD_TIME = 50
+areaIsShowing = false
+areaShowTimer = 0
+
+function checkAreaName()
+	if dividers ~= nil then
+		for k,v in ipairs(dividers) do
+			if playerX >= v[2] and playerX <= v[2] + v[4] and playerY >= v[3] and playerY <= v[3] + v[5] then
+				if curAreaName ~= v[1] then
+					curAreaName = v[1]
+					areaShowTimer = AREA_SHOW_TIME + AREA_HOLD_TIME
+					areaIsShowing = true
+				end
+			end
+		end
+	end
 end
 
 function hardSetupCameraOffsets()
@@ -146,6 +178,35 @@ function updateOverworld()
 			checkMovement()
 		end
 	end
+
+	if areaShowTimer > 0 then
+		areaShowTimer -= 1
+		if areaShowTimer == 0 and areaIsShowing then
+			areaIsShowing = false
+			areaShowTimer = AREA_SHOW_TIME
+		end
+	end
+end
+
+local AREA_BLURB_POS_X <const> = 10
+local AREA_BLURB_WIDTH <const> = 150
+local AREA_BLURB_HEIGHT <const> = 30
+local AREA_BLURB_START_Y <const> = -AREA_BLURB_HEIGHT
+local AREA_BLURB_END_Y <const> = 10
+
+function drawAreaPopup()
+	local areaPopupY
+	if areaIsShowing then
+		if areaShowTimer <= AREA_HOLD_TIME then
+			areaPopupY = AREA_BLURB_END_Y
+		else
+			areaPopupY = playdate.math.lerp(AREA_BLURB_START_Y, AREA_BLURB_END_Y, timeLeft(areaShowTimer - AREA_HOLD_TIME, AREA_SHOW_TIME))
+		end
+	else
+		areaPopupY = playdate.math.lerp(AREA_BLURB_END_Y, AREA_BLURB_START_Y, timeLeft(areaShowTimer, AREA_SHOW_TIME))
+	end
+	drawNiceRect(AREA_BLURB_POS_X, areaPopupY, AREA_BLURB_WIDTH, AREA_BLURB_HEIGHT)
+	gfx.drawText(curAreaName, AREA_BLURB_POS_X + 3, areaPopupY + 3)
 end
 
 function drawInOverworld()
@@ -166,6 +227,10 @@ function drawInOverworld()
 
 	if textBoxShown then
 		drawTextBox()
+	end
+
+	if areaShowTimer > 0 and curAreaName ~= nil then
+		drawAreaPopup()
 	end
 end
 
@@ -191,6 +256,7 @@ function checkMovement()
 			local tarX, tarY = getPlayerPointCoord()
 			for i, v in ipairs(objs) do
 				if (v.posX == tarX and v.posY == tarY) then
+					menuClicky()
 					v:onInteract()
 				end
 			end
@@ -299,7 +365,7 @@ function mapRandomEncounter()
 		if result <= 0 then
 			--addScript(RandomEncounterScript(v[1], v[2]))
 			addScript(RandomEncounterScript(randomSpecies(), {5, 6}))
-			--addScript(RandomEncounterScript("Bombeetl", {playerMonsters[1].level-2, playerMonsters[1].level}))
+			--addScript(RandomEncounterScript("Topsywurmy", {playerMonsters[1].level-2, playerMonsters[1].level}))
 			nextScript()
 			break
 		end
@@ -328,6 +394,7 @@ function onMoveEnd()
 	end
 	if allowImmediateMovementCheck then
 		checkMovement()
+		checkAreaName()
 	end
 end
 

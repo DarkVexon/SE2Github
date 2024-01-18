@@ -190,8 +190,22 @@ end
 function Monster:useMove(move, target)
 	local outputText = self:messageBoxName() .. " used " .. move.name .. "!"
 	addScript(TextScript(outputText))
-	move:use(self, target)
-	self.ability:onUseMove(move, target)
+	local shouldUse = true
+	if move.targetsFoe then
+		local foe = self:getFoe()
+		if foe.isFainting then
+			shouldUse = false
+		end
+	else
+
+	end
+	if shouldUse then
+		move:use(self, target)
+	else
+		addScript(TextScript("But it failed!"))
+	end
+	addScript(LambdaScript("trigger on use move", function () self.ability:onUseMove(move, target) nextScript() end))
+	--self.ability:onUseMove(move, target)
 end
 
 function Monster:getFoe()
@@ -263,11 +277,24 @@ function Monster:getExp(defeated, wasCaught)
 	if wasCaught then
 		output *= 1.2
 	end
+	local prevXpProgress = self:curXpProgress()
+	local prevXpNeeded = self:xpForNext()
 	output *= (defeated.level / self.level)
 	output = math.floor(output)
 	self.exp += output
 	if self.exp > self:xpToNext() and self.level < levelCap then
 		addScriptTop(LambdaScript("Level up", function() self:levelUp() nextScript() end))
+		addScriptTop(StartAnimScript(XPBarAnim(self, 0, (self.exp - xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level+1)), (xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level+2) - xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level+1)))))
+		addScriptTop(LambdaScript("Add visuals for level", function ()
+			local myX, myY = self:getCoords()
+			for i=1, 10 do
+				addEffect(LevelUpwardsLine(myX, myY + math.random(45, 55)))
+			end
+			nextScript()
+		end))
+		addScriptTop(StartAnimScript(XPBarAnim(self, prevXpProgress, prevXpNeeded, prevXpNeeded)))
+	else
+		addScriptTop(StartAnimScript(XPBarAnim(self, prevXpProgress, self:curXpProgress(), self:xpForNext())))
 	end
 	addScriptTop(TextScript(self.name .. " gained " .. output .. " EXP!"))
 end
@@ -297,15 +324,22 @@ function Monster:getCoords()
 end
 
 function Monster:takeDamage(amount, damageType, source)
+	for k, v in pairs(source.statuses) do
+		amount = v:modifyOutgoingDamage(amount, damageType)
+	end
 	amount = self.ability:modifyIncomingDamage(amount, damageType)
 
 	amount = math.floor(amount)
 	amount = math.min(amount, self.curHp)
 
 	if amount > 0 then
+		local myX, myY = self:getCoords()
+		hitSound()
+		addEffect(DamageNumber(math.random(myX-10, myX+10), math.random(myY-10, myY+10), amount, self:isFriendly()))
 		self.curHp -= amount
 		if self.curHp <= 0 then
 			self.curHp = 0
+			self.isFainting = true
 		end
 		source.ability:onDealDamage(amount, damageType)
 		self.ability:whenHit(amount, damageType)
@@ -320,9 +354,9 @@ function Monster:takeDamage(amount, damageType, source)
 			if self == playerMonster then
 				if remainingMonsters(playerMonsters) > 0 then
 					if isTrainerBattle then
-						openLastResortMenu()
+						addScript(LambdaScript("open last resort menu", function() openLastResortMenu() nextScript() end))
 					else
-						promptForLastResort()
+						addScript(LambdaScript("open last resort menu", function() promptForLastResort() nextScript() end))
 					end
 				else
 					if not isCombatEnding then
@@ -357,7 +391,6 @@ function Monster:takeDamage(amount, damageType, source)
 			end
 		end
 
-		local myX, myY = self:getCoords()
 		addEffect(DamagePaf(not self:isFriendly()))
 		for i=1, 8 do
 			addEffect(DamageOutwardLine(myX, myY))

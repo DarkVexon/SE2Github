@@ -52,6 +52,7 @@ function updateTextBox()
 			setupPopupMenu(queryDropdownX, queryDropdownY, textBoxFollowUpOptions, textBoxFollowUpFuncs, textBoxFollowUpCanCancel)
 		else
 			if playdate.buttonJustPressed(playdate.kButtonA) then
+				menuClicky()
 				hideTextBox()
 			end
 		end

@@ -58,6 +58,7 @@ function updateDexMenu()
 					--print("-> moved next")
 					dexAngle -= dexAngleLimit *2
 					dexIdx += 1
+					menuClicky()
 					--dexNameShowFrames = 10
 				else --limit scroll
 					dexAngle = dexAngleLimit
@@ -67,6 +68,7 @@ function updateDexMenu()
 					--print("-> moved prev")
 					dexAngle += dexAngleLimit *2
 					dexIdx -= 1
+					menuClicky()
 					--dexNameShowFrames = 10
 				else --limit scroll
 					dexAngle = -dexAngleLimit
@@ -92,11 +94,13 @@ function updateDexMenu()
 
 		if playdate.buttonJustPressed(playdate.kButtonA) then
 			if playerDex[dexItems[dexIdx]] ~= 0 then
+				menuClicky()
 				dexSelectedIdx = dexIdx
 				dexSelectedSpecies = dexItems[dexIdx]
 				startFade(openDexSingleView)
 			end
 		elseif playdate.buttonJustPressed(playdate.kButtonB) then
+			menuClicky()
 			startFade(openMainScreen)
 		end
 

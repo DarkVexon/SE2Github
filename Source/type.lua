@@ -87,7 +87,7 @@ dealsHalfTo = {
 
 	["love"] = {},
 
-	["knight"] = {},
+	["knight"] = {"alien"},
 
 	["teeth"] = {"tech", "stone"}
 }

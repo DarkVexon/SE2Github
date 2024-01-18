@@ -19,7 +19,9 @@ function MoveTeacher:useOutsideCombat(monster)
 		showQueryTextBox("Which move should be replaced?", options, functions, true)
 	else
 		table.insert(monster.moves, getMoveByName(self.moveID))
-		showTextBox(monster.name .. " learned " .. self.moveID .. "!") 
+		addScript(TextScript(monster.name .. " learned " .. self.moveID .. "!"))
+		addScript(TransitionScript(openBag))
+		nextScript()
 		self:consumeOne()
 	end
 end

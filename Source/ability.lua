@@ -80,6 +80,10 @@ function Ability:receiveStatusApplied(incomingStatus)
 
 end
 
+function Ability:modifyOutgoingDamage(damage, damageType)
+
+end
+
 -- IMPORTS
 import "abilities/lovebug"
 import "abilities/backforseconds"
@@ -96,6 +100,9 @@ import "abilities/upsidedown"
 import "abilities/devourer"
 import "abilities/wandwaver"
 import "abilities/springspout"
+import "abilities/muffledneighing"
+import "abilities/alienated"
+import "abilities/puffedplumage"
 
 function getAbilityByName(name, owner)
 	if name == "Lovebug" then
@@ -128,5 +135,11 @@ function getAbilityByName(name, owner)
 		return WandWaver(owner)
 	elseif name == "Spring Spout" then
 		return SpringSpout(owner)
+	elseif name == "Muffled Neighing" then
+		return MuffledNeighing(owner)
+	elseif name == "Alienated" then
+		return Alienated(owner)
+	elseif name == "Puffed Plumage" then
+		return PuffedPlumage(owner)
 	end
 end

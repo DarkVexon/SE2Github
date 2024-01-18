@@ -29,15 +29,19 @@ end
 function moveVertInPartyView()
 	if monsterScreenSelectionIdx == 1 then
 		if #playerMonsters >= 3 then
+			menuClicky()
 			monsterScreenSelectionIdx = 3
 		end
 	elseif monsterScreenSelectionIdx == 2 then
 		if #playerMonsters >= 4 then
+			menuClicky()
 			monsterScreenSelectionIdx = 4
 		end
 	elseif monsterScreenSelectionIdx == 3 then
+		menuClicky()
 		monsterScreenSelectionIdx = 1
 	elseif monsterScreenSelectionIdx == 4 then
+		menuClicky()
 		monsterScreenSelectionIdx = 2
 	end
 end
@@ -45,15 +49,19 @@ end
 function moveHorizInPartyView()
 	if monsterScreenSelectionIdx == 1 then
 		if #playerMonsters >= 2 then
+			menuClicky()
 			monsterScreenSelectionIdx = 2
 		end
 	elseif monsterScreenSelectionIdx == 2 then
+		menuClicky()
 		monsterScreenSelectionIdx = 1
 	elseif monsterScreenSelectionIdx == 3 then
 		if #playerMonsters >= 4 then
+			menuClicky()
 			monsterScreenSelectionIdx = 4
 		end
 	elseif monsterScreenSelectionIdx == 4 then
+		menuClicky()
 		monsterScreenSelectionIdx = 3
 	end
 end
@@ -95,9 +103,11 @@ function updatePartyViewMenu()
 	else
 		if playdate.buttonJustPressed(playdate.kButtonB) then
 			if invItemToUseOnMonster ~= nil then
+				startFade(openBag)
 				invItemToUseOnMonster = nil
+			else
+				startFade(openMainScreen)
 			end
-			startFade(openMainScreen)
 		end
 		if playdate.buttonJustPressed(playdate.kButtonUp) then
 			moveVertInPartyView()

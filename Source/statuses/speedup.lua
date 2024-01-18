@@ -5,5 +5,5 @@ function SpeedUp:init(target)
 end
 
 function SpeedUp:modifySpeed(speed)
-	return speed + (self.owner.speed * 0.1)
+	return speed + (self.owner.speed * 0.2)
 end

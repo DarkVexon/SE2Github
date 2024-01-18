@@ -5,5 +5,5 @@ function DefenseDown:init(target)
 end
 
 function DefenseDown:modifyDefense(defense)
-	return defense - (self.owner.defense * 0.1)
+	return defense - (self.owner.defense * 0.2)
 end

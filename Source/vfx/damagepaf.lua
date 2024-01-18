@@ -25,7 +25,3 @@ function DamagePaf:update()
 		self.isDone = true
 	end
 end
-
-function DamagePaf:render()
-
-end

@@ -1,11 +1,11 @@
 class('Trainer').extends(Person)
 
-function Trainer:init(name, x, y, facing, combat, textIn, textAfterFought)
+function Trainer:init(name, x, y, facing, combat, textIn, textAfterFought, flagID)
 	Trainer.super.init(self, name, x, y, facing)
 	self.combatID = combat
 	self.textIn = textIn
 	self.textAfterFought = textAfterFought
-	self.wasFought = false
+	self.flagID = flagID
 end
 
 local dirs <const> = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
@@ -13,7 +13,7 @@ local dirs <const> = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
 function Trainer:startBattle()
 	addScript(TextScript(self.textIn))
 	addScript(TrainerBattleScript(self.combatID))
-	addRetScript(LambdaScript("set " .. self.name .. " fight done", function () self.wasFought = true end))
+	addRetScript(LambdaScript("set " .. self.name .. " fight done", function () table.insert(playerBeatenTrainers, self.flagID) nextScript() end))
 	nextScript()
 end
 
@@ -44,7 +44,8 @@ function Trainer:checkForEyeContact()
 end
 
 function Trainer:onInteract()
-	if self.wasFought then
+	self:turnToFacePlayer()
+	if contains(playerBeatenTrainers, self.flagID) then
 		addScript(TextScript(self.textAfterFought))
 		nextScript()
 	else

@@ -25,9 +25,9 @@
     "name": "Slimyslime",
     "payout": 10,
     "1": {
-      "species": "Palpillar",
+      "species": "Tumight",
       "level": 5,
-      "moves": ["Nibble"],
+      "moves": ["Slash"],
       "nature": "Unlucky"
     }
   }

@@ -9,6 +9,8 @@ function Move:init(name)
 	self.type = targetMoveInfo["type"]
 	self.basePower = targetMoveInfo["basePower"]
 	self.description = targetMoveInfo["description"]
+	self.contact = targetMoveInfo["contact"]
+	self.targetsFoe = targetMoveInfo["targetsFoe"]
 end
 
 local sameTypeAsUserBonus <const> = 1.1
@@ -24,7 +26,7 @@ function manualCalculateDamage(owner, target, power, type)
 	local ownerAttack = owner:getCalculatedAttack()
 	local targetDefense = target:getCalculatedDefense()
 	printIfDebug("Owner attack is " .. owner.attack .. ", target defense is " .. target.defense .. ".")
-	print("Multiplying by (" .. ownerAttack .. "/" .. targetDefense ..").")
+	printIfDebug("Multiplying by (" .. ownerAttack .. "/" .. targetDefense ..").")
 	output *= (ownerAttack / targetDefense)
 	printIfDebug("Power after modification: " .. output)
 	if contains(owner.types, type) then
@@ -41,6 +43,9 @@ function manualCalculateDamage(owner, target, power, type)
 		addScript(TextScript("It's not very effective..."))
 	elseif typeMatchupOutcome == 0 then
 		addScript(TextScript("It had no effect!"))
+	end
+	if target.item ~= nil then
+		typeMatchupOutcome = target.item:receiveTypeMatchupOutcome(typeMatchupOutcome)
 	end
 	output *= typeMatchupOutcome
 	local critChance = 0
@@ -93,6 +98,7 @@ import "moves/mysterybox"
 import "moves/peck"
 import "moves/meditate"
 import "moves/watergun"
+import "moves/slash"
 
 function getMoveByName(name)
 	if name == "Nibble" then
@@ -109,6 +115,8 @@ function getMoveByName(name)
 		return Meditate()
 	elseif name == "Water Gun" then
 		return WaterGun()
+	elseif name == "Slash" then
+		return Slash()
 	end
 end
 

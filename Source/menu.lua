@@ -53,6 +53,7 @@ function updateInMenu()
 				--print("-> moved next")
 				menuAngle -= menuAngleLimit * 2
 				menuIdx += 1
+				menuClicky()
 			else --limit scroll
 				menuAngle = menuAngleLimit
 			end
@@ -61,6 +62,7 @@ function updateInMenu()
 				--print("-> moved prev")
 				menuAngle += menuAngleLimit * 2
 				menuIdx -= 1
+				menuClicky()
 			else --limit scroll
 				menuAngle = -menuAngleLimit
 			end

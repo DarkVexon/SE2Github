@@ -19,5 +19,12 @@
     "description": "Use this to teach a Kenermon a move.",
     "canUseInBag": true,
     "canUseInBattle": false
+  },
+  "Protective Shield":
+  {
+    "itemName": "Protective Shield",
+    "description": "Reduces super-effective damage once.",
+    "canUseInBag": true,
+    "canUseInBattle": false
   }
 }

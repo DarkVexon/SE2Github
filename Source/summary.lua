@@ -91,9 +91,20 @@ function drawSingleMonsterView()
 	
 	gfx.drawTextInRect(singleViewMonster.ability.name .. ": " .. singleViewMonster.ability.description, singleViewAbilityDrawX, singleViewAbilityDrawY, singleViewAbilityBoxWidth, singleViewAbilityBoxHeight)
 
-	for i=1, 4 do
-		drawSingleMonsterViewMove(singleViewMovesDrawX, singleViewMovesDrawY + ((i-1)*singleViewSingleMoveHeight + (i-1) * singleViewSingleMoveDistBetween), singleViewMonster.moves[i])
+	if singleViewMonster.item ~= nil then
+		gfx.drawTextInRect(singleViewMonster.item.name .. ": " .. singleViewMonster.item.description, singleViewAbilityDrawX, singleViewAbilityDrawY + singleViewAbilityBoxHeight + 2, singleViewAbilityBoxWidth, singleViewAbilityBoxHeight)
 	end
+
+	if singleViewMonster.item ~= nil then
+		for i=1, 4 do
+			drawSingleMonsterViewMove(singleViewMovesDrawX, singleViewMovesDrawY + ((i-1)*singleViewSingleMoveHeight + (i-1) * singleViewSingleMoveDistBetween)+ singleViewAbilityBoxHeight + 2, singleViewMonster.moves[i])
+		end
+	else
+		for i=1, 4 do
+			drawSingleMonsterViewMove(singleViewMovesDrawX, singleViewMovesDrawY + ((i-1)*singleViewSingleMoveHeight + (i-1) * singleViewSingleMoveDistBetween), singleViewMonster.moves[i])
+		end
+	end
+
 
 	drawBackButton()
 end

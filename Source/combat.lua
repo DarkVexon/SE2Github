@@ -40,7 +40,7 @@ local playerImgEndX2 <const> = -playerImgWidth
 
 playerMonsterStartX = -100
 PLAYER_MONSTER_X = 15
-local playerMonsterY <const> = 85
+playerMonsterY = 85
 
 local postKOChoices <const> = {"Swap", "Flee"}
 
@@ -178,7 +178,16 @@ enemyChosenMove = nil
 
 function playerMonsterMoveCheck()
 	if playerChosenMove ~= nil then
-		playerMonster:useMove(playerChosenMove, enemyMonster)
+		local useMoveResult = true
+		for k, v in pairs(playerMonster.statuses) do
+			useMoveResult = v:preUseMove()
+			if not useMoveResult then
+				break
+			end
+		end
+		if useMoveResult then
+			playerMonster:useMove(playerChosenMove, enemyMonster)
+		end
 		playerChosenMove = nil
 		nextScript()
 	else
@@ -188,7 +197,16 @@ end
 
 function enemyMonsterMoveCheck()
 	if enemyChosenMove ~= nil then
-		enemyMonster:useMove(enemyChosenMove, playerMonster)
+		local useMoveResult = true
+		for k, v in pairs(enemyMonster.statuses) do
+			useMoveResult = v:preUseMove()
+			if not useMoveResult then
+				break
+			end
+		end
+		if useMoveResult then
+			enemyMonster:useMove(enemyChosenMove, playerMonster)
+		end
 		enemyChosenMove = nil
 		nextScript()
 	else
@@ -198,6 +216,7 @@ end
 
 function sendInMonster(monster)
 	clear(monster.statuses)
+	monster.isFainting = false
 	monster.dispHp = monster.curHp
 	if playerDex[monster.speciesName] == 0 then
 		playerDex[monster.speciesName] = 1
@@ -367,6 +386,18 @@ function resetCombat()
 	swapToExecution = false
 	turnExecutionPhase = turnExecutionFirstPhase
 	globalBuffer = 0
+
+	for k, v in pairs(playerMonsters) do
+		if v.item ~= nil then
+			v.item:atBattleStart()
+		end
+	end
+
+	for k, v in pairs(enemyMonsters) do
+		if v.item ~= nil then
+			v.item:atBattleStart()
+		end
+	end
 end
 
 function beginWildBattle()
@@ -404,40 +435,47 @@ end
 
 function updateMoveSelect()
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		menuClicky()
 		tissueSelectionIdx -= 1
 		if tissueSelectionIdx == 0 then
 			tissueSelectionIdx = #playerMonster.moves
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		menuClicky()
 		tissueSelectionIdx += 1
 		if tissueSelectionIdx > #playerMonster.moves then
 			tissueSelectionIdx = 1
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) then
+		menuClicky()
 		playerChosenMove = playerMonster.moves[tissueSelectionIdx]
 		hideTissue()
 		turnExecutionPhase = turnExecutionFirstPhase
 		swapToExecution = true
 	end
 	if playdate.buttonJustPressed(playdate.kButtonB) then
+		menuClicky()
 		hideTissue()
 	end
 end
 
 function updateLearnMoveSelect()
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		menuClicky()
 		tissueSelectionIdx -= 1
 		if tissueSelectionIdx == 0 then
 			tissueSelectionIdx = #playerMonster.moves+1
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		menuClicky()
 		tissueSelectionIdx += 1
 		if tissueSelectionIdx > #playerMonster.moves+1 then
 			tissueSelectionIdx = 1
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) then
+		menuClicky()
 		if tissueSelectionIdx <= #playerMonster.moves then
 			addScriptTop(TextScript(playerMonster.name .. " forgot " .. playerMonster.moves[tissueSelectionIdx].name .. " and learned " .. learningMove.name .. "!"))
 			playerMonster.moves[tissueSelectionIdx] = learningMove
@@ -452,17 +490,20 @@ end
 
 function updateSwapSelect()
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		menuClicky()
 		tissueSelectionIdx -= 1
 		if tissueSelectionIdx == 0 then
 			tissueSelectionIdx = #playerMonsters
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		menuClicky()
 		tissueSelectionIdx += 1
 		if tissueSelectionIdx > #playerMonsters then
 			tissueSelectionIdx = 1
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) then
+		menuClicky()
 		local targetMonster = playerMonsters[tissueSelectionIdx]
 		if targetMonster ~= playerMonster and targetMonster.curHp > 0 then
 			if playerMonster.curHp == 0 then
@@ -479,6 +520,7 @@ function updateSwapSelect()
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonB) and playerMonster.curHp > 0 then
+		menuClicky()
 		hideTissue()
 	end
 end
@@ -486,18 +528,22 @@ end
 
 function updateItemSelect()
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		menuClicky()
 		tissueSelectionIdx -= 1
 		if tissueSelectionIdx == 0 then
 			tissueSelectionIdx = numKeys(playerItems)
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		menuClicky()
 		tissueSelectionIdx += 1
 		if tissueSelectionIdx > numKeys(playerItems) then
 			tissueSelectionIdx = 1
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) and numKeys(playerItems) > 0 then
-		local targetItem = keyAtIndex(playerItems, tissueSelectionIdx + tissueIndexOffset)
+		menuClicky()
+		local targetItemName = keyAtIndex(playerItems, tissueSelectionIdx + tissueIndexOffset)
+		local targetItem = getItemByName(targetItemName)
 		if targetItem:canUse() then
 			playerChosenItem = targetItem
 			hideTissue()
@@ -506,6 +552,7 @@ function updateItemSelect()
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonB) and playerMonster.curHp > 0 then
+		menuClicky()
 		hideTissue()
 	end
 end
@@ -549,6 +596,7 @@ function updateCombatChoicePhase()
 				moveHorizInCombatChoice()
 			end
 			if playdate.buttonJustPressed(playdate.kButtonA) then
+				menuClicky()
 				if combatMenuChoiceIdx == 4 then
 					if isTrainerBattle then
 						showTextBox("You can't flee from a battle with someone else!")
@@ -568,6 +616,7 @@ function updateCombatChoicePhase()
 				updateSwapSelect()
 			elseif combatSubmenuChosen == 5 then
 				if playdate.buttonJustPressed(playdate.kButtonA) then
+					menuClicky()
 					hideTissue()
 					swapToExecution = true
 				end
@@ -764,7 +813,8 @@ function drawTissueMenu()
 		local i = 1
 		for k, v in pairs(playerItems) do
 			if i >= tissueIndexOffset and i <= tissueIndexOffset+3 and i <= numKeys(playerItems) then
-				drawCombatMenuChoice(k.name .. " x" .. v, tissueMenuX + 10, tissueMenuY + 10 + ((i) * 25), tissueSelectionIdx == i and tissueTimer == 0)
+				local itemByName = getItemByName(k)
+				drawCombatMenuChoice(itemByName.name .. " x" .. v, tissueMenuX + 10, tissueMenuY + 10 + ((i) * 25), tissueSelectionIdx == i and tissueTimer == 0)
 				i += 1
 			end
 		end

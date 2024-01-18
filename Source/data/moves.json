@@ -4,46 +4,69 @@
     "moveName": "Nibble",
     "type": "teeth",
     "basePower": 8,
-    "description": "A weak biting attack."
+    "description": "A weak biting attack.",
+    "contact": true,
+    "targetsFoe": true
   },
   "Ember":
   {
     "moveName": "Ember",
     "type": "fire",
     "basePower": 8,
-    "description": "A small, fiery burst."
+    "description": "A small, fiery burst.",
+    "contact": false,
+    "targetsFoe": true
   },
   "Spark":
   {
     "moveName": "Spark",
     "type": "tech",
     "basePower": 8,
-    "description": "A tepid electric shock."
+    "description": "A tepid electric shock.",
+    "contact": false,
+    "targetsFoe": true
   },
   "Mystery Box":
   {
     "moveName": "Mystery Box",
     "type": "magic",
-    "description": "Pull a random other move from the box."
+    "description": "Pull a random other move from the box.",
+    "contact": false,
+    "targetsFoe": false
   },
   "Peck":
   {
     "moveName": "Peck",
     "type": "wing",
     "basePower": 8,
-    "description": "A small hit with beak or mouth."
+    "description": "A small hit with beak or mouth.",
+    "contact": true,
+    "targetsFoe": true
   },
   "Meditate":
   {
     "moveName": "Meditate",
     "type": "magic",
-    "description": "Increase ATK by 40%."
+    "description": "Increase ATK by 40%.",
+    "contact": false,
+    "targetsFoe": false
   },
   "Water Gun":
   {
     "moveName": "Water Gun",
     "type": "water",
     "basePower": 8,
-    "description": "A small, watery blast."
+    "description": "A small, watery blast.",
+    "contact": false,
+    "targetsFoe": true
+  },
+  "Slash":
+  {
+    "moveName": "Slash",
+    "type": "knight",
+    "basePower": 10,
+    "description": "A simple slash with a sword.",
+    "contact": true,
+    "targetsFoe": true
   }
 }

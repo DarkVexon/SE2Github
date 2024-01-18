@@ -2,7 +2,7 @@
   "Lovebug": 
   {
     "abilityName": "Lovebug",
-    "description": "Reduces enemy ATK by 10% when hit."
+    "description": "Reduces enemy ATK by 20% when hit."
   },
   "Back for Seconds":
   {
@@ -47,12 +47,12 @@
   "Fast as Fire":
   {
     "abilityName": "Fast as Fire",
-    "description": "At end of turn, increase SPD by 30%."
+    "description": "At end of turn, increase SPD by 40%."
   },
   "Crybaby":
   {
     "abilityName": "Crybaby",
-    "description": "On enter, reduce foe ATK, DEF, and SPD by 10%."
+    "description": "On enter, reduce foe ATK, DEF, and SPD by 20%."
   },
   "UpsideDown":
   {
@@ -73,5 +73,20 @@
   {
     "abilityName": "Spring Spout",
     "description": "At end of turn, heal ALL allies 5% max HP."
+  },
+  "Muffled Neighing":
+  {
+    "abilityName": "Muffled Neighing",
+    "description": "Moves that touch also reduce DEF by 20%."
+  },
+  "Alienated":
+  {
+    "abilityName": "Alienated",
+    "description": "33% chance to Daze attackers."
+  },
+  "Puffed Plumage":
+  {
+    "abilityName": "Puffed Plumage",
+    "description": "Wing attacks apply 2 Charmed."
   }
 }

@@ -3,24 +3,18 @@ playerMonsters = {
 
 }
 playerMonsterStorage = {
-	randomEncounterMonster(randomSpecies(), {5, 5}),
-	randomEncounterMonster(randomSpecies(), {5, 5}),
-	randomEncounterMonster(randomSpecies(), {5, 5}),
-	randomEncounterMonster(randomSpecies(), {5, 5}),
-	randomEncounterMonster(randomSpecies(), {5, 5}),
-	randomEncounterMonster(randomSpecies(), {5, 5}),
-	randomEncounterMonster(randomSpecies(), {5, 5}),
-	randomEncounterMonster(randomSpecies(), {5, 5})
+
 }
 playerItems = {
-	[Poutine()] = 1,
-	[CaptureCube()] = 2,
-	[MoveTeacher("Mystery Box")] = 2
+
 }
 playerMoney = 100
 
 playerFlag = 1
 playerRetreatMap = "testtownroom1"
+
+playerPickedUpItems = {}
+playerBeatenTrainers = {}
 
 playerDex = {}
 for i, k in ipairs(getTableKeys(monsterInfo)) do
@@ -44,6 +38,14 @@ function addToParty(monster)
 	end
 end
 
+function obtainItem(itemID)
+	if playerItems[itemID] == nil then
+		playerItems[itemID] = 1
+	else
+		playerItems[itemID] = playerItems[itemID]+1
+	end
+end
+
 function removeFromParty(monster)
 	local monIdx = indexValue(playerMonsters, monster)
 	if monIdx ~= -1 then
@@ -53,9 +55,9 @@ function removeFromParty(monster)
 	end
 end
 
-addToParty(randomEncounterMonster("Wheart", {5, 5}))
-addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
-addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
-addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
+--addToParty(randomEncounterMonster("Palpillar", {12, 15}))
+--addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
+--addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
+--addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
 --addToParty(randomEncounterMonster("Hungwy", {5, 5}))
---playerMonsters[1].exp = playerMonsters[1]:xpToNext()-1
+--playerMonsters[1].exp = playerMonsters[1]:xpToNext()-25

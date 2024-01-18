@@ -47,16 +47,20 @@ end
 
 function updateOptionsMenu()
 	if playdate.buttonJustPressed(playdate.kButtonA) then
+		menuClicky()
 		valueAtIndex(MENU_OPTIONS, optionsMenuSelectionIdx)[2]()
 	elseif playdate.buttonJustPressed(playdate.kButtonB) then
+		menuClicky()
 		startFade(openMainScreen)
 	end
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		menuClicky()
 		optionsMenuSelectionIdx -= 1
 		if optionsMenuSelectionIdx == 0 then
 			optionsMenuSelectionIdx = numKeys(MENU_OPTIONS)
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		menuClicky()
 		optionsMenuSelectionIdx += 1
 		if optionsMenuSelectionIdx > numKeys(MENU_OPTIONS) then
 			optionsMenuSelectionIdx = 1

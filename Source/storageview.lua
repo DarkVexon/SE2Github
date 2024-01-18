@@ -40,6 +40,7 @@ end
 
 function updateStorageView()
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		menuClicky()
 		if storageSelectionIdx < 0 then
 			storageSelectionIdx += 1
 			if storageSelectionIdx == 0 then
@@ -52,6 +53,7 @@ function updateStorageView()
 			end
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		menuClicky()
 		if storageSelectionIdx < 0 then
 			storageSelectionIdx -= 1
 			if storageSelectionIdx < -#playerMonsters then
@@ -64,6 +66,7 @@ function updateStorageView()
 			end
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonLeft) then
+		menuClicky()
 		if storageSelectionIdx < 0 then
 			if storageSelectionIdx == -1 or storageSelectionIdx == -2 then
 				storageSelectionIdx = 5
@@ -77,6 +80,7 @@ function updateStorageView()
 			end
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonRight) then
+		menuClicky()
 		if storageSelectionIdx < 0 then
 			if storageSelectionIdx == -1 or storageSelectionIdx == -2 then
 				storageSelectionIdx = 1
@@ -88,6 +92,7 @@ function updateStorageView()
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) then
+		menuClicky()
 		if storageCurrentlySelectedMonster ~= nil then
 			if storageSelectionIdx < 0 then
 				if selectedFromPc then

@@ -33,17 +33,20 @@ end
 
 function updateDexSingleView()
 	if playdate.buttonJustPressed(playdate.kButtonB) then
+		menuClicky()
 		startFade(openDexMenu)
 		gfx.setDrawOffset(0, 0)
 	end
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
 		if dexSelectedIdx > 1 then
+			menuClicky()
 			dexSelectedIdx -= 1
 			dexSelectedSpecies = dexItems[dexSelectedIdx]
 			gfx.setDrawOffset(0, 0)
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
 		if dexSelectedIdx < #dexItems then
+			menuClicky()
 			dexSelectedIdx += 1
 			dexSelectedSpecies = dexItems[dexSelectedIdx]
 			gfx.setDrawOffset(0, 0)

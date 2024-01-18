@@ -42,6 +42,12 @@ function WandWaver:render()
 			gfx.setColor(gfx.kColorBlack)
 		end
 	else
-		drawNiceRect(WAND_WAVER_POS_X_ENEMY, WAND_WAVER_POS_Y_ENEMY + 20, WAND_WAVER_WIDTH, WAND_WAVER_HEIGHT)
+		WAND_WAVER_IMG:draw(WAND_WAVER_POS_X_ENEMY - 3, WAND_WAVER_POS_Y_PLAYER - 3)
+		drawNiceRect(WAND_WAVER_POS_X_ENEMY, WAND_WAVER_POS_Y_PLAYER + 20, WAND_WAVER_WIDTH, WAND_WAVER_HEIGHT)
+		if self.charge == 1 then
+			gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
+			gfx.fillRoundRect(WAND_WAVER_POS_X_ENEMY + (BOX_OUTLINE_SIZE/2), WAND_WAVER_POS_Y_PLAYER + 20 + (WAND_WAVER_HEIGHT/2) + (BOX_OUTLINE_SIZE/2), WAND_WAVER_WIDTH, WAND_WAVER_HEIGHT / 2, BOX_OUTLINE_SIZE)
+			gfx.setColor(gfx.kColorBlack)
+		end
 	end
 end

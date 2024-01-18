@@ -9,6 +9,7 @@ gfx = playdate.graphics
 sfx = playdate.sound
 
 gameFont = gfx.font.new("font/coreTextFont")
+smallerFont = gfx.font.new("font/coreTextSmall")
 gfx.setFont(gameFont)
 
 import "constants"
@@ -46,7 +47,6 @@ import "storageview"
 isCrankUp = false
 
 function initialize()
-	
 	gfx.setLineWidth(LINE_WIDTH)
 	loadMap("testtown", 1)
 end

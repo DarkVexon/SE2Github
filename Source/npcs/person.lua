@@ -57,7 +57,6 @@ function Person:render()
 end
 
 function Person:attemptMoveUp()
-	self:setFacing(0)
 	if (self:canMoveThere(self.posX, self.posY-1)) then
 		self:moveBy(0, -1)
 		return
@@ -65,7 +64,6 @@ function Person:attemptMoveUp()
 end
 
 function Person:attemptMoveDown()
-	self:setFacing(2)
 	if (self:canMoveThere(self.posX, self.posY+1)) then
 		self:moveBy(0, 1)
 		return
@@ -73,7 +71,6 @@ function Person:attemptMoveDown()
 end
 
 function Person:attemptMoveLeft()
-	self:setFacing(3)
 	if (self:canMoveThere(self.posX - 1, self.posY)) then
 		self:moveBy(-1, 0)
 		return
@@ -81,7 +78,6 @@ function Person:attemptMoveLeft()
 end
 
 function Person:attemptMoveRight()
-	self:setFacing(1)
 	if (self:canMoveThere(self.posX + 1, self.posY)) then
 		self:moveBy(1, 0)
 		return
@@ -121,8 +117,17 @@ end
 
 function Person:moveBy(x, y)
 	if (x ~= 0 or y ~= 0) then
-		print("Cur pos x: " .. self.posX .. ", cur pos y: " .. self.posY)
-		print("Cur vis x: " .. self.visX .. ", cur vis y: " .. self.visY)
+		if x > 0 then
+			self:setFacing(1)
+		elseif x < 0 then
+			self:setFacing(3)
+		elseif y > 0 then 
+			self:setFacing(2)
+		elseif y < 0 then
+			self:setFacing(0)
+		end
+		--print("Cur pos x: " .. self.posX .. ", cur pos y: " .. self.posY)
+		--print("Cur vis x: " .. self.visX .. ", cur vis y: " .. self.visY)
 		self.prevVisX = self.visX
 		self.prevVisY = self.visY
 		self.posX += x
@@ -130,11 +135,23 @@ function Person:moveBy(x, y)
 		self.visDestX = (self.posX-1) * 40
 		self.visDestY = (self.posY-1) * 40
 		self.moveTime = TIME_TO_MOVE
-		print("New pos x: " .. self.posX .. ", new pos y: " .. self.posY)
-		print("Next vis x: " .. self.visDestX .. ", next vis y: " .. self.visDestY)
+		--print("New pos x: " .. self.posX .. ", new pos y: " .. self.posY)
+		--print("Next vis x: " .. self.visDestX .. ", next vis y: " .. self.visDestY)
 	end
 end
 
 function Person:update()
 	self:updateVisualMotion()
+end
+
+function Person:turnToFacePlayer()
+	if playerX < self.posX then
+		self:setFacing(3)
+	elseif playerX > self.posX then
+		self:setFacing(1)
+	elseif playerY < self.posY then
+		self:setFacing(0)
+	elseif playerY > self.posY then
+		self:setFacing(2)
+	end
 end

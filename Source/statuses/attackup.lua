@@ -5,5 +5,5 @@ function AttackUp:init(target)
 end
 
 function AttackUp:modifyAttack(attack)
-	return attack + (self.owner.attack * 0.1)
+	return attack + (self.owner.attack * 0.2)
 end

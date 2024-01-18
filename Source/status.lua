@@ -22,12 +22,20 @@ function Status:modifyDefense(defense)
 	return defense
 end
 
+function Status:preUseMove()
+	return true
+end
+
 function Status:update()
 
 end
 
 function Status:render()
 
+end
+
+function Status:modifyOutgoingDamage(damage, damageType)
+	return damage
 end
 
 -- IMPORTS
@@ -39,3 +47,5 @@ import "statuses/defensedown"
 import "statuses/speeddown"
 import "statuses/defenseup"
 import "statuses/attackup"
+import "statuses/daze"
+import "statuses/charmed"

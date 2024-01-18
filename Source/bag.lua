@@ -51,8 +51,9 @@ function drawBagViewScreen()
 	if bagMenuChosenTab == 1 then
 		for i=bagMenuScrollIdx, bagMenuScrollIdx+BAG_VIEW_NUM_ITEMS_SHOWN do
 			if i > 0 and i <= numKeys(playerItems) then
-				local curItem = keyAtIndex(playerItems, i)
-				local curQuantity = playerItems[curItem]
+				local curName = keyAtIndex(playerItems, i)
+				local curItem = getItemByName(curName)
+				local curQuantity = playerItems[curName]
 				local posY = BAG_VIEW_ITEMS_START_Y + (i-1) * BAG_VIEW_ITEMS_DIST_BETWEEN
 
 				gfx.drawText(curItem.name, BAG_VIEW_ITEM_NAME_X, posY)
@@ -82,11 +83,13 @@ function updateBagViewScreen()
 		switchBagTab()
 	end
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
+		menuClicky()
 		bagMenuIdx -= 1
 		if bagMenuIdx == 0 then
 			bagMenuIdx = numKeys(playerItems)
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+		menuClicky()
 		bagMenuIdx += 1
 		if bagMenuIdx > numKeys(playerItems) then
 			bagMenuIdx = 1
@@ -95,6 +98,7 @@ function updateBagViewScreen()
 	if playdate.buttonJustPressed(playdate.kButtonB) then
 		startFade(openMainScreen)
 	elseif playdate.buttonJustPressed(playdate.kButtonA) then
+		menuClicky()
 		local itemFound = keyAtIndex(playerItems, bagMenuIdx)
 		if itemFound.canUseFromBag then
 			keyAtIndex(playerItems, bagMenuIdx):use()

@@ -36,18 +36,27 @@ function Item:displaySelf(user)
 end
 
 function Item:consumeOne()
-	playerItems[self] -= 1
-	if playerItems[self] == 0 then
-		playerItems[self] = nil
+	playerItems[self.id] -= 1
+	if playerItems[self.id] == 0 then
+		playerItems[self.id] = nil
 	end
 end
 
 -- IMPORTS
 import "items/useonmonsteritem"
+import "items/equippableitem"
 import "items/poutine"
 import "items/capturecube"
 import "items/moveteacher"
+import "items/protectiveshield"
+
+itemMapping = {
+	["Capture Cube"] = CaptureCube(),
+	["Poutine"] = Poutine(),
+	["Mystery Box Teacher"] = MoveTeacher("Mystery Box"),
+	["Protective Shield"] = ProtectiveShield()
+}
 
 function getItemByName(name)
-
+	return itemMapping[name]
 end
