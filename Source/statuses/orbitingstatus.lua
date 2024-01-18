@@ -1,4 +1,4 @@
-class('OrbitingStatus').extends(Status)
+class('OrbitingStatus').extends(OwnedStatus)
 
 local ORBIT_RADIUS <const> = 75
 local TIME_TO_AROUND <const> = 150

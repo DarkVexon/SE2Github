@@ -11,13 +11,27 @@ function Move:init(name)
 	self.description = targetMoveInfo["description"]
 	self.contact = targetMoveInfo["contact"]
 	self.targetsFoe = targetMoveInfo["targetsFoe"]
+	if targetMoveInfo["priority"] == nil then
+		self.priority = 0
+	else
+		self.priority = targetMoveInfo["priority"]
+	end
+	if targetMoveInfo["missChance"] == nil then
+		self.missChance = 0
+	else
+		self.missChance = targetMoveInfo["missChance"]
+	end
 end
 
 local sameTypeAsUserBonus <const> = 1.1
 
 function Move:calculateDamage(owner, target)
 	printIfDebug("Using move " .. self.name .. ".")
-	return manualCalculateDamage(owner, target, self.basePower, self.type)
+	return manualCalculateDamage(owner, target, self:calculatePower(owner, target), self.type)
+end
+
+function Move:calculatePower(owner, target)
+	return self.basePower
 end
 
 function manualCalculateDamage(owner, target, power, type)
@@ -76,18 +90,22 @@ function Move:getCopy()
 end
 
 function Move:checkMiss(owner, target)
-	local missChance = 0
+	local missChance = self.missChance
 	missChance = target.ability:modifyIncomingMiss(missChance)
 	if target.mark ~= nil then
 		missChance = target.mark:modifyIncomingMiss(missChance)
 	end
 	local result = math.random(0, 100)
 	if result <= missChance then
-		addScript(TextScript("But it missed!"))
+		addScript(TextScript("The attack missed!"))
 		return false
 	else
 		return true
 	end
+end
+
+function moveRandom(min, max)
+	return math.random(min, max)
 end
 
 -- import
@@ -100,6 +118,21 @@ import "moves/peck"
 import "moves/meditate"
 import "moves/watergun"
 import "moves/slash"
+import "moves/purifyingflame"
+import "moves/dineanddash"
+import "moves/prayer"
+import "moves/hydraulics"
+import "moves/rootslap"
+import "moves/warble"
+import "moves/jumpscare"
+import "moves/robofist"
+import "moves/scaleshield"
+import "moves/snowball"
+import "moves/stinger"
+import "moves/nomnomnom"
+import "moves/skystrike"
+import "moves/gaseousgaze"
+import "moves/magicmissile"
 
 function getMoveByName(name)
 	if name == "Nibble" then
@@ -118,7 +151,38 @@ function getMoveByName(name)
 		return WaterGun()
 	elseif name == "Slash" then
 		return Slash()
+	elseif name == "Purifying Flame" then
+		return PurifyingFlame()
+	elseif name == "Dine and Dash" then
+		return DineAndDash()
+	elseif name == "Prayer" then
+		return Prayer()
+	elseif name == "Hydraulics" then
+		return Hydraulics()
+	elseif name == "Rootslap" then
+		return Rootslap()
+	elseif name == "Warble" then
+		return Warble()
+	elseif name == "Jumpscare" then
+		return Jumpscare()
+	elseif name == "Robo-Fist" then
+		return RoboFist()
+	elseif name == "Scaleshield" then
+		return Scaleshield()
+	elseif name == "Snowball" then
+		return Snowball()
+	elseif name == "Stinger" then
+		return Stinger()
+	elseif name == "Nom Nom Nom" then
+		return NomNomNom()
+	elseif name == "Skystrike" then
+		return Skystrike()
+	elseif name == "Gaseous Gaze" then
+		return GaseousGaze()
+	elseif name == "Magic Missile" then
+		return MagicMissile()
 	end
+	print("ERR! INCORRECT MOVE NAME: " .. name)
 end
 
 function randomMove()

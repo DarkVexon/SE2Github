@@ -1,5 +1,6 @@
 local COMBAT_MOVE_PANEL_STARTX <const> = 5
 local COMBAT_MOVE_PANEL_DESCRIPTION_WIDTH <const> = 295
+local COMBAT_OTHER_PANEL_DESCRIPTION_WIDTH <const> = 350
 local COMBAT_MOVE_PANEL_DESCRIPTION_HEIGHT <const> = 45
 
 local ENEMY_MONSTER_INFO_DRAWX <const> = 275
@@ -24,7 +25,7 @@ tissueMenuY = combatTextBoxPosY
 
 local tissueShowHideTimer <const> = 10
 
-local combatMenuOptionsStartX <const> = 50
+local combatMenuOptionsStartX <const> = 70
 local combatMenuOptionsStartY <const> = combatTextBoxPosY + 5
 local combatMenuOptionsHorizDist <const> = 200
 local combatMenuOptionsVertDist <const> = 20
@@ -273,12 +274,35 @@ function swapEnemyMonsters(newMonster)
 	addScript(TextScript(curTrainerName .. " sent out " .. newMonster.name .. "!"))
 end
 
+function enemyGoesFirst()
+	local enemyMovePriority
+	local playerMovePriority
+	if enemyChosenMove == nil then
+		enemyMovePriority = 0
+	else
+		enemyMovePriority = enemyChosenMove.priority
+	end
+	if playerChosenMove == nil then
+		playerMovePriority = 0
+	else
+		playerMovePriority = playerChosenMove.priority
+	end
+	if enemyMovePriority < playerMovePriority then
+		return true
+	elseif playerMovePriority < enemyMovePriority then
+		return false
+	else
+		return enemyMonster:getCalculatedSpeed() > playerMonster:getCalculatedSpeed()
+	end
+end
+
 function getNextCombatActions()
 	print("Getting next combat actions at phase " .. turnExecutionPhase)
 	if turnExecutionPhase == 0 then
 		turnExecutionPhase += 1
 		--TODO: Better AI
 		enemyChosenMove = enemyMonster:chooseMove()
+		enemyGoingFirst = enemyGoesFirst()
 		nextScript()
 	elseif turnExecutionPhase == 1 then
 		turnExecutionPhase += 1
@@ -314,14 +338,14 @@ function getNextCombatActions()
 		end
 	elseif turnExecutionPhase == 5 then
 		turnExecutionPhase += 1
-		if enemyMonster:getCalculatedSpeed() > playerMonster:getCalculatedSpeed() then
+		if enemyGoingFirst then
 			enemyMonsterMoveCheck()
 		else
 			playerMonsterMoveCheck()
 		end
 	elseif turnExecutionPhase == 6 then
 		turnExecutionPhase += 1
-		if enemyMonster:getCalculatedSpeed() > playerMonster:getCalculatedSpeed() then
+		if enemyGoingFirst then
 			playerMonsterMoveCheck()
 		else
 			enemyMonsterMoveCheck()
@@ -406,6 +430,10 @@ function resetCombat()
 			v.item:atBattleStart()
 		end
 	end
+
+	playerTeamStatuses = {}
+	enemyTeamStatuses = {}
+	enemyMonsterDrawScale = 1
 end
 
 function beginWildBattle()
@@ -512,6 +540,7 @@ function updateSwapSelect()
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) then
 		menuClicky()
+		isForcedSwitch = false
 		local targetMonster = playerMonsters[tissueSelectionIdx]
 		if targetMonster ~= playerMonster and targetMonster.curHp > 0 then
 			if playerMonster.curHp == 0 then
@@ -526,8 +555,7 @@ function updateSwapSelect()
 				turnExecutionPhase = turnExecutionFirstPhase
 			end
 		end
-	end
-	if playdate.buttonJustPressed(playdate.kButtonB) and playerMonster.curHp > 0 then
+	elseif playdate.buttonJustPressed(playdate.kButtonB) and not isForcedSwitch then
 		menuClicky()
 		hideTissue()
 	end
@@ -653,6 +681,7 @@ end
 
 function openLastResortMenu()
 	turnExecuting = false
+	isForcedSwitch = true
 	showTissue(3)
 end
 
@@ -795,12 +824,18 @@ function drawCombatMonsterData(x, y, monster)
 end
 
 function drawCombatSwapMonsterRow(monster, x, y, selected)
-	if selected then
-		gfx.fillTriangle(x, y, x + 15, y + 8, x, y + 16)
-	end
-	gfx.drawText(monster.name, x + 20, y)
+	--if selected then
+	--	gfx.fillTriangle(x, y, x + 15, y + 8, x, y + 16)
+	--end
+	gfx.drawText(monster.name, x, y)
+	local width = gfx.getTextSize(monster.name) + 6
 	if monster == playerMonster or monster.curHp == 0 then
-		gfx.drawLine(x + 18, y + 8, x + 100, y + 8)
+		gfx.drawLine(x -2, y + 8, x + width, y + 8)
+	end
+	if selected then
+		gfx.setColor(gfx.kColorXOR)
+		gfx.fillRoundRect(x - 3, y - 2, width, 22, 2)
+		gfx.setColor(gfx.kColorBlack)
 	end
 end
 
@@ -822,7 +857,7 @@ function drawTissueMenu()
 		for k, v in pairs(playerItems) do
 			if i >= tissueIndexOffset and i <= tissueIndexOffset+3 and i <= numKeys(playerItems) then
 				local itemByName = getItemByName(k)
-				drawCombatMenuChoice(itemByName.name .. " x" .. v, tissueMenuX + 10, tissueMenuY + 10 + ((i) * 25), tissueSelectionIdx == i and tissueTimer == 0)
+				drawCombatMenuChoice(itemByName.name, tissueMenuX + 10, tissueMenuY + 10 + ((i) * 25), tissueSelectionIdx == i and tissueTimer == 0)
 				i += 1
 			end
 		end
@@ -857,13 +892,16 @@ end
 
 
 function drawCombatMenuChoice(text, x, y, selected)
-	if selected then
-		gfx.fillTriangle(x, y, x + 15, y + 8, x, y + 16)
-	end
 	if text ~= nil then
-		gfx.drawText(text, x + 20, y)
+		gfx.drawText(text, x, y)
 	else
-		gfx.drawText("???", x+20, y)
+		gfx.drawText("???", x, y)
+	end
+	if selected then
+		gfx.setColor(gfx.kColorXOR)
+		local width = gfx.getTextSize(text) + 6
+		gfx.fillRoundRect(x - 3, y - 2, width, 22, 2)
+		gfx.setColor(gfx.kColorBlack)
 	end
 end
 
@@ -883,6 +921,16 @@ function drawCombatBottomBg()
 	gfx.setColor(gfx.kColorBlack)
 end
 
+function drawFullItemInfo(itemID, qty, x, y)
+	local item = getItemByName(itemID)
+	gfx.drawTextInRect(item.description .. " Held: " .. qty, x + 35, y, COMBAT_OTHER_PANEL_DESCRIPTION_WIDTH, COMBAT_MOVE_PANEL_DESCRIPTION_HEIGHT)
+end
+
+function drawMiniMonsterInfo(monster, x, y)
+	renderTypesHoriz(monster.types, x, y)
+	drawHealthBar(x + 160, y, MONSTER_INFO_HPBAR_WIDTH, MONSTER_INFO_HPBAR_HEIGHT, monster.curHp, monster.maxHp)
+end
+
 function drawCombatChoicePhase()
 	if tissueTimer > 0 or tissueMenuShown then
 		drawTissueMenu()
@@ -890,7 +938,7 @@ function drawCombatChoicePhase()
 
 	drawCombatBottomBg()
 
-	if not turnExecuting and playerMonster.curHp > 0 and combatSubmenuChosen < 5 then 
+	if not turnExecuting and playerMonster.curHp > 0 and combatSubmenuChosen < 5 and not isForcedSwitch then 
 		if (tissueTimer > tissueShowHideTimer/2 or combatSubmenuChosen == 0) and not swapToExecution then
 			local index = 1
 			for y=0, 1 do
@@ -904,6 +952,11 @@ function drawCombatChoicePhase()
 
 	if (tissueTimer > tissueShowHideTimer/2 and combatPrevSubmenu == 1) or combatSubmenuChosen == 1 then
 		drawFullMoveInfo(playerMonster.moves[tissueSelectionIdx], COMBAT_MOVE_PANEL_STARTX, combatInfoPanY)
+	elseif (tissueTimer > tissueShowHideTimer/2 and combatPrevSubmenu == 2) or combatSubmenuChosen == 2 then
+		local itemID = keyAtIndex(playerItems, tissueSelectionIdx)
+		drawFullItemInfo(itemID, playerItems[itemID], COMBAT_MOVE_PANEL_STARTX, combatInfoPanY)
+	elseif (tissueTimer > tissueShowHideTimer/2 and combatPrevSubmenu == 3) or combatSubmenuChosen == 3 then
+		drawMiniMonsterInfo(playerMonsters[tissueSelectionIdx], COMBAT_MOVE_PANEL_STARTX, combatInfoPanY)
 	end
 end
 
@@ -945,9 +998,20 @@ function drawCombatInterface()
 			v:render()
 		end
 	end
+	if curAnim ~= nil then
+		if curAnim.renderBehind then
+			curAnim:render()
+		end
+	end
+
+	for k, v in pairs(curEffects) do
+		if v.renderBehind then
+			v:render()
+		end
+	end
 
 	if showEnemyMonster then
-		enemyMonster.img:draw(enemyMonsterPosX, enemyMonsterPosY)
+		enemyMonster.img:drawScaled(enemyMonsterPosX, enemyMonsterPosY, enemyMonsterDrawScale)
 	end
 	drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
 	enemyMonster.ability:render()
@@ -968,11 +1032,15 @@ function drawCombatInterface()
 		end
 	end
 	if curAnim ~= nil then
-		curAnim:render()
+		if not curAnim.renderBehind then
+			curAnim:render()
+		end
 	end
 
 	for k, v in pairs(curEffects) do
-		v:render()
+		if not v.renderBehind then
+			v:render()
+		end
 	end
 
 	if textBoxShown then

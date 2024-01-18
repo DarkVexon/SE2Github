@@ -4,10 +4,9 @@ class('Status').extends()
 -- 0: Debuff
 -- 1: Buff
 
-function Status:init(name, type, owner)
+function Status:init(name, type)
 	self.name = name
 	self.type = type
-	self.owner = owner
 end
 
 function Status:modifyAttack(attack)
@@ -34,12 +33,17 @@ function Status:render()
 
 end
 
+function Status:modifyIncomingDamage(damage, damageType)
+	return damage
+end
+
 function Status:modifyOutgoingDamage(damage, damageType)
 	return damage
 end
 
 -- IMPORTS
 
+import "statuses/ownedstatus"
 import "statuses/orbitingstatus"
 import "statuses/attackdown"
 import "statuses/speedup"
@@ -49,3 +53,4 @@ import "statuses/defenseup"
 import "statuses/attackup"
 import "statuses/daze"
 import "statuses/charmed"
+import "statuses/scaleshieldstatus"

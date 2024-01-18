@@ -55,8 +55,7 @@ end
 function onKbHide()
 	keyboardShown = false
 	if playdate.keyboard.text == "" then
-		caughtMonster.name = "??"
-		caughtMonster.img = glitchMonsterImg()
+		glitch(caughtMonster)
 	else
 		caughtMonster.name = playdate.keyboard.text
 	end

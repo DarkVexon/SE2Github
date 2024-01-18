@@ -2,6 +2,7 @@ class('Animation').extends()
 
 function Animation:init()
 	self.isDone = false
+	self.renderBehind = false
 end
 
 function Animation:update()
@@ -20,3 +21,4 @@ import "animations/moveofforonanim"
 import "animations/movecapturedmonsteranim"
 import "animations/launchboltanim"
 import "animations/xpbaranim"
+import "animations/throwcubeanim"

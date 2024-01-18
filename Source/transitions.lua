@@ -3,7 +3,7 @@ fadeOutTimer = 0
 fadeInTimer = 0
 fadeDest = nil
 
-local fadeCircEndpoint = math.sqrt(400^2 + 240^2)/2
+fadeCircEndpoint = math.sqrt(400^2 + 240^2)/2
 
 function startFade(toCall)
 	fadeOutTimer = transitionTimer

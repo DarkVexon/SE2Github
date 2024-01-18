@@ -41,17 +41,28 @@ natures = {
 }
 
 function glitchMonsterImg()
-	local glitcherImg = gfx.image.new(100, 100)
+	local glitcherImg = gfx.image.new(math.random(94, 118), math.random(94, 118))
 	gfx.pushContext(glitcherImg)
 	for x=0, 1 do
 		for y=0, 1 do
 			local tarSpecies = randomSpecies()
 			local tarImg = monsterImgs[tarSpecies]
-			tarImg:draw(-50 + 100*x, -50 + 100*y)
+			tarImg:draw(math.random(-55, -45) + 100*x, math.random(-55, -45) + 100*y)
 		end
 	end
 	gfx.popContext()
 	return glitcherImg
+end
+
+function glitch(monster)
+	monster.name = "??"
+	monster.img = glitchMonsterImg()
+	for i=1, 4 do
+		monster.moves[i] = randomMove()
+	end
+	monster.types = randomTypeCombo()
+	monster.ability = randomAbility(monster)
+	monster.speciesName = ""
 end
 
 function randomSpecies()
@@ -341,6 +352,16 @@ end
 function Monster:takeDamage(amount, damageType, source)
 	for k, v in pairs(source.statuses) do
 		amount = v:modifyOutgoingDamage(amount, damageType)
+	end
+
+	if self:isFriendly() then
+		for k, v in pairs(playerTeamStatuses) do
+			amount = v:modifyIncomingDamage(amount, damageType)
+		end
+	else
+		for k, v in pairs(enemyTeamStatuses) do
+			amount = v:modifyIncomingDamage(amount, damageType)
+		end
 	end
 	amount = self.ability:modifyIncomingDamage(amount, damageType)
 

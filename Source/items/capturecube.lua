@@ -1,5 +1,7 @@
 class('CaptureCube').extends(Item)
 
+CAPTURE_CUBE_COMBAT_IMG = gfx.image.new("img/combat/cube")
+
 function CaptureCube:init()
 	CaptureCube.super.init(self, "Capture Cube")
 end
@@ -15,7 +17,7 @@ end
 
 function CaptureCube:use()
 	self:displaySelf(playerName)
-	-- TODO: Cool anim
+	addScript(StartAnimScript(ThrowCubeAnim(2)))
 	attemptToCapture(enemyMonster)
 	self:consumeOne()
 end

@@ -61,7 +61,8 @@
     "grantedExp": 30,
     "catchDifficulty": 20,
     "learnset": {
-      "1": "Nibble"
+      "1": "Nibble",
+      "3": "Dine and Dash"
     },
     "article": "",
     "description": "Exceedingly rare, Circe is said to be a type of demon which manifested into the human realm.",
@@ -78,7 +79,8 @@
     "grantedExp": 40,
     "catchDifficulty": 25,
     "learnset": {
-      "1": "Spark"
+      "1": "Spark",
+      "6": "Hydraulics"
     },
     "article": "",
     "description": "They doggedly drive from one location to another.",
@@ -112,7 +114,8 @@
     "grantedExp": 25,
     "catchDifficulty": 35,
     "learnset": {
-      "1": "Nibble"
+      "1": "Nibble",
+      "3": "Dine and Dash"
     },
     "article": "a ",
     "description": "A highly aggressive plant. Even the lightest breeze causes Chompah to blindly attack.",
@@ -213,6 +216,7 @@
     "stats": [125, 231, 111, 155],
     "lvlspeed": "normal",
     "grantedExp": 53,
+    "catchDifficulty": 99,
     "learnset": {
       "1": "Nibble"
     },

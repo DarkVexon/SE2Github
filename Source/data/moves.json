@@ -68,5 +68,146 @@
     "description": "A simple slash with a sword.",
     "contact": true,
     "targetsFoe": true
+  },
+  "Purifying Flame":
+  {
+    "moveName": "Purifier",
+    "type": "fire",
+    "basePower": 15,
+    "description": "Remove debuffs.",
+    "contact": false,
+    "targetsFoe": true
+  },
+  "Dine and Dash":
+  {
+    "moveName": "Dine & Dash",
+    "type": "teeth",
+    "basePower": 12,
+    "description": "After use, the user switches out.",
+    "contact": true,
+    "targetsFoe": true
+  },
+  "Prayer":
+  {
+    "moveName": "Prayer",
+    "type": "knight",
+    "description": "Heal for 30% of maximum HP. Increase SPD by 20%.",
+    "contact": false,
+    "targetsFoe": false
+  },
+  "Hydraulics":
+  {
+    "moveName": "Hydraulics",
+    "type": "water",
+    "description": "Increase ATK and SPD by 20%.",
+    "contact": false,
+    "targetsFoe": false
+  },
+  "Rootslap":
+  {
+    "moveName": "Rootslap",
+    "type": "plant",
+    "basePower": 10,
+    "description": "Decrease enemy SPD by 20%.",
+    "contact": true,
+    "targetsFoe": true
+  },
+  "Warble":
+  {
+    "moveName": "Warble",
+    "type": "alien",
+    "description": "Decrease enemy ATK, DEF, and SPD by 20%.",
+    "contact": false,
+    "targetsFoe": true
+  },
+  "Jumpscare":
+  {
+    "moveName": "Jumpscare",
+    "type": "fear",
+    "basePower": 7,
+    "description": "Always goes first.",
+    "contact": true,
+    "targetsFoe": true,
+    "priority": -1
+  },
+  "Robo-Fist":
+  {
+    "moveName": "Robo-Fist",
+    "type": "tech",
+    "basePower": 8,
+    "description": "Increase ATK by 20%.",
+    "contact": true,
+    "targetsFoe": true
+  },
+  "Scaleshield":
+  {
+    "moveName": "Scaleshield",
+    "type": "drake",
+    "description": "For 3 turns, reduce all incoming damage to your team by 30%.",
+    "contact": false,
+    "targetsFoe": false
+  },
+  "Snowball":
+  {
+    "moveName": "Snowball",
+    "type": "ice",
+    "basePower": 9,
+    "description": "Chance to reduce SPD by 20%.",
+    "contact": false,
+    "targetsFoe": true
+  },
+  "Magic Missile":
+  {
+    "moveName": "Magic Missile",
+    "type": "magic",
+    "basePower": 8,
+    "description": "A small magical burst.",
+    "contact": false,
+    "targetsFoe": true
+  },
+  "Stinger":
+  {
+    "moveName": "Stinger",
+    "type": "bug",
+    "basePower": 18,
+    "description": "Lose 20% max HP.",
+    "contact": true,
+    "targetsFoe": true
+  },
+  "Nom Nom Nom":
+  {
+    "moveName": "nom nom nom",
+    "type": "teeth",
+    "basePower": 5,
+    "description": "Hits three times.",
+    "contact": true,
+    "targetsFoe": true
+  },
+  "Rock Throw":
+  {
+    "moveName": "Rock Throw",
+    "type": "rock",
+    "basePower": 12,
+    "description": "10% chance to miss.",
+    "contact": false,
+    "targetsFoe": true,
+    "missChance": 10
+  },
+  "Skystrike":
+  {
+    "moveName": "Skystrike",
+    "type": "wing",
+    "basePower": 8,
+    "description": "Has double power against full-HP targets.",
+    "contact": true,
+    "targetsFoe": true
+  },
+  "Gaseous Gaze":
+  {
+    "moveName": "Gaseous Gaze",
+    "type": "poison",
+    "description": "Makes the target sick.",
+    "contact": false,
+    "targetsFoe": true
   }
 }

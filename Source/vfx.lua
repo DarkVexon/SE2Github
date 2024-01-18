@@ -2,6 +2,7 @@ class('VFX').extends()
 
 function VFX:init()
 	self.isDone = false
+	self.renderBehind = false
 end
 
 function VFX:render()

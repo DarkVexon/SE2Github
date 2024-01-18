@@ -152,6 +152,5 @@ function getAbilityByName(name, owner)
 end
 
 function randomAbility(owner)
-	--TODO TOO LAZY
-	return getAbilityByName("Devourer", owner)
+	return getAbilityByName(keyAtIndex(abilityInfo, math.random(numKeys(abilityInfo))), owner)
 end

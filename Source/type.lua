@@ -185,4 +185,5 @@ function randomTypeCombo()
 			table.insert(typeResult, table.remove(allTypes, math.random(#allTypes)))
 		end
 	end
+	return typeResult
 end

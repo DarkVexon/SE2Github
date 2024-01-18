@@ -32,7 +32,7 @@
   "Snapper":
   {
     "abilityName": "Snapper",
-    "description": "Enters combat with a 10 damage Plant attack."
+    "description": "Enters combat with a 10 power Plant attack."
   },
   "Innovator":
   {
@@ -67,7 +67,7 @@
   "Wand Waver":
   {
     "abilityName": "Wand Waver",
-    "description": "2 non-attacks causes 15 damage Magic attack."
+    "description": "Use 2 non-attacks for 15 power Magic attack."
   },
   "Spring Spout":
   {

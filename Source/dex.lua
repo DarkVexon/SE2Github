@@ -140,9 +140,9 @@ function drawDexMenu()
             --local basicallyOffset = (math.abs(i-dexIdx)) * 0.5
 
             --local dexIconScale = playdate.math.lerp(1.0, 0.5, basicallyOffset)
-            local dexIconScale = playdate.math.lerp(0, 1, basicallyOffset)
-            local dexIconDestX = (circRadius) * math.cos(destRads) + circlePosition
-            local dexIconDestY = (circRadius) * math.sin(destRads) + 120
+			local dexIconScale = playdate.math.lerp(0, 1, basicallyOffset)
+			local dexIconDestX = (circRadius) * math.cos(destRads) + circlePosition
+			local dexIconDestY = (circRadius) * math.sin(destRads) + 120
 
             if dexIdx == i then
                 local squareSize = 120 * dexIconScale

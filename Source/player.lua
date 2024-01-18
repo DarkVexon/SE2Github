@@ -56,8 +56,11 @@ function removeFromParty(monster)
 end
 
 --addToParty(randomEncounterMonster("Error", {40, 50}))
+addToParty(randomEncounterMonster("Circe", {5, 5}))
 addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
---addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
---addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
+addToParty(randomEncounterMonster("Chompah", {5, 5}))
+--for i, v in ipairs(playerMonsters) do
+--	glitch(v)
+--end
 --addToParty(randomEncounterMonster("Hungwy", {5, 5}))
 --playerMonsters[1].exp = playerMonsters[1]:xpToNext()-25
