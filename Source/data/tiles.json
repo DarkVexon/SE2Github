@@ -5,7 +5,8 @@
 		"stepSwaps": {
 			"6": 29,
 			"29": 6
-		}
+		},
+		"overlays": [6, 29]
 	},
 	"indoors": {
 		"passable": [2, 3, 6],

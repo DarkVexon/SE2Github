@@ -12,6 +12,9 @@ function initializePlayer()
 	for i, k in ipairs(getTableKeys(monsterInfo)) do
 		playerDex[k] = 0
 	end
+
+
+	addToParty(randomEncounterMonster("Craydrisk", {5, 5}))
 end
 
 function getDexProgress(type)
@@ -50,7 +53,7 @@ end
 
 --addToParty(randomEncounterMonster("Error", {40, 50}))
 --addToParty(randomEncounterMonster("Circe", {5, 5}))
---addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
+--
 --addToParty(randomEncounterMonster("Chompah", {5, 5}))
 --for i, v in ipairs(playerMonsters) do
 --	glitch(v)

@@ -30,9 +30,13 @@ playerPrevRenderPosY = playerRenderPosY
 playerDestRenderPosX = playerRenderPosX
 playerDestRenderPosY = playerRenderPosY
 playerFooting = 1
+currentTime = -1
 
 returnScripts = {}
 overworldFx = {}
+
+local grassOver <const> = gfx.image.new("img/overworld/grassover")
+local grassOverAlt <const> = gfx.image.new("img/overworld/grassover-alt")
 
 curAreaName = "Colus Town"
 
@@ -234,6 +238,25 @@ function drawInOverworld()
 	gfx.fillEllipseInRect(playerRenderPosX, playerRenderPosY + 40 - 13, 40, 10)
 	gfx.setColor(gfx.kColorBlack)
 	playerImg[playerImgIndex]:draw(playerRenderPosX, playerRenderPosY - 8)
+	if playerPrevY >= playerY then
+		local indexOfOverlay = indexValue(overlays, prevTile)
+		if indexOfOverlay ~= -1 then
+			if indexOfOverlay == 1 then
+				grassOver:draw(projectX((playerPrevX - 1) * 40), projectY((playerPrevY-1) * 40))
+			else
+				grassOverAlt:draw(projectX((playerPrevX - 1) * 40), projectY((playerPrevY-1) * 40))
+			end
+		end
+	end
+
+	indexOfOverlay = indexValue(overlays, currentTile)
+	if indexOfOverlay ~= -1 then
+		if indexOfOverlay == 1 then
+			grassOver:draw(projectX((playerX - 1) * 40), projectY((playerY-1) * 40))
+		else
+			grassOverAlt:draw(projectX((playerX - 1) * 40), projectY((playerY-1) * 40))
+		end
+	end
 
 	for i, v in ipairs(overworldFx) do
 		v:render()
@@ -361,11 +384,13 @@ end
 
 function playerMoveBy(x, y)
 	if (x ~= 0 or y ~= 0) then
+		prevTile = currentTile
 		playerPrevX = playerX
 		playerPrevY = playerY
 		swapPlayerFooting()
 		playerX += x
 		playerY += y
+		currentTile = currentTileset:getTileAtPosition(playerX, playerY)
 		if playerFacing == 0 or playerFacing == 2 then
 			playerImgIndex = 1 + playerFooting
 		else
@@ -433,7 +458,6 @@ end
 
 function onMoveEnd()
 	playerImgIndex  = 1
-	local landedTile = currentTileset:getTileAtPosition(playerX, playerY)
 	movingCam = false
 	allowImmediateMovementCheck = true
 	for k, v in ipairs(objs) do
@@ -445,7 +469,7 @@ function onMoveEnd()
 			end
 		end
 	end
-	if contains(encounterTiles, landedTile) then
+	if contains(encounterTiles, currentTile) then
 		if math.random(0, 3) == 0 then
 			local startX = (playerX - 1) * 40 + 15
 			local endX = (playerX) * 40 - 15
@@ -458,13 +482,15 @@ function onMoveEnd()
 			end
 		end
 		if randomEncounterChance() and not fightStarting then
-			allowImmediateMovementCheck = false
-			mapRandomEncounter()
+			--allowImmediateMovementCheck = false
+			--mapRandomEncounter()
 		end
 	end
 	if stepSwaps ~= nil then
-		if stepSwaps[landedTile .. ""] ~= nil then
-			currentTileset:setTileAtPosition(playerX, playerY, stepSwaps[landedTile .. ""])
+		if stepSwaps[currentTile .. ""] ~= nil then
+			local newTile = stepSwaps[currentTile .. ""]
+			currentTileset:setTileAtPosition(playerX, playerY, newTile)
+			currentTile = newTile
 		end
 	end
 	if allowImmediateMovementCheck then
@@ -490,10 +516,11 @@ function updateCameraOffset()
 
 		if cameraTimer == cameraMaxTimer * 0.5 then
 			playerImgIndex = 1
-			local tarTile = currentTileset:getTileAtPosition(playerX, playerY)
 			if stepSwaps ~= nil then
-				if stepSwaps[tarTile .. ""] ~= nil then
-					currentTileset:setTileAtPosition(playerX, playerY, stepSwaps[tarTile .. ""])
+				if stepSwaps[currentTile .. ""] ~= nil then
+					local newTile = stepSwaps[currentTile .. ""]
+					currentTileset:setTileAtPosition(playerX, playerY, newTile)
+					currentTile = newTile
 				end
 			end
 		end

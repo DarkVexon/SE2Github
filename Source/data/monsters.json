@@ -329,5 +329,22 @@
     "description": "???",
     "locationHint": "very rarely",
     "location": "Unknown"
+  },
+  "Craydrisk":
+  {
+    "speciesName": "Craydrisk",
+    "types": ["water", "drake"],
+    "ability": "Whiskers",
+    "stats": [133, 110, 120, 60],
+    "lvlspeed": "normal",
+    "grantedExp": 60,
+    "catchDifficulty": 20,
+    "learnset": {
+      "1": "Aqua Slam"
+    },
+    "article": "a ",
+    "description": "???",
+    "locationHint": "via fishing",
+    "location": "Route 10"
   }
 }

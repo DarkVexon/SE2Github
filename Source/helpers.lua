@@ -25,6 +25,9 @@ function valueAtIndex(test, wanted)
 end
 
 function indexKey(test, key)
+	if test == nil then
+		return -1
+	end
 	for i, v in ipairs(getTableKeys(test)) do
 		if v == key then
 			return i
@@ -33,6 +36,9 @@ function indexKey(test, key)
 end
 
 function indexValue(test, key)
+	if test == nil then
+		return -1
+	end
 	for i, v in ipairs(test) do
 		if v == key then
 			return i

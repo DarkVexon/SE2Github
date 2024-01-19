@@ -12,6 +12,8 @@ overworldTiles:setImageTable(outdoorsTable)
 tilesets = {}
 impassableTiles = {}
 randomEncounterTiles = {}
+stepSwaps = {}
+overlays = {}
 
 indoorsTiles = gfx.tilemap.new()
 indoorsTiles:setImageTable(indoorsTable)
@@ -47,6 +49,7 @@ function loadMap(map, x, y, facing)
 	passables = tilesetInfo[tilesToUse]["passable"]
 	encounterTiles = tilesetInfo[tilesToUse]["encounter"]
 	stepSwaps = tilesetInfo[tilesToUse]["stepSwaps"]
+	overlays = tilesetInfo[tilesToUse]["overlays"]
 	randomEncounters = mapResult["encountertable"]
 	encounterChance = mapResult["encounterchance"]
 	dividers = mapResult["dividers"]
@@ -64,6 +67,8 @@ function loadMap(map, x, y, facing)
 	playerY = y
 	playerPrevX = playerX
 	playerPrevY = playerY
+	currentTile = currentTileset:getTileAtPosition(playerX, playerY)
+	prevTile = currentTile
 
 	if mapBg == "white" then
 		gfx.setBackgroundColor(gfx.kColorWhite)

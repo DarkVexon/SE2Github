@@ -64,13 +64,14 @@ function manualCalculateDamage(owner, target, power, type)
 	end
 	output *= typeMatchupOutcome
 	local critChance = 0
+	critChance = owner.ability:modifyOutgoingCrit(critChance)
 	if owner.mark ~= nil then
 		critChance = owner.mark:modifyOutgoingCrit(critChance)
 	end
 	local critRoll = math.random(100)
 	if critRoll <= critChance then
 		printIfDebug("Rolled a crit! Doubling damage.")
-		table.insert(scriptStack, 2, TextScript("Critical Hit!!!"))
+		table.insert(scriptStack, TextScript("Critical Hit!!!"))
 		output *= 2
 		printIfDebug("New total: " .. output)
 	end
@@ -95,10 +96,15 @@ function Move:checkMiss(owner, target)
 	if target.mark ~= nil then
 		missChance = target.mark:modifyIncomingMiss(missChance)
 	end
+	missChance = target.ability:modifyOutgoingMiss(missChance)
 	local result = math.random(0, 100)
 	if result <= missChance then
 		addScript(TextScript("The attack missed!"))
-		return false
+		if owner.ability:willMiss() then
+			return false
+		else
+			return true
+		end
 	else
 		return true
 	end
@@ -134,6 +140,7 @@ import "moves/skystrike"
 import "moves/gaseousgaze"
 import "moves/magicmissile"
 import "moves/rockthrow"
+import "moves/aquaslam"
 
 function getMoveByName(name)
 	if name == "Nibble" then
@@ -184,6 +191,8 @@ function getMoveByName(name)
 		return MagicMissile()
 	elseif name == "Rock Throw" then
 		return RockThrow()
+	elseif name == "Aqua Slam" then
+		return AquaSlam()
 	end
 	print("ERR! INCORRECT MOVE NAME: " .. name)
 end

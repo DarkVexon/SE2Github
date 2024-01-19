@@ -52,6 +52,18 @@ function Ability:modifyIncomingMiss(missChance)
 	return missChance
 end
 
+function Ability:modifyOutgoingMiss(missChance)
+	return missChance
+end
+
+function Ability:willMiss()
+	return true
+end
+
+function Ability:modifyOutgoingCrit(critChance)
+	return critChance
+end
+
 function Ability:atEndOfTurn()
 
 end
@@ -108,6 +120,7 @@ import "abilities/muffledneighing"
 import "abilities/alienated"
 import "abilities/puffedplumage"
 import "abilities/iridescence"
+import "abilities/whiskers"
 
 function getAbilityByName(name, owner)
 	if name == "Lovebug" then
@@ -148,6 +161,8 @@ function getAbilityByName(name, owner)
 		return PuffedPlumage(owner)
 	elseif name == "Iridescence" then
 		return Iridescence(owner)
+	elseif name == "Whiskers" then
+		return Whiskers(owner)
 	end
 end
 

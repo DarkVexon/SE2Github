@@ -93,5 +93,10 @@
   {
     "abilityName": "Iridescence",
     "description": "Resists Fire, Water, and Plant."
+  },
+  "Whiskers":
+  {
+    "abilityName": "Whiskers",
+    "description": "Misses are crits."
   }
 }

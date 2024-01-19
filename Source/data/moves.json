@@ -209,5 +209,15 @@
     "description": "Makes the target sick.",
     "contact": false,
     "targetsFoe": true
+  },
+  "Aqua Slam":
+  {
+    "moveName": "Aqua Slam",
+    "type": "water",
+    "basePower": 14,
+    "description": "30% chance to miss.",
+    "contact": true,
+    "targetsFoe": true,
+    "missChance": 100
   }
 }
