@@ -218,6 +218,6 @@
     "description": "30% chance to miss.",
     "contact": true,
     "targetsFoe": true,
-    "missChance": 100
+    "missChance": 30
   }
 }

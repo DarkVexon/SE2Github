@@ -249,12 +249,14 @@ function drawInOverworld()
 		end
 	end
 
-	indexOfOverlay = indexValue(overlays, currentTile)
-	if indexOfOverlay ~= -1 then
-		if indexOfOverlay == 1 then
-			grassOver:draw(projectX((playerX - 1) * 40), projectY((playerY-1) * 40))
-		else
-			grassOverAlt:draw(projectX((playerX - 1) * 40), projectY((playerY-1) * 40))
+	if playerPrevY <= playerY or cameraTimer <= cameraMaxTimer * 0.5 then
+		indexOfOverlay = indexValue(overlays, currentTile)
+		if indexOfOverlay ~= -1 then
+			if indexOfOverlay == 1 then
+				grassOver:draw(projectX((playerX - 1) * 40), projectY((playerY-1) * 40))
+			else
+				grassOverAlt:draw(projectX((playerX - 1) * 40), projectY((playerY-1) * 40))
+			end
 		end
 	end
 

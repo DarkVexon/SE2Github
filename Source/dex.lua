@@ -29,7 +29,6 @@ end
 
 function openDexMenu()
 	curScreen = 7
-	dexIdx = 1
 	lastDexIdx = dexIdx
 	resetDex()
 	dexTimer = 10

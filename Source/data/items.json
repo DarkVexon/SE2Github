@@ -4,27 +4,39 @@
     "itemName": "Poutine",
     "description": "Heals 20 HP.",
     "canUseInBag": true,
-    "canUseInBattle": true
+    "canUseInBattle": true,
+    "isKey": false
   },
   "Capture Cube":
   {
     "itemName": "Capture Cube",
     "description": "Attempt to capture a wild enemy monster.",
     "canUseInBag": false,
-    "canUseInBattle": true
+    "canUseInBattle": true,
+    "isKey": false
   },
   "Move Teacher":
   {
     "itemName": "Move Teacher",
     "description": "Use this to teach a Kenermon a move.",
     "canUseInBag": true,
-    "canUseInBattle": false
+    "canUseInBattle": false,
+    "isKey": false
   },
   "Protective Shield":
   {
     "itemName": "Protective Shield",
     "description": "Reduces super-effective damage once.",
     "canUseInBag": true,
-    "canUseInBattle": false
+    "canUseInBattle": false,
+    "isKey": false
+  },
+  "Kenedar Map":
+  {
+    "itemName": "Kenedar Map",
+    "descrioption": "Where am I?",
+    "canUseInBag": true,
+    "canUseInBattle": false,
+    "isKey": true
   }
 }

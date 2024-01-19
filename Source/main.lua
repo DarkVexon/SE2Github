@@ -46,6 +46,7 @@ import "storageview"
 import "shop"
 import "mainmenuoptions"
 import "formalities"
+import "worldmap"
 
 isCrankUp = false
 
@@ -67,6 +68,7 @@ curScreen = 0
 -- 9: Monster storage view screen
 -- 10: Shop screen
 -- 11: Main menu option selection
+-- 12: World map
 
 skipNextRender = false
 
@@ -108,6 +110,8 @@ function playdate.update()
 				updateShop()
 			elseif curScreen == 11 then
 				updateMainMenuOptionScreen()
+			elseif curScreen == 12 then
+				updateWorldMap()
 			end
 		end
 
@@ -159,6 +163,8 @@ function render()
 		drawShop()
 	elseif curScreen == 11 then
 		drawMainMenuOptionScreen()
+	elseif curScreen == 12 then
+		drawWorldMap()
 	end
 
 	if popupUp then

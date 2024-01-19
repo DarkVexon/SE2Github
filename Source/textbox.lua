@@ -72,9 +72,9 @@ end
 
 function getTextBoxMaxRows()
 	if curScreen == 3 then
-		return 3
+		return 2
 	else
-		return 5
+		return 3
 	end
 end
 

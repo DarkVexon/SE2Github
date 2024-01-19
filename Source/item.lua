@@ -49,12 +49,14 @@ import "items/poutine"
 import "items/capturecube"
 import "items/moveteacher"
 import "items/protectiveshield"
+import "items/kenedarmap"
 
 itemMapping = {
 	["Capture Cube"] = CaptureCube(),
 	["Poutine"] = Poutine(),
 	["Mystery Box Teacher"] = MoveTeacher("Mystery Box"),
-	["Protective Shield"] = ProtectiveShield()
+	["Protective Shield"] = ProtectiveShield(),
+	["Kenedar Map"] = KenedarMap()
 }
 
 function getItemByName(name)

@@ -3,6 +3,9 @@ function initializePlayer()
 	playerMonsters = {}
 	playerMonsterStorage = {}
 	playerItems = {}
+	playerKeyItems = {
+		["Kenedar Map"] = 1
+	}
 	playerMoney = 100
 	playerFlag = 1
 	playerRetreatMap = "testtownroom1"

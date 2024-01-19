@@ -17,10 +17,19 @@ bagMenuChosenTab = 1
 bagMenuIdx = 1
 bagMenuScrollIdx = 0
 
+function setupBagMenuOptions()
+	if bagMenuChosenTab == 1 then
+		bagMenuItems = playerItems
+	else
+		bagMenuItems = playerKeyItems
+	end
+end
+
 function openBag()
 	curScreen = 4
 	bagMenuIdx = 1
 	bagMenuScrollIdx = 0
+	setupBagMenuOptions()
 end
 
 function drawBagViewScreen()
@@ -48,22 +57,22 @@ function drawBagViewScreen()
 		keyItemTabImg:draw(BAG_SCREEN_EDGE_BUFFER + BAG_SCREEN_WIDTH / 4 - 30+ (BAG_SCREEN_WIDTH/2), BAG_VIEW_TAB_ICON_HEIGHT)
 	end
 
-	if bagMenuChosenTab == 1 then
-		for i=bagMenuScrollIdx, bagMenuScrollIdx+BAG_VIEW_NUM_ITEMS_SHOWN do
-			if i > 0 and i <= numKeys(playerItems) then
-				local curName = keyAtIndex(playerItems, i)
-				local curItem = getItemByName(curName)
+	for i=bagMenuScrollIdx, bagMenuScrollIdx+BAG_VIEW_NUM_ITEMS_SHOWN do
+		if i > 0 and i <= numKeys(bagMenuItems) then
+			local curName = keyAtIndex(bagMenuItems, i)
+			local curItem = getItemByName(curName)
+			local posY = BAG_VIEW_ITEMS_START_Y + (i-1) * BAG_VIEW_ITEMS_DIST_BETWEEN
+
+			gfx.drawText(curItem.name, BAG_VIEW_ITEM_NAME_X, posY)
+			if bagMenuChosenTab == 1 then
 				local curQuantity = playerItems[curName]
-				local posY = BAG_VIEW_ITEMS_START_Y + (i-1) * BAG_VIEW_ITEMS_DIST_BETWEEN
-
-				gfx.drawText(curItem.name, BAG_VIEW_ITEM_NAME_X, posY)
 				gfx.drawText("x" .. curQuantity, BAG_VIEW_ITEM_QUANTITY_X, posY)
+			end
 
-				if i == bagMenuIdx then
-					gfx.setColor(gfx.kColorXOR)
-					gfx.fillRoundRect(BAG_VIEW_ITEM_NAME_X - 5, posY - 2, 325, 20, 2)
-					gfx.setColor(gfx.kColorBlack)
-				end
+			if i == bagMenuIdx then
+				gfx.setColor(gfx.kColorXOR)
+				gfx.fillRoundRect(BAG_VIEW_ITEM_NAME_X - 5, posY - 2, 325, 20, 2)
+				gfx.setColor(gfx.kColorBlack)
 			end
 		end
 	end
@@ -75,6 +84,7 @@ function switchBagTab()
 	else
 		bagMenuChosenTab = 1
 	end
+	setupBagMenuOptions()
 	bagMenuIdx = 1
 end
 
@@ -86,12 +96,12 @@ function updateBagViewScreen()
 		menuClicky()
 		bagMenuIdx -= 1
 		if bagMenuIdx == 0 then
-			bagMenuIdx = numKeys(playerItems)
+			bagMenuIdx = numKeys(bagMenuItems)
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonDown) then
 		menuClicky()
 		bagMenuIdx += 1
-		if bagMenuIdx > numKeys(playerItems) then
+		if bagMenuIdx > numKeys(bagMenuItems) then
 			bagMenuIdx = 1
 		end
 	end
@@ -99,7 +109,7 @@ function updateBagViewScreen()
 		startFade(openMainScreen)
 	elseif playdate.buttonJustPressed(playdate.kButtonA) then
 		menuClicky()
-		local itemFound = getItemByName(keyAtIndex(playerItems, bagMenuIdx))
+		local itemFound = getItemByName(keyAtIndex(bagMenuItems, bagMenuIdx))
 		if itemFound.canUseFromBag then
 			itemFound:use()
 		end
