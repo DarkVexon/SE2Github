@@ -56,9 +56,15 @@ function updatePopupMenu()
 			followTextBoxWithPopup = false
 			textBoxShown = false
 		end
-		popupFuncs[popupMenuSelectionIdx]()
+		if popupFuncs[popupMenuSelectionIdx] ~= nil then
+			popupFuncs[popupMenuSelectionIdx]()
+		end
 		popupUp = false
 	elseif playdate.buttonJustPressed(playdate.kButtonB) and canCancelPopup then
+		if followTextBoxWithPopup then
+			followTextBoxWithPopup = false
+			textBoxShown = false
+		end
 		menuClicky()
 		popupUp = false
 	end

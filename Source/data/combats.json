@@ -14,9 +14,9 @@
     "name": "Rival",
     "payout": 25,
     "1": {
-      "species": "Leafjawbs",
+      "species": "Palpillar",
       "level": 4,
-      "moves": ["Spark"],
+      "moves": ["Nibble"],
       "nature": "Unlucky"
     }
   },

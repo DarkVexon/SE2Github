@@ -4,7 +4,7 @@ local DEX_IMG_POS_Y <const> = (240/2) - 100
 local DEX_DESCRIPTION_POS_X <const> = 15
 local DEX_DESCRIPTION_POS_Y <const> = 130
 local DEX_DESCRIPTION_BOX_WIDTH <const> = 370
-local DEX_DESCRIPTION_BOX_HEIGHT <const> = 150
+local DEX_DESCRIPTION_BOX_HEIGHT <const> = 175
 local DEX_DESCRIPTION_BOX_BUFFER <const> = 3
 
 local DEX_BASICINFO_X <const> = 20
@@ -21,7 +21,7 @@ local DEX_ABILITY_Y <const> = 70
 local DEX_LOCATION_X <const> = 20
 local DEX_LOCATION_Y <const> = 100
 
-local DEX_MAX_SCROLL <const> = 50
+local DEX_MAX_SCROLL <const> = 70
 
 dexSingleScrollAmt = 0
 

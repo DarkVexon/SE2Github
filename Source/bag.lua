@@ -99,9 +99,9 @@ function updateBagViewScreen()
 		startFade(openMainScreen)
 	elseif playdate.buttonJustPressed(playdate.kButtonA) then
 		menuClicky()
-		local itemFound = keyAtIndex(playerItems, bagMenuIdx)
+		local itemFound = getItemByName(keyAtIndex(playerItems, bagMenuIdx))
 		if itemFound.canUseFromBag then
-			keyAtIndex(playerItems, bagMenuIdx):use()
+			itemFound:use()
 		end
 	end
 end

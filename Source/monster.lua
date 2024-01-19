@@ -41,7 +41,7 @@ natures = {
 }
 
 function glitchMonsterImg()
-	local glitcherImg = gfx.image.new(math.random(94, 118), math.random(94, 118))
+	local glitcherImg = gfx.image.new(100, 100)
 	gfx.pushContext(glitcherImg)
 	for x=0, 1 do
 		for y=0, 1 do
@@ -70,6 +70,14 @@ function randomSpecies()
 	return keys[math.random(#keys)]
 end
 
+function Monster:getMoveNames()
+	local moveNames = {}
+	for i, v in ipairs(self.moves) do
+		table.insert(moveNames, v.id)
+	end
+	return moveNames
+end
+
 function Monster:init(data)
 	if data["randomNum"] == nil then
 		self.randomnum = 1
@@ -89,7 +97,7 @@ function Monster:init(data)
 	if data["exp"] == nil then
 		self.exp = xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level)
 	else
-		self.exp = data["exp"] + xpNeededForLevel(monsterInfo[self.species]["lvlspeed"], self.level)
+		self.exp = data["exp"]
 	end
 	self.moves = {}
 	for k, v in pairs(data["moves"]) do
@@ -191,7 +199,6 @@ function randomEncounterMonster(species, levelRange)
 	monsterData["name"] = monsterInfo[species]["speciesName"]
 	monsterData["level"] = math.random(levelRange[1], levelRange[2])
 	monsterData["moves"] = getMostRecentFourMovesAtLevel(species, monsterData["level"])
-	monsterData["exp"] = 0
 	monsterData["nature"] = randomKey(natures)
 	if math.random(0, 10) == 0 then
 	--if true then

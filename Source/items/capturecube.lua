@@ -17,8 +17,28 @@ end
 
 function CaptureCube:use()
 	self:displaySelf(playerName)
-	addScript(StartAnimScript(ThrowCubeAnim(2)))
-	attemptToCapture(enemyMonster)
+	local result = attemptToCapture(enemyMonster)
+	addScript(StartAnimScript(ThrowCubeAnim(result)))
+	if result == 4 then
+		caughtMonster = enemyMonster
+		if (playerDex[caughtMonster.species]) < 2 then
+			playerDex[caughtMonster.species] = 2
+		end
+		addScript(TextScript("Capture was successful!"))
+		addScript(LambdaScript("Gain exp", function()
+			playerMonster:getExp(caughtMonster)
+			nextScript()
+		end))
+		if playerDex[enemyMonster.species] ~= 2 then
+			playerDex[enemyMonster.species] = 2
+			addScript(TextScript(enemyMonster.name .. "'s information was added to the Monsterpedia."))
+			addScript(TransitionScript(openPostCaptureScreen))
+		else
+			addScript(TransitionScript(openPostCaptureScreen))
+		end
+	else
+		addScript(TextScript("Capture failed! Darn."))
+	end
 	self:consumeOne()
 end
 
@@ -32,19 +52,15 @@ function attemptToCapture(target)
 	output = math.floor(output)
 	local foundValue = math.random(1, 100)
 	if foundValue <= output then
-		caughtMonster = target
-		if (playerDex[caughtMonster.species]) < 2 then
-			playerDex[caughtMonster.species] = 2
-		end
-		addScript(TextScript("Capture was successful!"))
-		if playerDex[target.species] ~= 2 then
-			playerDex[target.species] = 2
-			addScript(TextScript(target.name .. "'s information was added to the Monsterpedia."))
-			addScript(TransitionScript(openPostCaptureScreen))
-		else
-			addScript(TransitionScript(openPostCaptureScreen))
-		end
+		return 4
 	else
-		addScript(TextScript("Capture failed! Darn."))
+		local diff = foundValue-output
+		if diff <= 20 then
+			return 3
+		elseif diff <= 40 then
+			return 2
+		else
+			return 1
+		end
 	end
 end

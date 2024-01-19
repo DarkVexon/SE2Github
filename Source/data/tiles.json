@@ -1,7 +1,11 @@
 {
 	"outdoors": {
-		"passable": [2, 3, 4, 5, 6, 18, 26, 27],
-		"encounter": [6]
+		"passable": [2, 3, 4, 5, 6, 18, 26, 27, 29],
+		"encounter": [6, 29],
+		"stepSwaps": {
+			"6": 29,
+			"29": 6
+		}
 	},
 	"indoors": {
 		"passable": [2, 3, 6],

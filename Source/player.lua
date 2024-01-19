@@ -1,24 +1,17 @@
-playerName = "Dr. Qupo"
-playerMonsters = {
-
-}
-playerMonsterStorage = {
-
-}
-playerItems = {
-	["Capture Cube"] = 10
-}
-playerMoney = 100
-
-playerFlag = 1
-playerRetreatMap = "testtownroom1"
-
-playerPickedUpItems = {}
-playerBeatenTrainers = {}
-
-playerDex = {}
-for i, k in ipairs(getTableKeys(monsterInfo)) do
-	playerDex[k] = 2
+function initializePlayer()
+	playerName = "Dr. Qupo"
+	playerMonsters = {}
+	playerMonsterStorage = {}
+	playerItems = {}
+	playerMoney = 100
+	playerFlag = 1
+	playerRetreatMap = "testtownroom1"
+	playerPickedUpItems = {}
+	playerBeatenTrainers = {}	
+	playerDex = {}
+	for i, k in ipairs(getTableKeys(monsterInfo)) do
+		playerDex[k] = 0
+	end
 end
 
 function getDexProgress(type)
@@ -56,9 +49,9 @@ function removeFromParty(monster)
 end
 
 --addToParty(randomEncounterMonster("Error", {40, 50}))
-addToParty(randomEncounterMonster("Circe", {5, 5}))
-addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
-addToParty(randomEncounterMonster("Chompah", {5, 5}))
+--addToParty(randomEncounterMonster("Circe", {5, 5}))
+--addToParty(randomEncounterMonster(randomSpecies(), {5, 5}))
+--addToParty(randomEncounterMonster("Chompah", {5, 5}))
 --for i, v in ipairs(playerMonsters) do
 --	glitch(v)
 --end

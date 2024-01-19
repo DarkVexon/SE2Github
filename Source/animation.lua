@@ -2,10 +2,13 @@ class('Animation').extends()
 
 function Animation:init()
 	self.isDone = false
-	self.renderBehind = false
 end
 
 function Animation:update()
+
+end
+
+function Animation:renderBehind()
 
 end
 

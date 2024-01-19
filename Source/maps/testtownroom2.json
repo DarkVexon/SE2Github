@@ -11,8 +11,8 @@
 "width": 8,
 "npcs":
 	[
-		["door", 3, 6, "testtown", 5],
-		["door", 4, 6, "testtown", 5],
+		["door", 3, 6, "overworld", 5],
+		["door", 4, 6, "overworld", 5],
 		["shopopener", 1, 1]
 	],
 "translocs":

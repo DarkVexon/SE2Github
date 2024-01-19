@@ -1,13 +1,22 @@
+objs = {}
+storedOverworldObjs = nil
+
+overworldMapInfo = json.decodeFile("maps/overworld.json")
+
+outdoorsTable = gfx.imagetable.new("img/overworld/tile/outdoors-table-40-40")
+indoorsTable = gfx.imagetable.new("img/overworld/tile/indoors-table-40-40")
+
+overworldTiles = gfx.tilemap.new()
+overworldTiles:setImageTable(outdoorsTable)
+
 tilesets = {}
 impassableTiles = {}
 randomEncounterTiles = {}
-outdoorsTiles = gfx.tilemap.new()
-outdoorsTable = gfx.imagetable.new("img/overworld/tile/outdoors-table-40-40")
-outdoorsTiles:setImageTable(outdoorsTable)
+
 indoorsTiles = gfx.tilemap.new()
-indoorsTable = gfx.imagetable.new("img/overworld/tile/indoors-table-40-40")
 indoorsTiles:setImageTable(indoorsTable)
-tilesets["outdoors"] = outdoorsTiles
+
+tilesets["outdoors"] = overworldTiles
 tilesets["indoors"] = indoorsTiles
 
 tilesetInfo = json.decodeFile("data/tiles.json")
@@ -15,42 +24,70 @@ tilesetInfo = json.decodeFile("data/tiles.json")
 currentMap = nil
 currentTileset = nil
 
+function storeOverworldNpcs()
+	for i, v in ipairs(objs) do
+		table.insert(storedOverworldObjs, v)
+	end
 
+	clear(objs)
+end
 
-function loadMap(map, transloc)
+function loadMap(map, x, y, facing)
 	currentMap = map
-	local mapResult = json.decodeFile("maps/" .. map .. ".json")
+	local mapResult
+	if map == "overworld" then
+		mapResult = overworldMapInfo
+	else
+		mapResult = json.decodeFile("maps/" .. map .. ".json")
+	end
 	local tilesToUse = mapResult["tiles"]
 	tilesets[tilesToUse]:setTiles(mapResult["data"], mapResult["width"])
-	currentTileset = tilesets[tilesToUse]
 
 	mapWidth, mapHeight = tilesets[tilesToUse]:getSize()
 	passables = tilesetInfo[tilesToUse]["passable"]
 	encounterTiles = tilesetInfo[tilesToUse]["encounter"]
+	stepSwaps = tilesetInfo[tilesToUse]["stepSwaps"]
 	randomEncounters = mapResult["encountertable"]
 	encounterChance = mapResult["encounterchance"]
 	dividers = mapResult["dividers"]
+
 	clear(objs)
 	for i, v in ipairs(mapResult["npcs"]) do
 		loadNpc(v)
 	end
-	local targetTransloc = mapResult["translocs"][transloc]
-	playerX = targetTransloc[1]
-	playerY = targetTransloc[2]
+
+	mapBg = mapResult["background"]
+	
+	currentTileset = tilesets[tilesToUse]
+
+	playerX = x
+	playerY = y
 	playerPrevX = playerX
 	playerPrevY = playerY
-	mapBg = mapResult["background"]
+
 	if mapBg == "white" then
 		gfx.setBackgroundColor(gfx.kColorWhite)
 	elseif mapBg == "black" then
 		gfx.setBackgroundColor(gfx.kColorBlack)
 	end
-	setPlayerFacing(targetTransloc[3])
+	setPlayerFacing(facing)
 	hardSetupCameraOffsets()
 end
 
+function loadMapFromTransloc(map, transloc)
+	local targetTransloc
+	if map == "overworld" then
+		targetTransloc = overworldMapInfo["translocs"][transloc]
+	else
+		local mapResult = json.decodeFile("maps/" .. map .. ".json")
+		targetTransloc = mapResult["translocs"][transloc]
+	end
+
+	loadMap(map, targetTransloc[1], targetTransloc[2], targetTransloc[3])
+end
+
 function loadNextMap()
-	loadMap(nextMap, nextTransloc)
+	loadMapFromTransloc(nextMap, nextTransloc)
 	if curScreen ~= 0 then
 		openMainScreen()
 	end

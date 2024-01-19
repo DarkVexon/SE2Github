@@ -11,8 +11,12 @@ function Poutine:useInCombat()
 end
 
 function Poutine:useOutsideCombat(monster)
+	local amtHealed = math.min(20, monster.maxHp - monster.curHp)
 	monster.curHp = math.min(monster.curHp + 20, monster.maxHp)
 	self:consumeOne()
+	addScript(TextScript(monster.name .. " healed for " .. amtHealed .. "!"))
+	addScript(TransitionScript(openBag))
+	nextScript()
 end
 
 function Poutine:canUseOnTarget(target)

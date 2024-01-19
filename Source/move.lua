@@ -133,6 +133,7 @@ import "moves/nomnomnom"
 import "moves/skystrike"
 import "moves/gaseousgaze"
 import "moves/magicmissile"
+import "moves/rockthrow"
 
 function getMoveByName(name)
 	if name == "Nibble" then
@@ -181,6 +182,8 @@ function getMoveByName(name)
 		return GaseousGaze()
 	elseif name == "Magic Missile" then
 		return MagicMissile()
+	elseif name == "Rock Throw" then
+		return RockThrow()
 	end
 	print("ERR! INCORRECT MOVE NAME: " .. name)
 end

@@ -12,13 +12,14 @@
 "npcs":
 	[
 		["letter", 2, 2, "KENEDAR BIOLOGY GROUP: Thank you for accepting our mission! Your KENEMON is in the SCIENCE LAB."],
-		["door", 2, 6, "testtown", 2],
-		["door", 3, 6, "testtown", 2],
+		["door", 2, 6, "overworld", 2],
+		["door", 3, 6, "overworld", 2],
 		["healmachine", 5, 2],
 		["monsterstorageaccessor", 6, 2]
 	],
 "translocs":
 	[
+		[5, 4, 2],
 		[3, 5, 0],
 		[2, 5, 0]
 	],

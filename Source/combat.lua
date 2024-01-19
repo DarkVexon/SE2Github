@@ -32,7 +32,7 @@ local combatMenuOptionsVertDist <const> = 20
 
 enemyMonsterStartX = -100
 enemyMonsterEndX = 285
-local enemyMonsterY <const> = 85
+enemyMonsterY = 85
 
 local playerImgWidth <const> = 100
 local playerImgStartX1 <const> = 400
@@ -57,7 +57,7 @@ tissueMenuShown = false
 combatMenuChoiceY = combatMenuOptionsStartY
 combatInfoPanY = 240
 turnExecuting = false
-combatIsEnding = false
+isCombatEnding = false
 
 enemyMonsters = {}
 
@@ -414,7 +414,7 @@ function resetCombat()
 	combatMenuChoiceY = combatMenuOptionsStartY
 	combatInfoPanY = 240
 	turnExecuting = false
-	combatIsEnding = false
+	isCombatEnding = false
 	swapToExecution = false
 	turnExecutionPhase = turnExecutionFirstPhase
 	globalBuffer = 0
@@ -686,6 +686,8 @@ function openLastResortMenu()
 end
 
 function exitBattleViaLoss()
+	fightStarting = false
+	turnExecuting = false
 	for k, v in pairs(playerMonsters) do
 		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
 	end
@@ -699,10 +701,12 @@ function exitBattleViaLoss()
 	addScript(MapChangeScript(playerRetreatMap, 1))
 	addScript(LambdaScript("post loss heal", function () fullyRestoreMonsters() nextScript() end))
 	addScript(TextScript("Having rushed away, you restore your team's energy."))
-	isCombatEnding = false
+	addScript(LambdaScript("unset is combat ending", function () isCombatEnding = false nextScript() end))
 end
 
 function exitBattleViaVictory()
+	fightStarting = false
+	turnExecuting = false
 	for k, v in pairs(playerMonsters) do
 		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
 	end
@@ -720,7 +724,7 @@ function exitBattleViaVictory()
 		end
 		addScript(TransitionScript(openMainScreen))
 	end
-	isCombatEnding = false
+	addScript(LambdaScript("unset is combat ending", function () isCombatEnding = false nextScript() end))
 end
 
 -- COMBAT INTRO PHASES
@@ -938,7 +942,7 @@ function drawCombatChoicePhase()
 
 	drawCombatBottomBg()
 
-	if not turnExecuting and playerMonster.curHp > 0 and combatSubmenuChosen < 5 and not isForcedSwitch then 
+	if not turnExecuting and playerMonster.curHp > 0 and combatSubmenuChosen < 5 and not isForcedSwitch and not isCombatEnding then 
 		if (tissueTimer > tissueShowHideTimer/2 or combatSubmenuChosen == 0) and not swapToExecution then
 			local index = 1
 			for y=0, 1 do
@@ -999,9 +1003,7 @@ function drawCombatInterface()
 		end
 	end
 	if curAnim ~= nil then
-		if curAnim.renderBehind then
-			curAnim:render()
-		end
+		curAnim:renderBehind()
 	end
 
 	for k, v in pairs(curEffects) do
@@ -1032,9 +1034,7 @@ function drawCombatInterface()
 		end
 	end
 	if curAnim ~= nil then
-		if not curAnim.renderBehind then
-			curAnim:render()
-		end
+		curAnim:render()
 	end
 
 	for k, v in pairs(curEffects) do

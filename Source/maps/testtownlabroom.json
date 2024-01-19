@@ -18,8 +18,8 @@
 "npcs":
 	[
 		["tablecube", 4, 3],
-      ["door", 4, 14, "testtown", 3],
-      ["door", 5, 14, "testtown", 4]
+      ["door", 4, 14, "overworld", 3],
+      ["door", 5, 14, "overworld", 4]
 	],
 "translocs":
 	[

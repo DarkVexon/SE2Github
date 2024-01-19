@@ -43,11 +43,11 @@
     "grantedExp": 35,
     "catchDifficulty": 50,
     "learnset": {
-      "1": "Ember",
-      "3": "Nibble"
+      "1": "Nibble",
+      "6": "Ember"
     },
     "article": "a ",
-    "description": "Stores acid in one organ and explosive powder in another. Stepping on a Bombeetl is a one-way ticket to the hospital.",
+    "description": "The bright red elytra don't conceal any wings; it's hypothesized they function as a threat display. \n \nUpon entering combat, Bombeetls ritually scratch and light their fuses with sharp hind tarsal claws. A Bombeetl close to detonation scuttles rapidly towards its opponent.",
     "locationHint": "most grass",
     "location": "Routes 1, 2, 3, & 5"
   },
@@ -62,7 +62,7 @@
     "catchDifficulty": 20,
     "learnset": {
       "1": "Nibble",
-      "3": "Dine and Dash"
+      "7": "Dine and Dash"
     },
     "article": "",
     "description": "Exceedingly rare, Circe is said to be a type of demon which manifested into the human realm.",
@@ -97,7 +97,8 @@
     "grantedExp": 35,
     "catchDifficulty": 40,
     "learnset": {
-      "1": "Nibble"
+      "1": "Nibble",
+      "6": "Stinger"
     },
     "article": "an ",
     "description": "Glands near Achewig's incisors produce acid to help it gnaw through enamel. Every Achewig guards its tooth jealously. \n\nCompetition for molars and wisdom teeth is especially fierce.",

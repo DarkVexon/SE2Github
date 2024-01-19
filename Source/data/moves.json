@@ -186,7 +186,7 @@
   "Rock Throw":
   {
     "moveName": "Rock Throw",
-    "type": "rock",
+    "type": "stone",
     "basePower": 12,
     "description": "10% chance to miss.",
     "contact": false,

@@ -11,6 +11,7 @@ end
 local dirs <const> = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
 
 function Trainer:startBattle()
+	fightStarting = true
 	addScript(TextScript(self.textIn))
 	addScript(TrainerBattleScript(self.combatID))
 	addRetScript(LambdaScript("set " .. self.name .. " fight done", function () table.insert(playerBeatenTrainers, self.flagID) nextScript() end))

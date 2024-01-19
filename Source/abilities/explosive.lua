@@ -6,6 +6,8 @@ end
 
 function Explosive:onDeath()
 	local toHit = self.owner:getFoe()
-	self:displaySelf()
-	addScript(DamageScript((toHit.maxHp) * 0.4, toHit, 1, self.owner))
+	if not toHit.isFainting then
+		self:displaySelf()
+		addScript(DamageScript((toHit.maxHp) * 0.4, toHit, 1, self.owner))
+	end
 end

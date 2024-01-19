@@ -20,7 +20,7 @@ function NoCreaturesGoBack:onOverlap()
 		elseif playerFlag == 2 then
 			addScript(TextScript("You should probably see what the KENEDAR BIOLOGY GROUP has for you in the SCIENCE LAB."))
 		end
-		addScript(LambdaScript("Move player up", function () attemptMoveUp() nextScript() end))
+		addScript(LambdaScript("Move player up", function () setPlayerFacing(0) attemptMoveUp() nextScript() end))
 		nextScript()
 	end
 end

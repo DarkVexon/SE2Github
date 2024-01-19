@@ -75,6 +75,7 @@
             ["founditem", 15, 43, "Poutine", 2],
             ["founditem", 3, 53, "Poutine", 3],
             ["founditem", 37, 57, "Poutine", 4],
+            ["founditem", 16, 21, "Capture Cube", 5],
             ["trainer", "third trainer", 36, 53, 2, "trainer3", "I've been using Capture Cubes to get all sorts of Kenemon.", "You fought well!", 3],
             ["trainer", "fourth trainer", 39, 50, 1, "trainer4", "Did you know that some Kenemon are more resistant to certain Types?", "My Fritzle resists so many attacks!", 4],
             ["trainer", "fifth trainer", 33, 37, 2, "trainer5", "Did you get a letter about Kenemon too?", "Wow! I guess you've been studying up.", 5]
@@ -97,7 +98,7 @@
     "background": "white",
     "dividers":
     [
-        ["Colus Town", 1, 1, 29, 19],
+        ["Colus Town", 1, 1, 29, 18],
         ["Route 1", 1, 20, 29, 27],
         ["Route 1", 13, 48, 16, 3],
         ["Route 2", 12, 58, 12, 12],

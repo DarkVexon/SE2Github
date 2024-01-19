@@ -44,12 +44,14 @@ import "dexsingleview"
 import "vfx"
 import "storageview"
 import "shop"
+import "mainmenuoptions"
+import "formalities"
 
 isCrankUp = false
 
 function initialize()
 	gfx.setLineWidth(LINE_WIDTH)
-	loadMap("testtown", 1)
+	openMainMenuOptions()
 end
 
 curScreen = 0
@@ -64,6 +66,7 @@ curScreen = 0
 -- 8: Monsterdex single screen
 -- 9: Monster storage view screen
 -- 10: Shop screen
+-- 11: Main menu option selection
 
 skipNextRender = false
 
@@ -73,6 +76,10 @@ function playdate.update()
 	if (fadeOutTimer > 0 or fadeInTimer > 0) then
 		updateFade()
 		renderFade()
+		if isDebug then
+			drawDebugActionQueue()
+			playdate.drawFPS(5, 5)
+		end
 	else
 		if popupUp then
 			updatePopupMenu()
@@ -99,6 +106,8 @@ function playdate.update()
 				updateStorageView()
 			elseif curScreen == 10 then
 				updateShop()
+			elseif curScreen == 11 then
+				updateMainMenuOptionScreen()
 			end
 		end
 
@@ -148,6 +157,8 @@ function render()
 		drawStorageView()
 	elseif curScreen == 10 then
 		drawShop()
+	elseif curScreen == 11 then
+		drawMainMenuOptionScreen()
 	end
 
 	if popupUp then
@@ -156,7 +167,7 @@ function render()
 
 	if isDebug then
 		drawDebugActionQueue()
-		--playdate.drawFPS(5, 5)
+		playdate.drawFPS(5, 5)
 	end
 end
 

@@ -101,6 +101,8 @@ function updateInMenu()
 			startFade(openOptionsMenu)
 		elseif target == "Creaturedex" then
 			startFade(openDexMenu)
+		elseif target == "Save" then
+			showQueryTextBox("Would you like to save the game?", {"Yes", "No"}, {saveGame}, true)
 		end
 	end
 end
@@ -167,14 +169,15 @@ function drawMenu()
         end
     end
 
-    if (menuTimer == 0) or (menuTimer > 0 and showingMenu) then
+	if not (popupUp or followTextBoxWithPopup) then
+	    if (menuTimer == 0) or (menuTimer > 0 and showingMenu) then
+	    	drawMonsterInfoBox(playerMonsters[1], 10, 10, false)
 
-    	drawMonsterInfoBox(playerMonsters[1], 10, 10, false)
-
-	    drawNiceRect(10, (240 - MENU_INFO_BOX_HEIGHT) - 10, 275, MENU_INFO_BOX_HEIGHT)
-	    gfx.drawText(playerName, 20, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 10)
-	    gfx.drawText("$" .. playerMoney, 225, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 10)
-	    gfx.drawText("Seen: " .. getDexProgress(1) .. "/" .. numMonsters, 20, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 30)
-	    gfx.drawText("Caught: " .. getDexProgress(2).. "/" .. numMonsters, 140, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 30)
+		    drawNiceRect(10, (240 - MENU_INFO_BOX_HEIGHT) - 10, 275, MENU_INFO_BOX_HEIGHT)
+		    gfx.drawText(playerName, 20, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 10)
+		    gfx.drawText("$" .. playerMoney, 225, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 10)
+		    gfx.drawText("Seen: " .. getDexProgress(1) .. "/" .. numMonsters, 20, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 30)
+		    gfx.drawText("Caught: " .. getDexProgress(2).. "/" .. numMonsters, 140, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 30)
+		end
 	end
 end

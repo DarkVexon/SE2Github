@@ -31,9 +31,8 @@ playerDestRenderPosX = playerRenderPosX
 playerDestRenderPosY = playerRenderPosY
 playerFooting = 1
 
-objs = {}
-
 returnScripts = {}
+overworldFx = {}
 
 curAreaName = "Colus Town"
 
@@ -168,6 +167,21 @@ function updateOverworld()
 			v:update()
 		end
 
+		for i, v in ipairs(overworldFx) do
+			v:update()
+		end
+
+		local toRemove = {}
+		for i, v in ipairs(overworldFx) do
+			v:update()
+			if v.isDone then
+				table.insert(toRemove, v)
+			end
+		end
+		for i, v in ipairs(toRemove) do
+			table.remove(overworldFx, indexValue(overworldFx, v))
+		end
+
 		if (movingCam) then
 			updateCameraOffset()
 		elseif (menuTimer > 0) then
@@ -175,7 +189,7 @@ function updateOverworld()
 		elseif (isMenuUp) then
 			updateInMenu()
 		else
-			checkMovement()
+			checkMovement(false)
 		end
 	end
 
@@ -216,10 +230,14 @@ function drawInOverworld()
 		v:render()
 	end
 
-	--gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
+	gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
 	gfx.fillEllipseInRect(playerRenderPosX, playerRenderPosY + 40 - 13, 40, 10)
-	--gfx.setColor(gfx.kColorBlack)
+	gfx.setColor(gfx.kColorBlack)
 	playerImg[playerImgIndex]:draw(playerRenderPosX, playerRenderPosY - 8)
+
+	for i, v in ipairs(overworldFx) do
+		v:render()
+	end
 
 	if menuTimer > 0 or isMenuUp then
 		drawMenu()
@@ -250,7 +268,45 @@ function canMoveThere(x, y)
 	return true
 end
 
-function checkMovement()
+timeSpentHoldingCurOverMove = 0
+
+function stiffMovementCheck()
+	if (playdate.buttonIsPressed(playdate.kButtonUp)) and playerFacing ~= 0 then
+		setPlayerFacing(0)
+	elseif (playdate.buttonIsPressed(playdate.kButtonUp)) and playerFacing == 0 then
+		attemptMoveUp()
+	elseif (playdate.buttonIsPressed(playdate.kButtonDown)) and playerFacing ~= 2 then
+		setPlayerFacing(2)
+	elseif (playdate.buttonIsPressed(playdate.kButtonDown)) and playerFacing == 2 then
+		attemptMoveDown()
+	elseif (playdate.buttonIsPressed(playdate.kButtonLeft)) and playerFacing ~= 3 then
+		setPlayerFacing(3)
+	elseif (playdate.buttonIsPressed(playdate.kButtonLeft)) and playerFacing == 3 then
+		attemptMoveLeft()
+	elseif (playdate.buttonIsPressed(playdate.kButtonRight)) and playerFacing ~= 1 then
+		setPlayerFacing(1)
+	elseif (playdate.buttonIsPressed(playdate.kButtonRight)) and playerFacing == 1 then
+		attemptMoveRight()
+	end
+end
+
+function smoothMovementCheck()
+	if playdate.buttonIsPressed(playdate.kButtonUp) then
+		setPlayerFacing(0)
+		attemptMoveUp()
+	elseif playdate.buttonIsPressed(playdate.kButtonDown) then
+		setPlayerFacing(2)
+		attemptMoveDown()
+	elseif playdate.buttonIsPressed(playdate.kButtonLeft) then
+		setPlayerFacing(3)
+		attemptMoveLeft()
+	elseif playdate.buttonIsPressed(playdate.kButtonRight) then
+		setPlayerFacing(1)
+		attemptMoveRight()
+	end
+end
+
+function checkMovement(smooth)
 	if #scriptStack == 0 then
 		if (playdate.buttonJustPressed(playdate.kButtonA)) then
 			local tarX, tarY = getPlayerPointCoord()
@@ -260,14 +316,12 @@ function checkMovement()
 					v:onInteract()
 				end
 			end
-		elseif (playdate.buttonIsPressed(playdate.kButtonUp)) then
-			attemptMoveUp()
-		elseif (playdate.buttonIsPressed(playdate.kButtonDown)) then
-			attemptMoveDown()
-		elseif (playdate.buttonIsPressed(playdate.kButtonLeft)) then
-			attemptMoveLeft()
-		elseif (playdate.buttonIsPressed(playdate.kButtonRight)) then
-			attemptMoveRight()
+		else
+			if smooth then
+				smoothMovementCheck()
+			else
+				stiffMovementCheck()
+			end
 		end
 
 		if not playdate.isCrankDocked() and not isCrankUp then
@@ -278,7 +332,6 @@ function checkMovement()
 end
 
 function attemptMoveUp()
-	setPlayerFacing(0)
 	if (canMoveThere(playerX, playerY-1)) then
 		playerMoveBy(0, -1)
 		return
@@ -286,7 +339,6 @@ function attemptMoveUp()
 end
 
 function attemptMoveDown()
-	setPlayerFacing(2)
 	if (canMoveThere(playerX, playerY+1)) then
 		playerMoveBy(0, 1)
 		return
@@ -294,7 +346,6 @@ function attemptMoveDown()
 end
 
 function attemptMoveLeft()
-	setPlayerFacing(3)
 	if (canMoveThere(playerX - 1, playerY)) then
 		playerMoveBy(-1, 0)
 		return
@@ -302,7 +353,6 @@ function attemptMoveLeft()
 end
 
 function attemptMoveRight()
-	setPlayerFacing(1)
 	if (canMoveThere(playerX + 1, playerY)) then
 		playerMoveBy(1, 0)
 		return
@@ -373,6 +423,14 @@ function mapRandomEncounter()
 	end
 end
 
+function projectX(x)
+	return x + cameraOffsetX
+end
+
+function projectY(y)
+	return y + cameraOffsetY
+end
+
 function onMoveEnd()
 	playerImgIndex  = 1
 	local landedTile = currentTileset:getTileAtPosition(playerX, playerY)
@@ -388,15 +446,35 @@ function onMoveEnd()
 		end
 	end
 	if contains(encounterTiles, landedTile) then
-		if randomEncounterChance() then
+		if math.random(0, 3) == 0 then
+			local startX = (playerX - 1) * 40 + 15
+			local endX = (playerX) * 40 - 15
+			local startY = (playerY - 1) * 40 + 15
+			local endY = startY + 15
+			local speedX = randomFloat(2, 3)
+			local speedY = randomFloat(-5.5, -3)
+			for i=1, 2 do
+				addOverworldEffect(GrassShakeSparkle(math.random(startX, endX), math.random(startY, endY), playerY * 40 - 15, speedX, speedY, i==2))
+			end
+		end
+		if randomEncounterChance() and not fightStarting then
 			allowImmediateMovementCheck = false
 			mapRandomEncounter()
 		end
 	end
+	if stepSwaps ~= nil then
+		if stepSwaps[landedTile .. ""] ~= nil then
+			currentTileset:setTileAtPosition(playerX, playerY, stepSwaps[landedTile .. ""])
+		end
+	end
 	if allowImmediateMovementCheck then
-		checkMovement()
+		checkMovement(true)
 		checkAreaName()
 	end
+end
+
+function addOverworldEffect(effect)
+	table.insert(overworldFx, effect)
 end
 
 function updateCameraOffset()
@@ -412,6 +490,12 @@ function updateCameraOffset()
 
 		if cameraTimer == cameraMaxTimer * 0.5 then
 			playerImgIndex = 1
+			local tarTile = currentTileset:getTileAtPosition(playerX, playerY)
+			if stepSwaps ~= nil then
+				if stepSwaps[tarTile .. ""] ~= nil then
+					currentTileset:setTileAtPosition(playerX, playerY, stepSwaps[tarTile .. ""])
+				end
+			end
 		end
 
 		if cameraTimer == 0 then

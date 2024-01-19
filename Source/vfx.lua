@@ -19,3 +19,5 @@ import "vfx/damageoutwardline"
 import "vfx/damagepaf"
 import "vfx/levelupwardsline"
 import "vfx/damagenumber"
+
+import "vfx/grassshakesparkle"

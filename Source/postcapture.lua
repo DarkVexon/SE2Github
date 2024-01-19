@@ -1,7 +1,7 @@
 CAPTURED_MONSTER_POS_X = (400/2) - 50
 KEYBOARD_MONSTER_POS_X = CAPTURED_MONSTER_POS_X - 100
 local CAUGHT_MONSTER_POS_Y <const> = (200/2)-50
-local MARK_OFFSET_FROM_MONSTER_X <const> = -150
+local MARK_OFFSET_FROM_MONSTER_X <const> = -110
 local MARK_OFFSET_FROM_MONSTER_Y <const> = -25
 postCaptureMonsterPosX = CAPTURED_MONSTER_POS_X
 
@@ -20,7 +20,7 @@ end
 
 function postNicknameChoice()
 	if #playerMonsters < 4 then
-		addScript(LambdaScript("add monster to team", function() table.insert(playerMonsters, caughtMonster) nextScript() end))
+		addScript(LambdaScript("add monster to team", function() addToParty(caughtMonster) nextScript() end))
 		if #playerMonsters == 0 then
 			addScript(TextScript("With " .. caughtMonster.name .. " in your Monsterbelt, you're ready to explore."))
 		else
@@ -28,7 +28,7 @@ function postNicknameChoice()
 		end
 	else
 		addScript(LambdaScript("add monster to storage", function() table.insert(playerMonsterStorage, caughtMonster) nextScript() end))
-		addScript(TextScript(caughtMonster.name .. " was sent to the DOUBLE SHADOW GOVERNMENT!"))
+		addScript(TextScript(caughtMonster.name .. " was sent to the KENEDAR BIOLOGY GROUP!"))
 	end
 	addScript(TransitionScript(openMainScreen))
 	nextScript()

@@ -18,7 +18,7 @@ function WandWaver:onEnterCombat()
 end
 
 function WandWaver:onUseMove(move, target)
-	if move.basePower == nil and not combatIsEnding then
+	if move.basePower == nil and not isCombatEnding then
 		addScript(LambdaScript("Charge up wand waver", function ()
 			self.charge += 1
 			if self.charge == 2 then

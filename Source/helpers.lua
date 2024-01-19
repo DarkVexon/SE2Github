@@ -54,8 +54,8 @@ function contains(test, item)
 	return false
 end
 
-function containsKey(key)
-	for k, v in pairs(table) do
+function containsKey(test, key)
+	for k, v in pairs(test) do
 		if (k==key) then
 			return true
 		end
