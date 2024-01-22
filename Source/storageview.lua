@@ -96,64 +96,71 @@ function updateStorageView()
 		if storageCurrentlySelectedMonster ~= nil then
 			if storageSelectionIdx < 0 then
 				if selectedFromPc then
+					-- PC to party
 					local stored = playerMonsters[storageSelectionIdx * -1]
 					playerMonsters[storageSelectionIdx * -1] = storageCurrentlySelectedMonster
 					playerMonsterStorage[storageCurSelectionIdx] = stored
 				else
+					-- party to party
 					local stored = playerMonsters[storageSelectionIdx * -1]
 					playerMonsters[storageSelectionIdx * -1] = storageCurrentlySelectedMonster
 					playerMonsters[storageCurSelectionIdx * -1] = stored
 				end
 			else
 				if selectedFromPc then
+					-- PC to PC
 					local stored = playerMonsterStorage[storageSelectionIdx]
 					playerMonsterStorage[storageSelectionIdx] = storageCurrentlySelectedMonster
 					playerMonsterStorage[storageCurSelectionIdx] = stored
 				else
+					-- Party to PC
 					local stored = playerMonsterStorage[storageSelectionIdx]
-					playerMonsterStorage[storageSelectionIdx] = storageCurrentlySelectedMonster
-					if stored ~= nil then
-						playerMonsters[storageCurSelectionIdx * -1] = stored
-					else
-						removeFromParty(playerMonsters[storageCurSelectionIdx * -1])
+					if stored ~= nil or #playerMonsters > 1 then
+						playerMonsterStorage[storageSelectionIdx] = storageCurrentlySelectedMonster
+						if stored ~= nil then
+							playerMonsters[storageCurSelectionIdx * -1] = stored
+						else
+							removeFromParty(playerMonsters[storageCurSelectionIdx * -1])
+						end
 					end
 				end
 			end
 			storageCurrentlySelectedMonster = nil
 			storageCurSelectionIdx = 0
 		else
-			setupPopupMenu(getCursorX(storageSelectionIdx), getCursorY(storageSelectionIdx), {"Move", "Summary", "Heart"}, {
-				function () 
-					if storageSelectionIdx < 0 then
-						storageCurrentlySelectedMonster = playerMonsters[storageSelectionIdx * -1]
-						storageCurSelectionIdx = storageSelectionIdx
-						selectedFromPc = false
-					else
-						storageCurrentlySelectedMonster = playerMonsterStorage[storageSelectionIdx]
-						storageCurSelectionIdx = storageSelectionIdx
-						selectedFromPc = true
-					end
-				end,
+			if storageSelectionIdx <= #playerMonsterStorage then
+				setupPopupMenu(getCursorX(storageSelectionIdx), getCursorY(storageSelectionIdx), {"Move", "Summary", "Heart"}, {
+					function () 
+						if storageSelectionIdx < 0 then
+							storageCurrentlySelectedMonster = playerMonsters[storageSelectionIdx * -1]
+							storageCurSelectionIdx = storageSelectionIdx
+							selectedFromPc = false
+						else
+							storageCurrentlySelectedMonster = playerMonsterStorage[storageSelectionIdx]
+							storageCurSelectionIdx = storageSelectionIdx
+							selectedFromPc = true
+						end
+					end,
 
-				function ()
-					fromStorageView = true
-					if storageSelectionIdx < 0 then
-						singleViewMonster = playerMonsters[storageSelectionIdx * -1]
-					else
-						singleViewMonster = playerMonsterStorage[storageSelectionIdx]
-					end
-					startFade(openSingleMonsterView)
-				end,
+					function ()
+						fromStorageView = true
+						if storageSelectionIdx < 0 then
+							singleViewMonster = playerMonsters[storageSelectionIdx * -1]
+						else
+							singleViewMonster = playerMonsterStorage[storageSelectionIdx]
+						end
+						startFade(openSingleMonsterView)
+					end,
 
-				function ()
-					if storageSelectionIdx < 0 then
-						playerMonsters[storageSelectionIdx * -1].heart = not playerMonsters[storageSelectionIdx * -1].heart
-					else
-						playerMonsterStorage[storageSelectionIdx].heart = not playerMonsterStorage[storageSelectionIdx].heart
+					function ()
+						if storageSelectionIdx < 0 then
+							playerMonsters[storageSelectionIdx * -1].heart = not playerMonsters[storageSelectionIdx * -1].heart
+						else
+							playerMonsterStorage[storageSelectionIdx].heart = not playerMonsterStorage[storageSelectionIdx].heart
+						end
 					end
-				end
-			}, true)
-
+				}, true)
+			end
 		end
 	elseif playdate.buttonJustPressed(playdate.kButtonB) then
 		startFade(openMainScreen)

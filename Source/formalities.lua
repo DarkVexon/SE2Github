@@ -42,6 +42,7 @@ function saveGame()
 		dataPlayerMonsters = serializeMonsterList(playerMonsters),
 		dataPlayerMonsterStorage = serializeMonsterList(playerMonsterStorage),
 		dataPlayerItems = playerItems,
+		dataPlayerKeyItems = playerKeyItems,
 		dataPlayerMoney = playerMoney,
 		dataPlayerFlag = playerFlag,
 		dataPlayerRetreatMap = playerRetreatMap,
@@ -69,6 +70,7 @@ function loadSave()
 			playerMonsters = deserializeMonsterList(gameData.dataPlayerMonsters)
 			playerMonsterStorage = deserializeMonsterList(gameData.dataPlayerMonsterStorage)
 			playerItems = gameData.dataPlayerItems
+			playerKeyItems = gamedata.dataPlayerKeyItems
 			playerMoney = gameData.dataPlayerMoney
 			playerFlag = gameData.dataPlayerFlag
 			playerRetreatMap = gameData.dataPlayerRetreatMap

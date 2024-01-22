@@ -37,6 +37,7 @@ overworldFx = {}
 
 local grassOver <const> = gfx.image.new("img/overworld/grassover")
 local grassOverAlt <const> = gfx.image.new("img/overworld/grassover-alt")
+local OVERWORLD_FLAG_IMG <const> = gfx.image.new("img/overworld/flag.png")
 
 curAreaName = "Colus Town"
 
@@ -264,6 +265,33 @@ function drawInOverworld()
 		v:render()
 	end
 
+	if worldMapFlagLocationX ~= nil and worldMapFlagLocationY ~= nil then
+		local slope = (worldMapFlagLocationY - playerY) / (worldMapFlagLocationX - playerX)
+		local posX
+		local posY
+		if slope <= (240/400) and slope >= -(240/400) then
+			if playerX > worldMapFlagLocationX then
+				posX = 0
+				posY = slope * (posX - 200) + 120
+				OVERWORLD_FLAG_IMG:draw(posX, posY)
+			else
+				posX = 400
+				posY = slope * (posX - 200) + 120
+				OVERWORLD_FLAG_IMG:draw(posX - 30, posY)
+			end
+		else
+			if playerY > worldMapFlagLocationY then
+				posY = 0
+				posX = ((posY - 120) / slope) + 200
+				OVERWORLD_FLAG_IMG:draw(posX, posY)
+			else
+				posY = 240
+				posX = ((posY - 120) / slope) + 200
+				OVERWORLD_FLAG_IMG:draw(posX, posY - 30)
+			end
+		end
+	end
+
 	if menuTimer > 0 or isMenuUp then
 		drawMenu()
 	end
@@ -484,8 +512,8 @@ function onMoveEnd()
 			end
 		end
 		if randomEncounterChance() and not fightStarting then
-			--allowImmediateMovementCheck = false
-			--mapRandomEncounter()
+			allowImmediateMovementCheck = false
+			mapRandomEncounter()
 		end
 	end
 	if stepSwaps ~= nil then

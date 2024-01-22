@@ -7,7 +7,7 @@ function XPBarAnim:init(monster, startXP, endXP, maxXP)
 	self.dispXP = self.startXP
 	self.endXP = endXP
 	self.maxXP = maxXP
-	self.totalTime = ((endXP - startXP) / maxXP) * 125
+	self.totalTime = ((endXP - startXP) / maxXP) * 120
 	self.curTime = self.totalTime
 	self.bufferTime = 0
 	self.isFriendly = monster:isFriendly()
@@ -16,14 +16,14 @@ end
 function XPBarAnim:update()
 	if self.bufferTime > 0 then
 		self.bufferTime -= 1
-		if self.bufferTime == 0 and self.curTime == 0 then
+		if self.bufferTime <= 0 and self.curTime <= 0 then
 			self.isDone = true
 		end
 	elseif self.curTime > 0 then
 		self.curTime -= 1
 		self.dispXP = playdate.math.lerp(self.startXP, self.endXP, timeLeft(self.curTime, self.totalTime))
-		if self.curTime == 0 then
-			self.bufferTime = 30
+		if self.curTime <= 0 then
+			self.bufferTime = 15
 		end
 	else
 		self.isDone = true

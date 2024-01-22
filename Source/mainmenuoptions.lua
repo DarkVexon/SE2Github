@@ -47,7 +47,7 @@ function drawMainMenuOptionScreen()
 	drawNiceRect(MAIN_MENU_OPTIONS_X, MAIN_MENU_OPTIONS_Y, MAIN_MENU_OPTIONS_WIDTH, MAIN_MENU_OPTIONS_HEIGHT)
 	--TODO: If save exists
 	for i=1, 2 do
-		drawMainMenuOption(MAIN_MENU_OPTIONS[i], MAIN_MENU_OPTIONS_X + 5, MAIN_MENU_OPTIONS_Y + (i-1) * 30 + 10, mainMenuOptionsSelectedIdx == i)
+		drawMainMenuOption(MAIN_MENU_OPTIONS[i], MAIN_MENU_OPTIONS_X + 10, MAIN_MENU_OPTIONS_Y + (i-1) * 30 + 10, mainMenuOptionsSelectedIdx == i)
 	end
 
 	if textBoxShown then

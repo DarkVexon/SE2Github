@@ -17,7 +17,7 @@ function initializePlayer()
 	end
 
 
-	addToParty(randomEncounterMonster("Craydrisk", {5, 5}))
+	--addToParty(randomEncounterMonster("Tumight", {5, 5}))
 end
 
 function getDexProgress(type)

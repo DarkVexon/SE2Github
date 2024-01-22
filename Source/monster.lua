@@ -251,7 +251,11 @@ end
 
 function Monster:levelUp()
 	local learnset = monsterInfo[self.species]["learnset"]
-	local targetMove = getMoveByName(learnset[self.level+1 .. ""])
+	local moveToLearn = learnset[self.level+1 .. ""]
+	local targetMove = nil
+	if moveToLearn ~= nil then
+	  targetMove = getMoveByName(moveToLearn)
+	end
 	local prevLevel = self.level
 	local prevMaxHp = self.maxHp
 	local prevAtk = self.attack

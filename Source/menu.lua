@@ -36,60 +36,83 @@ function resetMenu()
 	menuPaddingFrames = 0
 end
 
-function updateInMenu()
-	--input
-	local input = playdate.getCrankChange() / 2
-	if playdate.buttonIsPressed(playdate.kButtonUp) then
-		input -= 3
-	elseif playdate.buttonIsPressed(playdate.kButtonDown) then
-		input += 3
-	end
-	if (input ~= 0) then
-		menuPaddingFrames = numMenuPaddingFrames
-		menuAngle += input
+local CRANKING_NEEDED_FOR_SAVE <const> = 1111
 
-		if menuAngle > menuAngleLimit then
-			if menuIdx < #menuItems then
-				--print("-> moved next")
-				menuAngle -= menuAngleLimit * 2
-				menuIdx += 1
-				menuClicky()
-			else --limit scroll
-				menuAngle = menuAngleLimit
+function updateInMenu()
+	local input = playdate.getCrankChange() / 2
+	if not isInSaveGameMode then
+		if playdate.buttonIsPressed(playdate.kButtonUp) then
+			input -= 3
+		elseif playdate.buttonIsPressed(playdate.kButtonDown) then
+			input += 3
+		end
+		if (input ~= 0) then
+			menuPaddingFrames = numMenuPaddingFrames
+			menuAngle += input
+
+			if menuAngle > menuAngleLimit then
+				if menuIdx < #menuItems then
+					--print("-> moved next")
+					menuAngle -= menuAngleLimit * 2
+					menuIdx += 1
+					menuClicky()
+				else --limit scroll
+					menuAngle = menuAngleLimit
+				end
+			elseif menuAngle < -menuAngleLimit then
+				if menuIdx > 1 then
+					--print("-> moved prev")
+					menuAngle += menuAngleLimit * 2
+					menuIdx -= 1
+					menuClicky()
+				else --limit scroll
+					menuAngle = -menuAngleLimit
+				end
 			end
-		elseif menuAngle < -menuAngleLimit then
-			if menuIdx > 1 then
-				--print("-> moved prev")
-				menuAngle += menuAngleLimit * 2
-				menuIdx -= 1
-				menuClicky()
-			else --limit scroll
-				menuAngle = -menuAngleLimit
+		else
+			if menuPaddingFrames > 0 then
+				menuPaddingFrames -= 1
+			else
+				if menuAngle > 0 then --are there only integer values? Dunno if this logic is fine for this. Adjust as necessary to have menuAngle slowly move back to 0.
+					menuAngle -= 1
+					if menuAngle < 0 then
+						menuAngle = 0
+					end
+				elseif menuAngle < 0 then
+					menuAngle += 1
+					if menuAngle > 0 then
+						menuAngle = 0
+					end
+				end
 			end
 		end
 	else
-		if menuPaddingFrames > 0 then
-			menuPaddingFrames -= 1
-		else
-			if menuAngle > 0 then --are there only integer values? Dunno if this logic is fine for this. Adjust as necessary to have menuAngle slowly move back to 0.
-				menuAngle -= 1
-				if menuAngle < 0 then
-					menuAngle = 0
-				end
-			elseif menuAngle < 0 then
-				menuAngle += 1
-				if menuAngle > 0 then
-					menuAngle = 0
-				end
-			end
+		if input > 0 then
+			saveGameCrankProgress += input
+		end
+		if saveGameCrankProgress < CRANKING_NEEDED_FOR_SAVE/2 then
+			saveGameCrankProgress -= 1
+		end
+		if saveGameCrankProgress > CRANKING_NEEDED_FOR_SAVE then
+			saveGameCrankProgress = CRANKING_NEEDED_FOR_SAVE
+		end
+		if playdate.buttonIsPressed(playdate.kButtonB) then
+			isInSaveGameMode = false
+			saveGameCrankProgress = 0
 		end
 	end
-
-
 
 	if playdate.isCrankDocked() and isCrankUp then
 		isCrankUp = false
 		closeMenu()
+		if isInSaveGameMode then
+			if saveGameCrankProgress >= CRANKING_NEEDED_FOR_SAVE then
+				saveGame()
+				showTextBox("Your game has been saved.")
+			end
+			isInSaveGameMode = false
+			saveGameCrankProgress = 0
+		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) then
 		local target = menuItems[menuIdx]
@@ -102,9 +125,15 @@ function updateInMenu()
 		elseif target == "Creaturedex" then
 			startFade(openDexMenu)
 		elseif target == "Save" then
-			showQueryTextBox("Would you like to save the game?", {"Yes", "No"}, {saveGame}, true)
+			showQueryTextBox("Would you like to save the game?", {"Yes", "No"}, {prepSaveGame}, true)
 		end
 	end
+end
+
+function prepSaveGame()
+	showTextBox("Crank to save, dock when complete!")
+	isInSaveGameMode = true
+	saveGameCrankProgress = 0
 end
 
 function updateMenuTimer()
@@ -169,9 +198,11 @@ function drawMenu()
         end
     end
 
-	if not (popupUp or followTextBoxWithPopup) then
+	if not (popupUp or followTextBoxWithPopup) and not isInSaveGameMode then
 	    if (menuTimer == 0) or (menuTimer > 0 and showingMenu) then
-	    	drawMonsterInfoBox(playerMonsters[1], 10, 10, false)
+	    	if #playerMonsters > 0 then
+	    		drawMonsterInfoBox(playerMonsters[1], 10, 10, false)
+	    	end
 
 		    drawNiceRect(10, (240 - MENU_INFO_BOX_HEIGHT) - 10, 275, MENU_INFO_BOX_HEIGHT)
 		    gfx.drawText(playerName, 20, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 10)
@@ -179,5 +210,9 @@ function drawMenu()
 		    gfx.drawText("Seen: " .. getDexProgress(1) .. "/" .. numMonsters, 20, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 30)
 		    gfx.drawText("Caught: " .. getDexProgress(2).. "/" .. numMonsters, 140, (240 - MENU_INFO_BOX_HEIGHT) - 10 + 30)
 		end
+	end
+
+	if isInSaveGameMode then
+		drawBar(10, 200, 380, 20, saveGameCrankProgress, CRANKING_NEEDED_FOR_SAVE)
 	end
 end

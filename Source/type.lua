@@ -49,7 +49,7 @@ dealsDoubleTo = {
 
 	["wing"] = {"plant", "bug"},
 
-	["poison"] = {"plant"},
+	["poison"] = {"plant", "teeth"},
 
 	["love"] = {"knight"},
 

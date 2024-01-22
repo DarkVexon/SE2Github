@@ -1,3 +1,4 @@
+
 class('DentalCarry').extends(Ability)
 
 function DentalCarry:init(owner)

@@ -11,11 +11,12 @@ function Ability:init(name, owner)
 end
 
 function Ability:displaySelf()
-	addScript(TextScript(self.owner:messageBoxName() .. "'s " .. self.name .. " activated!"))
+	addScript(StartAnimScript(ShowAbilityAnim(not self.owner:isFriendly())))
+	--addScript(TextScript(self.owner:messageBoxName() .. "'s " .. self.name .. " activated!"))
 end
 
 function Ability:displaySelfTop()
-	addScriptTop(TextScript(self.owner:messageBoxName() .. "'s " .. self.name .. " activated!"))
+	--addScriptTop(TextScript(self.owner:messageBoxName() .. "'s " .. self.name .. " activated!"))
 end
 
 -- HOOKS

@@ -9,6 +9,13 @@ local ENEMY_MONSTER_INFO_DRAWY <const> = 10
 local PLAYER_MONSTER_INFO_DRAWX <const> = 15
 local PLAYER_MONSTER_INFO_DRAWY <const> = 10
 
+POPUP_SYSTEM_WIDTH = 220
+PLAYER_POPUP_SYSTEM_STARTX = -205
+ENEMY_POPUP_SYSTEM_STARTX = 385
+
+local POPUP_SYSTEM_ABILITY_Y <const> = 120
+local POPUP_SYSTEM_ITEM_Y <const> = 160
+
 local MONSTER_INFO_HPBAR_WIDTH <const> = 60
 local MONSTER_INFO_HPBAR_HEIGHT <const> = 12
 
@@ -39,6 +46,8 @@ local playerImgStartX1 <const> = 400
 local playerImgEndX1 <const> = 25
 local playerImgEndX2 <const> = -playerImgWidth
 
+playerAbilityPopupX = PLAYER_POPUP_SYSTEM_STARTX
+enemyAbilityPopupX = ENEMY_POPUP_SYSTEM_STARTX
 playerMonsterStartX = -100
 PLAYER_MONSTER_X = 15
 playerMonsterY = 85
@@ -46,6 +55,8 @@ playerMonsterY = 85
 local postKOChoices <const> = {"Swap", "Flee"}
 
 combatIntroAnimTimers = {40, 12, 15, 0, 40, 15}
+
+local POPUP_HELPER_IMG <const> = gfx.image.new("img/combat/popupHelper")
 
 playerCombatImg = gfx.image.new("img/combat/combatPlayer")
 
@@ -459,16 +470,6 @@ function showTissue(submenu)
 	tissueIndexOffset = 0
 end
 
-function fleeCombat()
-	for k, v in pairs(playerMonsters) do
-		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
-	end
-	addScript(TextScript("You flee!"))
-	addScript(TransitionScript(openMainScreen))
-	turnExecuting = true
-	nextScript()
-end
-
 function updateMoveSelect()
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
 		menuClicky()
@@ -640,7 +641,21 @@ function updateCombatChoicePhase()
 						fleeCombat()
 					end
 				else
-					showTissue(combatMenuChoiceIdx)
+					if combatMenuChoiceIdx == 2 then
+						if numKeys(playerItems) == 0 then
+							showTextBox("You have no usable items!")
+						else
+							showTissue(combatMenuChoiceIdx)
+						end
+					elseif combatMenuChoiceIdx == 3 then
+						if #playerMonsters == 1 then
+							showTextBox("You have no other Kenemon!")
+						else
+							showTissue(combatMenuChoiceIdx)
+						end
+					else
+						showTissue(combatMenuChoiceIdx)
+					end
 				end
 			end
 		else
@@ -685,9 +700,21 @@ function openLastResortMenu()
 	showTissue(3)
 end
 
+function fleeCombat()
+	fightStarting = false
+	isCombatEnding = true
+	for k, v in pairs(playerMonsters) do
+		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
+	end
+	clear(returnScripts)
+	addScript(TextScript("You flee!"))
+	addScript(TransitionScript(openMainScreen))
+	addScript(LambdaScript("unset is combat ending", function () isCombatEnding = false turnExecuting = false nextScript() end))
+	nextScript()
+end
+
 function exitBattleViaLoss()
 	fightStarting = false
-	turnExecuting = false
 	for k, v in pairs(playerMonsters) do
 		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
 	end
@@ -701,12 +728,11 @@ function exitBattleViaLoss()
 	addScript(MapChangeScript(playerRetreatMap, 1))
 	addScript(LambdaScript("post loss heal", function () fullyRestoreMonsters() nextScript() end))
 	addScript(TextScript("Having rushed away, you restore your team's energy."))
-	addScript(LambdaScript("unset is combat ending", function () isCombatEnding = false nextScript() end))
+	addScript(LambdaScript("unset is combat ending", function () isCombatEnding = false turnExecuting = false nextScript() end))
 end
 
 function exitBattleViaVictory()
 	fightStarting = false
-	turnExecuting = false
 	for k, v in pairs(playerMonsters) do
 		v.ability = getAbilityByName(monsterInfo[v.species].ability, v)
 	end
@@ -724,7 +750,7 @@ function exitBattleViaVictory()
 		end
 		addScript(TransitionScript(openMainScreen))
 	end
-	addScript(LambdaScript("unset is combat ending", function () isCombatEnding = false nextScript() end))
+	addScript(LambdaScript("unset is combat ending", function () isCombatEnding = false turnExecuting = false nextScript() end))
 end
 
 -- COMBAT INTRO PHASES
@@ -1016,11 +1042,19 @@ function drawCombatInterface()
 		enemyMonster.img:drawScaled(enemyMonsterPosX, enemyMonsterPosY, enemyMonsterDrawScale)
 	end
 	drawCombatMonsterData(ENEMY_MONSTER_INFO_DRAWX, ENEMY_MONSTER_INFO_DRAWY, enemyMonster)
+	POPUP_HELPER_IMG:draw(enemyAbilityPopupX, POPUP_SYSTEM_ABILITY_Y, gfx.kImageFlippedX)
+	gfx.setImageDrawMode(playdate.graphics.kDrawModeFillWhite)
+	gfx.drawText(enemyMonster.ability.name, enemyAbilityPopupX + 23, POPUP_SYSTEM_ABILITY_Y + 2)
+	gfx.setImageDrawMode(playdate.graphics.kDrawModeCopy)
 	enemyMonster.ability:render()
 	if showPlayerMonster then
 		playerMonster.img:draw(playerMonsterPosX, playerMonsterPosY, gfx.kImageFlippedX)
 	end
 	drawCombatMonsterData(PLAYER_MONSTER_INFO_DRAWX, PLAYER_MONSTER_INFO_DRAWY, playerMonster)
+	POPUP_HELPER_IMG:draw(playerAbilityPopupX, POPUP_SYSTEM_ABILITY_Y)
+	gfx.setImageDrawMode(playdate.graphics.kDrawModeFillWhite)
+	gfx.drawText(playerMonster.ability.name, playerAbilityPopupX + 13, POPUP_SYSTEM_ABILITY_Y + 2)
+	gfx.setImageDrawMode(playdate.graphics.kDrawModeCopy)
 	playerMonster.ability:render()
 
 	for i, v in ipairs(playerMonster.statuses) do

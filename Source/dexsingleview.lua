@@ -36,6 +36,7 @@ function updateDexSingleView()
 		menuClicky()
 		startFade(openDexMenu)
 		gfx.setDrawOffset(0, 0)
+		skipNextRender = true
 	end
 	if playdate.buttonJustPressed(playdate.kButtonUp) then
 		if dexSelectedIdx > 1 then
