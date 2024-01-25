@@ -31,7 +31,7 @@ function ShowAbilityAnim:update()
 			if self.isOn then
 				self.isOn = false
 				self.time = self.totalTime
-				self.bufferTime = 35
+				self.bufferTime = 25
 			else
 				self.isDone = true
 			end

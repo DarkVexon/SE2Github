@@ -15,7 +15,7 @@ local CUBE_DROP_SPEED <const> = -4
 local CUBE_DROP_Y <const> = 150
 local CUBE_SWIRL_TIME <const> = 40
 
-function ThrowCubeAnim:init(numSparks)
+function ThrowCubeAnim:init(numSparks, numCubes)
 	ThrowCubeAnim.super.init(self)
 	self.posX = CUBE_START_X
 	self.posY = CUBE_START_Y
@@ -25,6 +25,7 @@ function ThrowCubeAnim:init(numSparks)
 	self.phase = 0
 	self.numSparks = numSparks
 	self.startSparks = self.numSparks
+	self.numCubes = numCubes
 	self.wasCaught = numSparks == 4
 end
 
@@ -127,9 +128,9 @@ end
 function ThrowCubeAnim:render()
 	CAPTURE_CUBE_COMBAT_IMG:draw(self.posX, self.posY)
 	if self.phase == 4 then
-		for i=0, 3 do
+		for i=0, self.numCubes do
 			local destDegrees = playdate.math.lerp(0, 360, timeLeft(self.phaseTimer, CUBE_SWIRL_TIME))
-			destDegrees += (360/4) * i
+			destDegrees += (360/self.numCubes) * i
 			destDegrees = destDegrees % 360
 	        local destRads = toRadians(destDegrees)
 	        local circRadius = playdate.math.lerp(fadeCircEndpoint, 0, timeLeft(self.phaseTimer, CUBE_SWIRL_TIME))

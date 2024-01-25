@@ -1,0 +1,40 @@
+{
+	"Route 1": {
+		"encountertable":
+		[
+			["Palpillar", [4, 6], 5],
+			["Bombeetl", [4, 6], 5],
+			["Achewig", [4, 6], 2],
+			["Leafjawbs", [4, 6], 1]
+		],
+		"encounterchance": 5
+	},
+	"Route 2": {
+		"encountertable":
+		[
+			["Palpillar", [5, 7], 5],
+			["Bombeetl", [5, 7], 5],
+			["Achewig", [5, 7], 2],
+			["Leafjawbs", [5, 7], 1]
+		],
+		"encounterchance": 5
+	},
+	"Route 10": {
+		"encountertable":
+		[
+			["Palpillar", [6, 7], 5],
+			["Bombeetl", [6, 7], 5],
+			["Yunyun", [6, 7], 2],
+			["Leafjawbs", [6, 7], 1]
+		],
+		"encounterchance": 6
+	},
+	"Desert Expanse": {
+		"encountertable":
+		[
+			["Skwizard", [7, 8], 6],
+			["Fritzle", [8, 10], 2]
+		],
+		"encounterchance": 9
+	}
+}

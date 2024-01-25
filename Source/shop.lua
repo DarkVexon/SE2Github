@@ -118,4 +118,6 @@ function drawShop()
 	drawNiceRect(SHOP_MENU_POS_X, SHOP_MENU_DESC_START_Y, SHOP_MENU_WIDTH, SHOP_MENU_DESC_HEIGHT+5)
 	local item = getItemByName(keyAtIndex(shopItems, shopMenuSelectedIdx))
 	gfx.drawTextInRect(item.name .. ": " .. item.description, SHOP_MENU_POS_X + 3, SHOP_MENU_DESC_START_Y + 2, SHOP_MENU_WIDTH - 6, SHOP_MENU_DESC_HEIGHT - 4)
+
+	drawBackButton()
 end

@@ -9,7 +9,6 @@ function Innovator:onEnterCombat()
 	if toCheck.ability.id ~= "Innovator" then
 		self:displaySelf()
 		addScript(TextScript(self.owner:messageBoxName() .. " copied " .. toCheck.name .. "'s " .. toCheck.ability.name .. "!"))
-		self.owner.ability = toCheck.ability:getCopy(self.owner)
-		self.owner.ability:onEnterCombat()
+		addScript(LambdaScript("set ability", function () self.owner.ability = toCheck.ability:getCopy(self.owner) self.owner.ability:onEnterCombat() end))
 	end
 end

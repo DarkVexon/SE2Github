@@ -1,7 +1,6 @@
 function newGame()
-	initializePlayer()
-	loadMapFromTransloc("overworld", 1)
-	startFade(openMainScreen)
+	playerName = "Qupo"
+	startFade(openIntroScroll)
 end
 
 function serializeMonster(monster)
@@ -70,7 +69,7 @@ function loadSave()
 			playerMonsters = deserializeMonsterList(gameData.dataPlayerMonsters)
 			playerMonsterStorage = deserializeMonsterList(gameData.dataPlayerMonsterStorage)
 			playerItems = gameData.dataPlayerItems
-			playerKeyItems = gamedata.dataPlayerKeyItems
+			playerKeyItems = gameData.dataPlayerKeyItems
 			playerMoney = gameData.dataPlayerMoney
 			playerFlag = gameData.dataPlayerFlag
 			playerRetreatMap = gameData.dataPlayerRetreatMap

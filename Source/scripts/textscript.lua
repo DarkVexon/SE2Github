@@ -6,5 +6,13 @@ function TextScript:init(text)
 end
 
 function TextScript:execute()
-	showTextBox(self.text)
+	local result = split(self.text, "NL")
+	if #result == 1 then
+		showTextBox(self.text)
+	else
+		showTextBox(result[1])
+		for i=#result, 2, -1 do
+			addScriptTop(TextScript(result[i]))
+		end
+	end
 end

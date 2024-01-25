@@ -75,7 +75,7 @@ function manualCalculateDamage(owner, target, power, type)
 		output *= 2
 		printIfDebug("New total: " .. output)
 	end
-	output = output * 0.35
+	output = output * 0.5
 	printIfDebug("Output pre-floor: " .. output)
 	output = math.floor(output)
 	printIfDebug("Final output: " .. output)

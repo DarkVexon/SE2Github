@@ -594,85 +594,136 @@ function updateItemSelect()
 	end
 end
 
-
 function updateCombatChoicePhase()
-	if tissueTimer > 0 then
-		tissueTimer -= 1
-		if tissueMenuShown then
-			tissueMenuY = playdate.math.lerp(tissueMenuRestY, combatTextBoxPosY, timeLeft(tissueTimer, tissueShowHideTimer))
-			if tissueTimer > tissueShowHideTimer/2 then
-				combatInfoPanY = playdate.math.lerp(combatMenuOptionsStartY, 260, timeLeft(tissueTimer - (tissueShowHideTimer/2), tissueShowHideTimer/2))
-			else
-				combatMenuChoiceY = playdate.math.lerp(260, combatMenuOptionsStartY, timeLeft(tissueTimer, tissueShowHideTimer/2))
-			end
-		else
-			tissueMenuY = playdate.math.lerp(combatTextBoxPosY, tissueMenuRestY, timeLeft(tissueTimer, tissueShowHideTimer))
-			if tissueTimer > tissueShowHideTimer/2 then
-				combatMenuChoiceY = playdate.math.lerp(combatMenuOptionsStartY, 260, timeLeft(tissueTimer - (tissueShowHideTimer/2), tissueShowHideTimer/2))
-			else
-				combatInfoPanY = playdate.math.lerp(260, combatMenuOptionsStartY, timeLeft(tissueTimer, tissueShowHideTimer/2))
-			end
-		end
-		if tissueTimer == 0 then
-			tissueMenuShown = not tissueMenuShown
-			if swapToExecution then
-				swapToExecution = false
-				turnExecuting = true
-				nextScript()
-			end
+	if curAnim ~= nil then
+		curAnim:update()
+		if curAnim.isDone then
+			curAnim = nil
+			nextScript()
 		end
 	else
-		if not tissueMenuShown then
-			if playdate.buttonJustPressed(playdate.kButtonUp) then
-				moveVertInCombatChoice()
-			elseif playdate.buttonJustPressed(playdate.kButtonRight) then
-				moveHorizInCombatChoice()
-			elseif playdate.buttonJustPressed(playdate.kButtonDown) then
-				moveVertInCombatChoice()
-			elseif playdate.buttonJustPressed(playdate.kButtonLeft) then
-				moveHorizInCombatChoice()
-			end
-			if playdate.buttonJustPressed(playdate.kButtonA) then
-				menuClicky()
-				if combatMenuChoiceIdx == 4 then
-					if isTrainerBattle then
-						showTextBox("You can't flee from a battle with someone else!")
-					else
-						fleeCombat()
-					end
+		if tissueTimer > 0 then
+			tissueTimer -= 1
+			if tissueMenuShown then
+				tissueMenuY = playdate.math.lerp(tissueMenuRestY, combatTextBoxPosY, timeLeft(tissueTimer, tissueShowHideTimer))
+				if tissueTimer > tissueShowHideTimer/2 then
+					combatInfoPanY = playdate.math.lerp(combatMenuOptionsStartY, 260, timeLeft(tissueTimer - (tissueShowHideTimer/2), tissueShowHideTimer/2))
 				else
-					if combatMenuChoiceIdx == 2 then
-						if numKeys(playerItems) == 0 then
-							showTextBox("You have no usable items!")
-						else
-							showTissue(combatMenuChoiceIdx)
-						end
-					elseif combatMenuChoiceIdx == 3 then
-						if #playerMonsters == 1 then
-							showTextBox("You have no other Kenemon!")
-						else
-							showTissue(combatMenuChoiceIdx)
-						end
-					else
-						showTissue(combatMenuChoiceIdx)
-					end
+					combatMenuChoiceY = playdate.math.lerp(260, combatMenuOptionsStartY, timeLeft(tissueTimer, tissueShowHideTimer/2))
+				end
+			else
+				tissueMenuY = playdate.math.lerp(combatTextBoxPosY, tissueMenuRestY, timeLeft(tissueTimer, tissueShowHideTimer))
+				if tissueTimer > tissueShowHideTimer/2 then
+					combatMenuChoiceY = playdate.math.lerp(combatMenuOptionsStartY, 260, timeLeft(tissueTimer - (tissueShowHideTimer/2), tissueShowHideTimer/2))
+				else
+					combatInfoPanY = playdate.math.lerp(260, combatMenuOptionsStartY, timeLeft(tissueTimer, tissueShowHideTimer/2))
+				end
+			end
+			if tissueTimer == 0 then
+				tissueMenuShown = not tissueMenuShown
+				if swapToExecution then
+					swapToExecution = false
+					turnExecuting = true
+					nextScript()
 				end
 			end
 		else
-			if combatSubmenuChosen == 1 then
-				updateMoveSelect()
-			elseif combatSubmenuChosen == 2 then
-				updateItemSelect()
-			elseif combatSubmenuChosen == 3 then
-				updateSwapSelect()
-			elseif combatSubmenuChosen == 5 then
-				if playdate.buttonJustPressed(playdate.kButtonA) then
-					menuClicky()
-					hideTissue()
-					swapToExecution = true
+			if inCaptureTutorialMode then
+				captureTutorialTimer -= 1
+				if captureTutorialTimer <= 0 then
+					if enemyMonster.curHp > enemyMonster.maxHp / 2 then
+						if not tissueMenuShown then
+							if not tutorialTextBoxOneShown then
+								captureTutorialTimer = 45
+								showTextBox("First, use some moves to whittle down the Kenemon's health!")
+								tutorialTextBoxOneShown = true
+							else
+								showTissue(1)
+								captureTutorialTimer = 45
+							end
+						else
+							captureTutorialTimer = 45
+							playerChosenMove = playerMonster.moves[1]
+							hideTissue()
+							swapToExecution = true
+						end
+					else
+						if not tissueMenuShown then
+							if combatMenuChoiceIdx == 1 then
+								combatMenuChoiceIdx = 2
+								captureTutorialTimer = 45
+							elseif combatMenuChoiceIdx == 2 then
+								if not tutorialTextBoxTwoShown then
+									captureTutorialTimer = 45
+									showTextBox("Second, throw the Capture Cube! It takes some luck (or skill in my case lol)")
+									tutorialTextBoxTwoShown = true
+								else
+									showTissue(2)
+									captureTutorialTimer = 45
+								end
+							end
+						else
+							captureTutorialTimer = 45
+							playerChosenItem = CaptureCube()
+							hideTissue()
+							swapToExecution = true
+						end
+					end
 				end
-			elseif combatSubmenuChosen == 6 then
-				updateLearnMoveSelect()
+			else
+				if not tissueMenuShown then
+					if playdate.buttonJustPressed(playdate.kButtonUp) then
+						moveVertInCombatChoice()
+					elseif playdate.buttonJustPressed(playdate.kButtonRight) then
+						moveHorizInCombatChoice()
+					elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+						moveVertInCombatChoice()
+					elseif playdate.buttonJustPressed(playdate.kButtonLeft) then
+						moveHorizInCombatChoice()
+					end
+					if playdate.buttonJustPressed(playdate.kButtonA) then
+						menuClicky()
+						if combatMenuChoiceIdx == 4 then
+							if isTrainerBattle then
+								showTextBox("You can't flee from a battle with someone else!")
+							else
+								fleeCombat()
+							end
+						else
+							if combatMenuChoiceIdx == 2 then
+								if numKeys(playerItems) == 0 then
+									showTextBox("You have no usable items!")
+								else
+									showTissue(combatMenuChoiceIdx)
+								end
+							elseif combatMenuChoiceIdx == 3 then
+								if #playerMonsters == 1 then
+									showTextBox("You have no other Kenemon!")
+								else
+									showTissue(combatMenuChoiceIdx)
+								end
+							else
+								showTissue(combatMenuChoiceIdx)
+							end
+						end
+					end
+				else
+					if combatSubmenuChosen == 1 then
+						updateMoveSelect()
+					elseif combatSubmenuChosen == 2 then
+						updateItemSelect()
+					elseif combatSubmenuChosen == 3 then
+						updateSwapSelect()
+					elseif combatSubmenuChosen == 5 then
+						if playdate.buttonJustPressed(playdate.kButtonA) then
+							menuClicky()
+							hideTissue()
+							swapToExecution = true
+						end
+					elseif combatSubmenuChosen == 6 then
+						updateLearnMoveSelect()
+					end
+				end
 			end
 		end
 	end
@@ -1017,7 +1068,6 @@ function drawCombatIntro()
 end
 
 function drawCombatInterface()
-
 	for i, v in ipairs(playerMonster.statuses) do
 		if v.renderBehind then
 			v:render()

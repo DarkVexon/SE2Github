@@ -3,7 +3,6 @@ class('Person').extends(NPC)
 local TIME_TO_MOVE <const> = 8
 
 function Person:loadImg(imgName)
-	imgName = "rival"
 	if (containsKey(objectImgs, imgName)) then
 		self.imgs = objectImgs[imgName]
 	else
@@ -52,7 +51,10 @@ end
 
 function Person:render()
 	if self:shouldRender() then
-		self.imgs[self.imgIndex]:draw(self.visX + cameraOffsetX, self.visY + cameraOffsetY)
+		gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
+		gfx.fillEllipseInRect(self.visX + cameraOffsetX, self.visY + cameraOffsetY + 40 - 13, 40, 10)
+		gfx.setColor(gfx.kColorBlack)
+		self.imgs[self.imgIndex]:draw(self.visX + cameraOffsetX, self.visY + cameraOffsetY - 8)
 	end
 end
 
@@ -156,5 +158,17 @@ function Person:turnToFacePlayer()
 		self:setFacing(0)
 	elseif playerY > self.posY then
 		self:setFacing(2)
+	end
+end
+
+function Person:moveForwards()
+	if self.facing == 0 then
+		self:attemptMoveUp()
+	elseif self.facing == 1 then
+		self:attemptMoveRight()
+	elseif self.facing == 2 then
+		self:attemptMoveDown()
+	elseif self.facing == 3 then
+		self:attemptMoveLeft()
 	end
 end

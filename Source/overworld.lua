@@ -61,7 +61,7 @@ end
 function hardSetupAreaName()
 	if dividers ~= nil then
 		for k,v in ipairs(dividers) do
-			if playerX >= v[2] and playerX <= v[2] + v[4] and playerY >= v[3] and playerY <= v[3] + v[5] then
+			if playerX >= v[2] and playerX <= v[4] and playerY >= v[3] and playerY <= v[5] then
 				curAreaName = v[1]
 				break
 			end
@@ -73,11 +73,12 @@ local AREA_SHOW_TIME = 15
 local AREA_HOLD_TIME = 25
 areaIsShowing = false
 areaShowTimer = 0
+encounterMinSteps = 0
 
 function checkAreaName()
 	if dividers ~= nil then
 		for k,v in ipairs(dividers) do
-			if playerX >= v[2] and playerX <= v[2] + v[4] and playerY >= v[3] and playerY <= v[3] + v[5] then
+			if playerX >= v[2] and playerX <= v[4] and playerY >= v[3] and playerY <= v[5] then
 				if curAreaName ~= v[1] then
 					curAreaName = v[1]
 					areaShowTimer = AREA_SHOW_TIME + AREA_HOLD_TIME
@@ -313,6 +314,13 @@ function canMoveThere(x, y)
 	if (not contains(passables, result)) then
 		return false
 	end
+	if oneWays ~= nil then
+		if containsKey(oneWays, result .. "") then
+			if oneWays[result .. ""] ~= playerFacing then
+				return false
+			end
+		end
+	end
 	for i, v in ipairs(objs) do
 		if (v:occupies(x, y) and not v:canMoveHere()) then
 			return false
@@ -377,7 +385,7 @@ function checkMovement(smooth)
 			end
 		end
 
-		if not playdate.isCrankDocked() and not isCrankUp then
+		if not playdate.isCrankDocked() and not isCrankUp and playerFlag > 3 then
 			isCrankUp = true
 			openMenu()
 		end
@@ -451,13 +459,14 @@ function getPlayerPointCoord()
 end
 
 function randomEncounterChance()
-	if math.random(0, encounterChance) == 0 then
+	if math.random(0, getEncounterChance()) == 0 then
 		return true
 	end
 	return false
 end
 
 function mapRandomEncounter()
+	local randomEncounters = getEncounterTable()
 	local maxSum = 0
 	for k, v in pairs(randomEncounters) do
 		maxSum += v[3]
@@ -468,8 +477,8 @@ function mapRandomEncounter()
 	for k, v in pairs(randomEncounters) do
 		result -= v[3]
 		if result <= 0 then
-			--addScript(RandomEncounterScript(v[1], v[2]))
-			addScript(RandomEncounterScript(randomSpecies(), {playerMonsters[1].level-2, playerMonsters[1].level}))
+			addScript(RandomEncounterScript(v[1], v[2]))
+			--addScript(RandomEncounterScript(randomSpecies(), {playerMonsters[1].level-2, playerMonsters[1].level}))
 			--addScript(RandomEncounterScript("Yunyun", {3, 5}))
 			--addScript(RandomEncounterScript("Chompah", {playerMonsters[1].level-2, playerMonsters[1].level}))
 			nextScript()
@@ -499,21 +508,26 @@ function onMoveEnd()
 			end
 		end
 	end
-	if contains(encounterTiles, currentTile) then
-		if math.random(0, 3) == 0 then
-			local startX = (playerX - 1) * 40 + 15
-			local endX = (playerX) * 40 - 15
-			local startY = (playerY - 1) * 40 + 15
-			local endY = startY + 15
-			local speedX = randomFloat(2, 3)
-			local speedY = randomFloat(-5.5, -3)
-			for i=1, 2 do
-				addOverworldEffect(GrassShakeSparkle(math.random(startX, endX), math.random(startY, endY), playerY * 40 - 15, speedX, speedY, i==2))
+	if encounterMinSteps > 0 then
+		encounterMinSteps -= 1
+	else
+		if contains(encounterTiles, currentTile) then
+			if math.random(0, 3) == 0 then
+				local startX = (playerX - 1) * 40 + 15
+				local endX = (playerX) * 40 - 15
+				local startY = (playerY - 1) * 40 + 15
+				local endY = startY + 15
+				local speedX = randomFloat(2, 3)
+				local speedY = randomFloat(-5.5, -3)
+				for i=1, 2 do
+					addOverworldEffect(GrassShakeSparkle(math.random(startX, endX), math.random(startY, endY), playerY * 40 - 15, speedX, speedY, i==2))
+				end
 			end
-		end
-		if randomEncounterChance() and not fightStarting then
-			allowImmediateMovementCheck = false
-			mapRandomEncounter()
+			if randomEncounterChance() and not fightStarting then
+				encounterMinSteps = 4
+				allowImmediateMovementCheck = false
+				mapRandomEncounter()
+			end
 		end
 	end
 	if stepSwaps ~= nil then
@@ -526,6 +540,10 @@ function onMoveEnd()
 	if allowImmediateMovementCheck then
 		checkMovement(true)
 		checkAreaName()
+	end
+	if callScriptAfterPlayerMove then
+		callScriptAfterPlayerMove = false
+		nextScript()
 	end
 end
 

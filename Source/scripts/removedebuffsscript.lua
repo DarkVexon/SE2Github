@@ -5,7 +5,7 @@ function RemoveDebuffsScript:init(target)
 	self.target = target
 end
 
-function RemoveStatusScript:execute()
+function RemoveDebuffsScript:execute()
 	for k, v in ipairs(self.target.statuses) do
 		if v.type == 0 then
 			addScriptTop(RemoveStatusScript(self.target, v))

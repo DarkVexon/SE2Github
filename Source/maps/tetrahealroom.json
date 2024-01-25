@@ -1,0 +1,75 @@
+{
+    "data":[4, 4, 4, 4, 4, 4, 4, 4,
+            10, 10, 10, 11, 10, 10, 11, 10,
+            10, 7, 8, 12, 7, 8, 12, 10,
+            10, 10, 10, 10, 10, 10, 10, 10,
+            10, 10, 10, 10, 10, 10, 10, 10,
+            10, 10, 10, 10, 10, 10, 10, 10,
+            10, 10, 10, 3, 3, 10, 10, 10,
+            5, 5, 5, 6, 6, 5, 5, 5],
+    "width": 8,
+    "npcs":
+    [
+        [
+            "door",
+            4,
+            8,
+            "overworld",
+            6
+        ],
+        [
+            "door",
+            5,
+            8,
+            "overworld",
+            7
+        ],
+        [
+            "monsterstorageaccessor",
+            8,
+            2
+        ],
+        [
+            "shopopener",
+            5,
+            3
+        ],
+        [
+            "shopopener",
+            6,
+            3
+        ],
+        [
+            "healmachine",
+            3,
+            2
+        ],
+        [
+            "wanderingperson",
+            "musicnote",
+            2,
+            5,
+            "I love it in Tetra! It's so ... affordable. Wait, are you one of those scientists?"
+        ]
+    ],
+    "translocs":
+    [
+        [
+            2,
+            2,
+            1
+        ],
+        [
+            4,
+            7,
+            2
+        ],
+        [
+            5,
+            7,
+            2
+        ]
+    ],
+    "background": "black",
+    "tiles": "indoors"
+}

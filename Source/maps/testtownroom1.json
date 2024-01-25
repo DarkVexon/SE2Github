@@ -11,7 +11,7 @@
 "width": 8,
 "npcs":
 	[
-		["letter", 2, 2, "KENEDAR BIOLOGY GROUP: Thank you for accepting our mission! Your KENEMON is in the SCIENCE LAB."],
+		["spawnintroman", 2, 5],
 		["door", 2, 6, "overworld", 2],
 		["door", 3, 6, "overworld", 2],
 		["healmachine", 5, 2],
@@ -19,7 +19,7 @@
 	],
 "translocs":
 	[
-		[5, 3, 2],
+		[2, 3, 0],
 		[3, 5, 0],
 		[2, 5, 0]
 	],

@@ -69,9 +69,9 @@ function updateStorageView()
 		menuClicky()
 		if storageSelectionIdx < 0 then
 			if storageSelectionIdx == -1 or storageSelectionIdx == -2 then
-				storageSelectionIdx = 5
+				
 			else
-				storageSelectionIdx = 5 + STORAGE_PER_ROW
+				
 			end
 		else
 			storageSelectionIdx -= 1
@@ -88,7 +88,11 @@ function updateStorageView()
 				storageSelectionIdx = 1 + STORAGE_PER_ROW
 			end
 		else
-			storageSelectionIdx += 1
+			if storageSelectionIdx % STORAGE_PER_ROW == (0) then
+
+			else
+				storageSelectionIdx += 1
+			end
 		end
 	end
 	if playdate.buttonJustPressed(playdate.kButtonA) then

@@ -100,9 +100,15 @@ function Monster:init(data)
 		self.exp = data["exp"]
 	end
 	self.moves = {}
-	for k, v in pairs(data["moves"]) do
-		local move = getMoveByName(v)
-		table.insert(self.moves, move)
+	if data["moves"] == nil then
+		for i, v in ipairs(getMostRecentFourMovesAtLevel(self.species, data["level"])) do
+			table.insert(self.moves, getMoveByName(v))
+		end
+	else
+		for k, v in pairs(data["moves"]) do
+			local move = getMoveByName(v)
+			table.insert(self.moves, move)
+		end
 	end
 	if data["nature"] == nil then
 		self.nature = randomKey(natures)

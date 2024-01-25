@@ -49,10 +49,10 @@ function loadMap(map, x, y, facing)
 	passables = tilesetInfo[tilesToUse]["passable"]
 	encounterTiles = tilesetInfo[tilesToUse]["encounter"]
 	stepSwaps = tilesetInfo[tilesToUse]["stepSwaps"]
+	oneWays = tilesetInfo[tilesToUse]["oneWays"]
 	overlays = tilesetInfo[tilesToUse]["overlays"]
-	randomEncounters = mapResult["encountertable"]
-	encounterChance = mapResult["encounterchance"]
 	dividers = mapResult["dividers"]
+
 
 	clear(objs)
 	for i, v in ipairs(mapResult["npcs"]) do
@@ -70,13 +70,14 @@ function loadMap(map, x, y, facing)
 	currentTile = currentTileset:getTileAtPosition(playerX, playerY)
 	prevTile = currentTile
 
-	if mapBg == "white" then
+--[[	if mapBg == "white" then
 		gfx.setBackgroundColor(gfx.kColorWhite)
 	elseif mapBg == "black" then
 		gfx.setBackgroundColor(gfx.kColorBlack)
-	end
+	end]]
 	setPlayerFacing(facing)
 	hardSetupCameraOffsets()
+	hardSetupAreaName()
 end
 
 function loadMapFromTransloc(map, transloc)

@@ -5,18 +5,16 @@
     "payout": 20,
     "1": {
       "species": "Bombeetl",
-      "level": 7,
-      "moves": ["Nibble"]
+      "level": 7
     }
   },
   "rivalfight1": {
-    "img": "slimeboy",
-    "name": "Rival",
+    "img": "rival",
+    "name": "Dr. Syta, P.H.D, M.D.",
     "payout": 25,
     "1": {
       "species": "Palpillar",
       "level": 4,
-      "moves": ["Nibble"],
       "nature": "Unlucky"
     }
   },
@@ -27,7 +25,6 @@
     "1": {
       "species": "Tumight",
       "level": 5,
-      "moves": ["Slash"],
       "nature": "Unlucky"
     }
   },
@@ -37,8 +34,7 @@
     "payout": 15,
     "1": {
       "species": "Bombeetl",
-      "level": 5,
-      "moves": ["Nibble", "Ember"]
+      "level": 5
     }
   },
   "trainer3": {
@@ -47,18 +43,15 @@
     "payout": 25,
     "1": {
       "species": "Palpillar",
-      "level": 4,
-      "moves": ["Nibble"]
+      "level": 4
     },
     "2": {
       "species": "Skwizard",
-      "level": 5,
-      "moves": ["Meditate", "Nibble"]
+      "level": 5
     },
     "3": {
       "species": "Chompah",
-      "level": 4,
-      "moves": ["Nibble"]
+      "level": 4
     }
   },
   "trainer4": {
@@ -67,8 +60,7 @@
     "payout": 40,
     "1": {
       "species": "Fritzle",
-      "level": 7,
-      "moves": ["Nibble"]
+      "level": 7
     }
   },
   "trainer5": {
@@ -77,8 +69,29 @@
     "payout": 10,
     "1": {
       "species": "Gnobnak",
-      "level": 8,
-      "moves": ["Spark", "Meditate", "Mystery Box"]
+      "level": 8
+    }
+  },
+  "deserttrainer1": {
+    "img": "slimeboy",
+    "name": "Desert Guard",
+    "payout": 20,
+    "1": {
+      "species": "Fritzle",
+      "level": 8
+    }
+  },
+  "typemasterfire1": {
+    "img": "slimeboy",
+    "name": "FIRE MASTER Terrence",
+    "payout": 125,
+    "1": {
+      "species": "Sootiwi",
+      "level": 8
+    },
+    "2": {
+      "species": "Sootiwi",
+      "level": 9
     }
   }
 }

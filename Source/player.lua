@@ -1,5 +1,4 @@
 function initializePlayer()
-	playerName = "Dr. Qupo"
 	playerMonsters = {}
 	playerMonsterStorage = {}
 	playerItems = {}

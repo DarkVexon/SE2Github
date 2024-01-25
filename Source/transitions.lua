@@ -44,6 +44,8 @@ function onEndFadeOut()
 		elseif mapBg == "black" then
 			gfx.setBackgroundColor(gfx.kColorBlack)
 		end
+	elseif curScreen == 13 then
+
 	else
 		gfx.setBackgroundColor(gfx.kColorWhite)
 	end

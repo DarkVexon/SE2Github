@@ -77,17 +77,23 @@ end
 -- IMPORTS
 import "npcs/signpost"
 import "npcs/person"
+import "npcs/standstilltalker"
 import "npcs/door"
 import "npcs/healingmachine"
 import "npcs/nocreaturesgoback"
-import "npcs/letter"
 import "npcs/tablecube"
-import "npcs/rivalfirstencounter"
+import "npcs/genericrival"
 import "npcs/trainer"
+import "npcs/turningtrainer"
+import "npcs/walkingtrainer"
 import "npcs/monsterstorageaccessor"
 import "npcs/founditem"
 import "npcs/wanderingperson"
 import "npcs/shopopener"
+import "npcs/spawnintroman"
+import "npcs/rivalcatchtutorial"
+import "npcs/cantleavetetrayet"
+import "npcs/typemasterfire"
 
 function loadNpc(info)
 	local npcType = info[1]
@@ -113,9 +119,23 @@ function loadNpc(info)
 	elseif npcType == "founditem" then
 		newNpc = FoundItem(info[2], info[3], info[4], info[5])
 	elseif npcType == "wanderingperson" then
-		newNpc = WanderingPerson(info[2], info[3], info[4], info[5], info[6])
+		newNpc = WanderingPerson(info[2], info[3], info[4], info[5])
 	elseif npcType == "shopopener" then
 		newNpc = ShopOpener(info[2], info[3])
+	elseif npcType == "spawnintroman" then
+		newNpc = SpawnIntroMan(info[2], info[3])
+	elseif npcType == "rivalcatchtutorial" then
+		newNpc = RivalCatchTutorial(info[2], info[3])
+	elseif npcType == "standstilltalker" then
+		newNpc = StandStillTalker(info[2], info[3], info[4], info[5], info[6])
+	elseif npcType == "cantleavetetrayet" then
+		newNpc = CantLeaveTetraYet(info[2], info[3])
+	elseif npcType == "turningtrainer" then
+		newNpc = TurningTrainer(info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9])
+	elseif npcType == "walkingtrainer" then
+		newNpc = WalkingTrainer(info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9], info[10], info[11], info[12])
+	elseif npcType == "typemasterfire" then
+		newNpc = TypeMasterFire(info[2], info[3], info[4])
 	end
 	if newNpc:shouldSpawn() then
 		table.insert(objs, newNpc)

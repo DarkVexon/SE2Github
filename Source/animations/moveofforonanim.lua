@@ -19,9 +19,9 @@ function MoveOffOrOnAnim:update()
 	self.time -= 1
 	if self.isEnemy then
 		if self.isOn then
-			enemyMonsterPosX = playdate.math.lerp(enemyMonsterStartX, enemyMonsterEndX, timeLeft(self.time, self.totalTime))
+			enemyMonsterPosX = playdate.math.lerp(400, enemyMonsterEndX, timeLeft(self.time, self.totalTime))
 		else
-			enemyMonsterPosX = playdate.math.lerp(enemyMonsterEndX, enemyMonsterStartX, timeLeft(self.time, self.totalTime))
+			enemyMonsterPosX = playdate.math.lerp(enemyMonsterEndX, 400, timeLeft(self.time, self.totalTime))
 		end
 	else
 		if self.isOn then

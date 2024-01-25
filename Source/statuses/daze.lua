@@ -5,7 +5,7 @@ function Daze:init(target)
 end
 
 function Daze:preUseMove()
-	if math.random(0, 0) == 0 then
+	if math.random(0, 2) == 0 then
 		addScript(TextScript(self.owner:messageBoxName() .. " is Dazed and cannot move!"))
 		addScript(RemoveStatusScript(self.owner, self))
 		return false

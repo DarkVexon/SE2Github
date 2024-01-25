@@ -4,8 +4,8 @@ local TIME_BETWEEN_WANDERS_MIN <const> = 100
 local TIME_BETWEEN_WANDERS_MAX <const> = 175
 local MAX_WANDERDIST <const> = 4
 
-function WanderingPerson:init(name, x, y, facing, talkText)
-	WanderingPerson.super.init(self, name, x, y, facing)
+function WanderingPerson:init(name, x, y, talkText)
+	WanderingPerson.super.init(self, name, x, y, 2)
 	self.timeToWander = math.random(TIME_BETWEEN_WANDERS_MIN, TIME_BETWEEN_WANDERS_MAX)
 	self.text = talkText
 end

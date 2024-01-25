@@ -47,6 +47,8 @@ import "shop"
 import "mainmenuoptions"
 import "formalities"
 import "worldmap"
+import "introscroll"
+import "encounters"
 
 isCrankUp = false
 
@@ -69,6 +71,7 @@ curScreen = 0
 -- 10: Shop screen
 -- 11: Main menu option selection
 -- 12: World map
+-- 13: Intro scroll
 
 skipNextRender = false
 
@@ -112,6 +115,8 @@ function playdate.update()
 				updateMainMenuOptionScreen()
 			elseif curScreen == 12 then
 				updateWorldMap()
+			elseif curScreen == 13 then
+				updateIntroScroll()
 			end
 		end
 
@@ -165,6 +170,8 @@ function render()
 		drawMainMenuOptionScreen()
 	elseif curScreen == 12 then
 		drawWorldMap()
+	elseif curScreen == 13 then
+		drawIntroScroll()
 	end
 
 	if popupUp then

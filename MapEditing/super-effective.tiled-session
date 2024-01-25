@@ -1,0 +1,156 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "Town1-backup.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "HealRoom.tmj": {
+            "scale": 2.790625,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 159.8208286674132,
+                "y": 158.38745800671893
+            }
+        },
+        "HealRoom.tmx": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 159.83333333333331,
+                "y": 159.83333333333334
+            }
+        },
+        "IndoorsNormal.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "OverworldMap.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "OverworldNormal.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Town1-.tmx": {
+            "scale": 0.5947,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 714.6460400201782,
+                "y": 755.0025222801413
+            }
+        },
+        "Town1-backup - Copy.tmx": {
+            "scale": 0.14454545454545456,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4185.534591194969,
+                "y": 2566.6666666666665
+            }
+        },
+        "Town1-backup.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4179.5,
+                "y": 2559.5
+            }
+        },
+        "Town1.json": {
+            "scale": 1.7535416666666668,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 480.1710823333729,
+                "y": 320.49423785196626
+            }
+        },
+        "Town1.tmj": {
+            "scale": 0.5947,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 681.0156381368756,
+                "y": 1000.5044560282494
+            }
+        },
+        "Town1.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1218,
+                "y": 1314
+            }
+        },
+        "TownFirstRoom.json": {
+            "scale": 3.4378124999999997,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 160.2763385146805,
+                "y": 120.13453322425235
+            }
+        },
+        "TownFirstRoom.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 143.25,
+                "y": 118.5
+            }
+        },
+        "TownLabRoom.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 159.5,
+                "y": 279
+            }
+        },
+        "TownSecondRoom.tmx": {
+            "scale": 3.26265625,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 160.2988362626311,
+                "y": 119.22800632153633
+            }
+        }
+    },
+    "last.exportedFilePath": "C:/Users/edanv/Desktop/SuperEffective2/MapEditing",
+    "last.externalTilesetPath": "C:/Users/edanv/Desktop/Stuff",
+    "last.imagePath": "C:/Users/edanv/Desktop/SuperEffective2/Source/img/overworld/tile",
+    "map.height": 8,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 40,
+    "map.tileWidth": 40,
+    "map.width": 8,
+    "openFiles": [
+        "Town1-backup.tmx",
+        "HealRoom.tmx"
+    ],
+    "project": "super-effective.tiled-project",
+    "recentFiles": [
+        "HealRoom.tmx",
+        "Town1-backup.tmx",
+        "Town1-backup - Copy.tmx",
+        "HealRoom.tmj",
+        "IndoorsNormal.tsx",
+        "TownSecondRoom.tmx",
+        "Town1.tmx",
+        "TownLabRoom.tmx",
+        "TownFirstRoom.tmx",
+        "Town1.tmj",
+        "OverworldNormal.tsx",
+        "TownFirstRoom.json"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 40,
+        "width": 40
+    }
+}

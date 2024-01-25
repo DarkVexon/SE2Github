@@ -54,12 +54,20 @@ end
 
 function onKbHide()
 	keyboardShown = false
-	if playdate.keyboard.text == "" then
-		glitch(caughtMonster)
-	else
-		caughtMonster.name = playdate.keyboard.text
+	if curScreen == 5 then
+		if playdate.keyboard.text == "" then
+			glitch(caughtMonster)
+		else
+			caughtMonster.name = playdate.keyboard.text
+		end
+		postNicknameChoice()
+	elseif curScreen == 13 then
+		if playdate.keyboard.text == "" then
+			playerName = "Qupo"
+		else
+			playerName = playdate.keyboard.text
+		end
 	end
-	postNicknameChoice()
 end
 
 playdate.keyboard.keyboardDidHideCallback = onKbHide
