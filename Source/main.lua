@@ -49,6 +49,7 @@ import "formalities"
 import "worldmap"
 import "introscroll"
 import "encounters"
+import "quickbattle"
 
 isCrankUp = false
 

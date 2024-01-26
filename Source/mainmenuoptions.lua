@@ -1,6 +1,6 @@
 local MAIN_MENU_OPTIONS_X <const> = 15
 local MAIN_MENU_OPTIONS_Y <const> = 15
-local MAIN_MENU_OPTIONS <const> = {"New Game", "Continue"}
+local MAIN_MENU_OPTIONS <const> = {"New Game", "Continue", "Quick Battle"}
 local MAIN_MENU_OPTIONS_WIDTH <const> = 125
 local MAIN_MENU_OPTIONS_HEIGHT <const> = 70
 
@@ -28,6 +28,8 @@ function updateMainMenuOptionScreen()
 				newGame()
 			elseif mainMenuOptionsSelectedIdx == 2 then
 				loadSave()
+			elseif mainMenuOptionsSelectedIdx == 3 then
+				quickBattle()
 			end
 		elseif playdate.buttonJustPressed(playdate.kButtonUp) then
 			mainMenuOptionsSelectedIdx -= 1
@@ -46,7 +48,7 @@ end
 function drawMainMenuOptionScreen()
 	drawNiceRect(MAIN_MENU_OPTIONS_X, MAIN_MENU_OPTIONS_Y, MAIN_MENU_OPTIONS_WIDTH, MAIN_MENU_OPTIONS_HEIGHT)
 	--TODO: If save exists
-	for i=1, 2 do
+	for i, v in ipairs(MAIN_MENU_OPTIONS) do
 		drawMainMenuOption(MAIN_MENU_OPTIONS[i], MAIN_MENU_OPTIONS_X + 10, MAIN_MENU_OPTIONS_Y + (i-1) * 30 + 10, mainMenuOptionsSelectedIdx == i)
 	end
 

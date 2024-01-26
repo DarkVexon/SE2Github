@@ -1,13 +1,24 @@
-transitionTimer = 15
+local transitionNames <const> = {"CircFade", "PureFade"}
+local transitionTimesIn <const> = {12, 5}
+local transitionTimesOut <const> = {12, 5}
+
+transitionTimer = 0
 fadeOutTimer = 0
 fadeInTimer = 0
 fadeDest = nil
+curFadeType = 1
 
 fadeCircEndpoint = math.sqrt(400^2 + 240^2)/2
 
 function startFade(toCall)
+	startSpecificFade(toCall, 2)
+end
+
+function startSpecificFade(toCall, transitionType)
+	transitionTimer = transitionTimesIn[transitionType]
 	fadeOutTimer = transitionTimer
 	fadeDest = toCall
+	curFadeType = transitionType
 end
 
 function updateFade()
@@ -19,6 +30,7 @@ function updateFade()
 			gfx.pushContext(transitionImg)
 			render()
 			gfx.popContext()
+			transitionTimer = transitionTimesOut[curFadeType]
 			fadeInTimer = transitionTimer
 		end
 	elseif fadeInTimer > 0 then
@@ -27,12 +39,27 @@ function updateFade()
 end
 
 function renderFade()
-	if fadeOutTimer > 0 then
-		gfx.fillCircleAtPoint(200, 120, playdate.math.lerp(0, 1, timeLeft(fadeOutTimer, transitionTimer)) * fadeCircEndpoint)
-	elseif fadeInTimer > 0 then
-		gfx.clear()
-		transitionImg:draw(0, 0)
-		gfx.fillCircleAtPoint(200, 120, playdate.math.lerp(1, 0, timeLeft(fadeInTimer, transitionTimer)) * fadeCircEndpoint)
+	if curFadeType == 1 then
+		if fadeOutTimer > 0 then
+			gfx.fillCircleAtPoint(200, 120, playdate.math.lerp(0, 1, timeLeft(fadeOutTimer, transitionTimer)) * fadeCircEndpoint)
+		elseif fadeInTimer > 0 then
+			gfx.clear()
+			transitionImg:draw(0, 0)
+			gfx.fillCircleAtPoint(200, 120, playdate.math.lerp(1, 0, timeLeft(fadeInTimer, transitionTimer)) * fadeCircEndpoint)
+		end
+	elseif curFadeType == 2 then
+		if fadeOutTimer >= transitionTimer - 2 or (fadeInTimer > 0 and fadeInTimer <= 2) then
+			gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8)
+		else
+			gfx.setColor(gfx.kColorBlack)
+		end
+		if fadeOutTimer > 0 then
+			gfx.fillRect(0, 0, 400, 240)
+		elseif fadeInTimer > 0 then
+			gfx.clear()
+			transitionImg:draw(0, 0)
+			gfx.fillRect(0, 0, 400, 240)
+		end
 	end
 end
 
