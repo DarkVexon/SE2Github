@@ -6,6 +6,7 @@
     "Lua.workspace.library": ["$PLAYDATE_SDK_PATH/CoreLibs"],
     "Lua.workspace.preloadFileSize": 1000,
     "terminal.integrated.defaultProfile.windows": "PowerShell",
-    "playdate.source": "Source",
-    "playdate.output": "Game.pdx"
+    "playdate-debug.sourcePath": "Source",
+    "playdate-debug.outputPath": "./",
+    "playdate-debug.productName": "Super Effective"
 }
