@@ -346,5 +346,22 @@
     "description": "???",
     "locationHint": "via fishing",
     "location": "Route 10"
+  },
+  "Smoochvine":
+  {
+    "speciesName": "Smoochvine",
+    "types": ["plant", "love"],
+    "ability": "Rejuvenation",
+    "stats": [100, 100, 100, 100],
+    "lvlspeed": "normal",
+    "grantedExp": 30,
+    "catchDifficulty": 60,
+    "learnset": {
+      "1": "Nom Nom Nom"
+    },
+    "article": "",
+    "description":"???",
+    "locationHint": "in overgrown areas",
+    "location": "Tolumnar Ruin"
   }
 }

@@ -385,7 +385,7 @@ function checkMovement(smooth)
 			end
 		end
 
-		if not playdate.isCrankDocked() and not isCrankUp and playerFlag > 3 then
+		if not playdate.isCrankDocked() and not isCrankUp then
 			isCrankUp = true
 			openMenu()
 		end

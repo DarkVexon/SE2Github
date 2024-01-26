@@ -122,6 +122,7 @@ import "abilities/alienated"
 import "abilities/puffedplumage"
 import "abilities/iridescence"
 import "abilities/whiskers"
+import "abilities/rejuvenation"
 
 function getAbilityByName(name, owner)
 	if name == "Lovebug" then
@@ -164,6 +165,8 @@ function getAbilityByName(name, owner)
 		return Iridescence(owner)
 	elseif name == "Whiskers" then
 		return Whiskers(owner)
+	elseif name == "Rejuvenation" then
+		return Rejuvenation(owner)
 	end
 end
 

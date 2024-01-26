@@ -98,5 +98,10 @@
   {
     "abilityName": "Whiskers",
     "description": "Misses are crits."
+  },
+  "Rejuvenation":
+  {
+    "abilityName": "Rejuvenation",
+    "description": "Remove a random debuff each turn."
   }
 }
