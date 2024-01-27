@@ -5,9 +5,11 @@ function ShopOpener:init(x, y)
 end
 
 function ShopOpener:onInteract()
+	addScript(TextScript("Heya! Welcome to the shop."))
 	shopItems = {
 		["Capture Cube"] = 15,
 		["Poutine"] = 20
 	}
-	startFade(openNextShop)
+	addScript(TransitionScript(openNextShop))
+	nextScript()
 end

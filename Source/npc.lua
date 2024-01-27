@@ -94,6 +94,7 @@ import "npcs/spawnintroman"
 import "npcs/rivalcatchtutorial"
 import "npcs/cantleavetetrayet"
 import "npcs/typemasterfire"
+import "npcs/healingmachineinvis"
 
 function loadNpc(info)
 	local npcType = info[1]
@@ -136,6 +137,11 @@ function loadNpc(info)
 		newNpc = WalkingTrainer(info[2], info[3], info[4], info[5], info[6], info[7], info[8], info[9], info[10], info[11], info[12])
 	elseif npcType == "typemasterfire" then
 		newNpc = TypeMasterFire(info[2], info[3], info[4])
+	elseif npcType == "healmachineinvis" then
+		newNpc = HealingMachineInvis(info[2], info[3], info[4], info[5])
+	elseif npcType == "npc" then
+		newNpc = NPC(info[2], info[3], info[4])
+		newNpc:loadImg(info[2])
 	end
 	if newNpc:shouldSpawn() then
 		table.insert(objs, newNpc)

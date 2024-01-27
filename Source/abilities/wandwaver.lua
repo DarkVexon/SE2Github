@@ -23,7 +23,8 @@ function WandWaver:onUseMove(move, target)
 			self.charge += 1
 			if self.charge == 2 then
 				self:displaySelf()
-				addScript(CalculatedDamageScript(self.owner, 15, "magic", self.owner:getFoe()))
+				addScript(CalculatedDamageScript(self.owner, 40, "magic", self.owner:getFoe()))
+				self.charge = 0
 			else
 				addScript(TextScript(self.owner:messageBoxName() .. " 's " .. self.name .. " is charging up!"))
 			end

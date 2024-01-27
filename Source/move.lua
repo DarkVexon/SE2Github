@@ -43,6 +43,10 @@ function manualCalculateDamage(owner, target, power, type)
 	printIfDebug("Multiplying by (" .. ownerAttack .. "/" .. targetDefense ..").")
 	output *= (ownerAttack / targetDefense)
 	printIfDebug("Power after modification: " .. output)
+	output *= (((owner.level * 2) / 5) + 2)
+	output /= 50
+	output += 2
+	printIfDebug("Pokemon method applied. New total: " .. output)
 	if contains(owner.types, type) then
 		printIfDebug("Applying same type damage bonus.")
 		output *= sameTypeAsUserBonus
@@ -75,7 +79,6 @@ function manualCalculateDamage(owner, target, power, type)
 		output *= 2
 		printIfDebug("New total: " .. output)
 	end
-	output = output * 0.5
 	printIfDebug("Output pre-floor: " .. output)
 	output = math.floor(output)
 	printIfDebug("Final output: " .. output)

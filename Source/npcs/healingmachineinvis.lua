@@ -1,15 +1,9 @@
 class('HealingMachineInvis').extends(NPC)
 
 function HealingMachineInvis:init(x, y, pretext, posttext)
-	HealingMachineInvis.super.init(self, "healmachine", x, y)
-	self.pretext = text
-	self.posttext = text
-end
-
-function fullyRestoreMonsters()
-	for k, v in pairs(playerMonsters) do
-		v.curHp = v.maxHp
-	end
+	HealingMachineInvis.super.init(self, "healmachineinvis", x, y)
+	self.pretext = pretext
+	self.posttext = posttext
 end
 
 function HealingMachineInvis:onInteract()

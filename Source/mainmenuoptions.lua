@@ -1,8 +1,8 @@
 local MAIN_MENU_OPTIONS_X <const> = 15
 local MAIN_MENU_OPTIONS_Y <const> = 15
 local MAIN_MENU_OPTIONS <const> = {"New Game", "Continue", "Quick Battle"}
-local MAIN_MENU_OPTIONS_WIDTH <const> = 125
-local MAIN_MENU_OPTIONS_HEIGHT <const> = 70
+local MAIN_MENU_OPTIONS_WIDTH <const> = 135
+local MAIN_MENU_OPTIONS_HEIGHT <const> = 20
 
 function openMainMenuOptions()
 	curScreen = 11
@@ -46,7 +46,7 @@ function updateMainMenuOptionScreen()
 end
 
 function drawMainMenuOptionScreen()
-	drawNiceRect(MAIN_MENU_OPTIONS_X, MAIN_MENU_OPTIONS_Y, MAIN_MENU_OPTIONS_WIDTH, MAIN_MENU_OPTIONS_HEIGHT)
+	drawNiceRect(MAIN_MENU_OPTIONS_X, MAIN_MENU_OPTIONS_Y, MAIN_MENU_OPTIONS_WIDTH, MAIN_MENU_OPTIONS_HEIGHT + (#MAIN_MENU_OPTIONS * 25))
 	--TODO: If save exists
 	for i, v in ipairs(MAIN_MENU_OPTIONS) do
 		drawMainMenuOption(MAIN_MENU_OPTIONS[i], MAIN_MENU_OPTIONS_X + 10, MAIN_MENU_OPTIONS_Y + (i-1) * 30 + 10, mainMenuOptionsSelectedIdx == i)

@@ -3,7 +3,7 @@
   {
     "moveName": "Nibble",
     "type": "teeth",
-    "basePower": 8,
+    "basePower": 30,
     "description": "A weak biting attack.",
     "contact": true,
     "targetsFoe": true
@@ -12,7 +12,7 @@
   {
     "moveName": "Ember",
     "type": "fire",
-    "basePower": 8,
+    "basePower": 30,
     "description": "A small, fiery burst.",
     "contact": false,
     "targetsFoe": true
@@ -21,7 +21,7 @@
   {
     "moveName": "Spark",
     "type": "tech",
-    "basePower": 8,
+    "basePower": 30,
     "description": "A tepid electric shock.",
     "contact": false,
     "targetsFoe": true
@@ -38,7 +38,7 @@
   {
     "moveName": "Peck",
     "type": "wing",
-    "basePower": 8,
+    "basePower": 30,
     "description": "A small hit with beak or mouth.",
     "contact": true,
     "targetsFoe": true
@@ -55,7 +55,7 @@
   {
     "moveName": "Water Gun",
     "type": "water",
-    "basePower": 8,
+    "basePower": 30,
     "description": "A small, watery blast.",
     "contact": false,
     "targetsFoe": true
@@ -64,7 +64,7 @@
   {
     "moveName": "Slash",
     "type": "knight",
-    "basePower": 10,
+    "basePower": 40,
     "description": "A simple slash with a sword.",
     "contact": true,
     "targetsFoe": true
@@ -73,7 +73,7 @@
   {
     "moveName": "Purifier",
     "type": "fire",
-    "basePower": 15,
+    "basePower": 60,
     "description": "Remove debuffs.",
     "contact": false,
     "targetsFoe": true
@@ -82,7 +82,7 @@
   {
     "moveName": "Dine & Dash",
     "type": "teeth",
-    "basePower": 12,
+    "basePower": 75,
     "description": "After use, the user switches out.",
     "contact": true,
     "targetsFoe": true
@@ -107,7 +107,7 @@
   {
     "moveName": "Rootslap",
     "type": "plant",
-    "basePower": 10,
+    "basePower": 50,
     "description": "Decrease enemy SPD by 20%.",
     "contact": true,
     "targetsFoe": true
@@ -124,7 +124,7 @@
   {
     "moveName": "Jumpscare",
     "type": "fear",
-    "basePower": 7,
+    "basePower": 40,
     "description": "Always goes first.",
     "contact": true,
     "targetsFoe": true,
@@ -134,7 +134,7 @@
   {
     "moveName": "Robo-Fist",
     "type": "tech",
-    "basePower": 8,
+    "basePower": 40,
     "description": "Increase ATK by 20%.",
     "contact": true,
     "targetsFoe": true
@@ -151,7 +151,7 @@
   {
     "moveName": "Snowball",
     "type": "ice",
-    "basePower": 9,
+    "basePower": 30,
     "description": "Chance to reduce SPD by 20%.",
     "contact": false,
     "targetsFoe": true
@@ -160,7 +160,7 @@
   {
     "moveName": "Magic Missile",
     "type": "magic",
-    "basePower": 8,
+    "basePower": 30,
     "description": "A small magical burst.",
     "contact": false,
     "targetsFoe": true
@@ -169,7 +169,7 @@
   {
     "moveName": "Stinger",
     "type": "bug",
-    "basePower": 18,
+    "basePower": 85,
     "description": "Lose 20% max HP.",
     "contact": true,
     "targetsFoe": true
@@ -178,7 +178,7 @@
   {
     "moveName": "nom nom nom",
     "type": "teeth",
-    "basePower": 5,
+    "basePower": 18,
     "description": "Hits three times.",
     "contact": true,
     "targetsFoe": true
@@ -187,7 +187,7 @@
   {
     "moveName": "Rock Throw",
     "type": "stone",
-    "basePower": 12,
+    "basePower": 45,
     "description": "10% chance to miss.",
     "contact": false,
     "targetsFoe": true,
@@ -197,7 +197,7 @@
   {
     "moveName": "Skystrike",
     "type": "wing",
-    "basePower": 8,
+    "basePower": 30,
     "description": "Has double power against full-HP targets.",
     "contact": true,
     "targetsFoe": true
@@ -214,7 +214,7 @@
   {
     "moveName": "Aqua Slam",
     "type": "water",
-    "basePower": 14,
+    "basePower": 50,
     "description": "30% chance to miss.",
     "contact": true,
     "targetsFoe": true,

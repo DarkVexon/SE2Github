@@ -1,7 +1,7 @@
 {
     "data":[4, 4, 4, 4, 4, 4, 4, 4,
             10, 10, 10, 11, 10, 10, 11, 10,
-            10, 7, 8, 12, 7, 8, 12, 10,
+            7, 9, 8, 12, 7, 8, 12, 10,
             10, 10, 10, 10, 10, 10, 10, 10,
             10, 10, 10, 10, 10, 10, 10, 10,
             10, 10, 10, 10, 10, 10, 10, 10,
@@ -30,19 +30,27 @@
             2
         ],
         [
-            "shopopener",
+            "npc",
+            "shop",
             5,
-            3
+            2
         ],
         [
             "shopopener",
-            6,
+            5,
             3
         ],
         [
             "healmachine",
             3,
             2
+        ],
+        [
+            "healmachineinvis",
+            3,
+            3,
+            "Ah - yes, I can heal your Kenemon. Just hand them over for a sec...NLProblem? No, I'm fine.NLOkay, there's a problem. It's my son, Terrence. He wandered into the NEW DESERT and hasn't returned...NLBut that's my problem, not yours.",
+            "Here's your Kenemon back. Let me know if you're heading into the NEW DESERT... or if you see Terrence."
         ],
         [
             "wanderingperson",

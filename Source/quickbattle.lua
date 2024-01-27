@@ -4,9 +4,10 @@ function quickBattle()
 	local levelCap = levelSetups[math.random(#levelSetups)]
 	playerName = "Mindbomber"
 	playerMonsters = {}
-	for i=1, 4 do
-		playerMonsters[i] = randomEncounterMonster(randomSpecies(), {levelCap, levelCap})
-	end
+	playerMonsters[1] = randomEncounterMonster(randomSpecies(), {levelCap, levelCap})
+	playerMonsters[2] = randomEncounterMonster(randomSpecies(), {levelCap, levelCap})
+	playerMonsters[3] = randomEncounterMonster(randomSpecies(), {levelCap, levelCap})
+	playerMonsters[4] = randomEncounterMonster(randomSpecies(), {levelCap, levelCap})
 	playerItems = {["Poutine"] = 3}
 	playerKeyItems = {}
 	playerMoney = 100
@@ -23,9 +24,10 @@ function quickBattle()
 	end
 
 	enemyMonsters = {}
-	for i=1, 4 do
-		enemyMonsters[i] = randomEncounterMonster(randomSpecies(), {levelCap, levelCap}) 
-	end
+	enemyMonsters[1] = randomEncounterMonster(randomSpecies(), {levelCap, levelCap})
+	enemyMonsters[2] = randomEncounterMonster(randomSpecies(), {levelCap, levelCap})
+	enemyMonsters[3] = randomEncounterMonster(randomSpecies(), {levelCap, levelCap})
+	enemyMonsters[4] = randomEncounterMonster(randomSpecies(), {levelCap, levelCap})
 	startFade(resetCombat)
 	isTrainerBattle = true
 

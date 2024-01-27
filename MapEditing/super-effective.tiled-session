@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Town1-backup.tmx",
+    "activeFile": "HealRoom.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -21,8 +21,8 @@
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 159.83333333333331,
-                "y": 159.83333333333334
+                "x": 183.33333333333331,
+                "y": 154.33333333333334
             }
         },
         "IndoorsNormal.tsx": {
@@ -56,11 +56,11 @@
             }
         },
         "Town1-backup.tmx": {
-            "scale": 1,
+            "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4179.5,
-                "y": 2559.5
+                "x": 1902,
+                "y": 1746
             }
         },
         "Town1.json": {
@@ -120,7 +120,7 @@
             }
         }
     },
-    "last.exportedFilePath": "C:/Users/edanv/Desktop/SuperEffective2/MapEditing",
+    "last.exportedFilePath": "C:/Users/edanv/Desktop/SE2Github/MapEditing",
     "last.externalTilesetPath": "C:/Users/edanv/Desktop/Stuff",
     "last.imagePath": "C:/Users/edanv/Desktop/SuperEffective2/Source/img/overworld/tile",
     "map.height": 8,
@@ -135,8 +135,8 @@
     ],
     "project": "super-effective.tiled-project",
     "recentFiles": [
-        "HealRoom.tmx",
         "Town1-backup.tmx",
+        "HealRoom.tmx",
         "Town1-backup - Copy.tmx",
         "HealRoom.tmj",
         "IndoorsNormal.tsx",

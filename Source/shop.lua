@@ -17,7 +17,7 @@ local SHOP_MENU_ITEM_X <const> = SHOP_MENU_POS_X + 5
 local SHOP_MENU_ITEM_START_Y <const> = SHOP_MENU_POS_Y + 5
 local SHOP_MENU_DIST_BETWEEN <const> = 30
 local SHOP_MENU_PRICE_X <const> = SHOP_MENU_POS_X + SHOP_MENU_WIDTH - 50
-local SHOP_MENU_DESC_START_Y <const> = SHOP_MENU_POS_Y + 180
+local SHOP_MENU_DESC_START_Y <const> = SHOP_MENU_POS_Y + 160
 local SHOP_MENU_DESC_HEIGHT <const> = SHOP_MENU_HEIGHT - SHOP_MENU_DESC_START_Y
 
 local SHOPKEEPER_IMG <const> = gfx.image.new("img/ui/shopkeeper")
