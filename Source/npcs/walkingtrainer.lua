@@ -27,9 +27,6 @@ function WalkingTrainer:onMoveEnd()
 	WalkingTrainer.super.onMoveEnd(self)
 	self.distMoved += 1
 	if not fightStarting then
-		print(self.distMoved)
-		print(self.distVert)
-		print(self.distHoriz)
 		if (self.facing == 2 or self.facing == 0) and (self.distMoved == self.distVert) then
 			if self.clockwise then
 				if self.facing == 2 then

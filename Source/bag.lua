@@ -113,7 +113,7 @@ function updateBagViewScreen()
 		if itemFound.canUseFromBag then
 			local popupOptions = {"Use", "Nvm"}
 			local popupResults = {function () itemFound:use() end}
-			itemFound:use()
+			setupPopupMenu(275, 150, popupOptions, popupResults, true)
 		end
 	end
 end
