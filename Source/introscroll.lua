@@ -2,26 +2,18 @@ local INTRO_SCROLL_START_X <const> = 25
 local INTRO_SCROLL_WIDTH <const> = 400 - (INTRO_SCROLL_START_X * 2)
 local INTRO_SCROLL_START_Y <const> = 40
 
-local INTRO_SCROLL_TEXT <const> = 
-	"From: KENEDAR BIOLOGY GROUP\n\nTo: Prof. \n\nTimes are changing in Kenedar.\n\n"
-	.. "As a leading biology expert, we're sure you're aware of reports that unusual, powerful creatures have appeared around the country. Colloquially, these creatures have been called 'KENEMON'. We are requesting many high-ranking " ..
-	"Kenedarian scientists investigate these " ..
-	"reports." ..
-	"\n\n" ..
-	"You are one of those scientists." ..
-	"\n\nKENEMON have special " ..
-	"abilities - it is dangerous for normal people " ..
-	"or animals to approach them. Because of this, you will " ..
-	"be provided with a KENEMON partner to assist in " ..
-	"the process." ..
-	"\n\n" ..
-	"Thank you for your work. We believe this is " ..
-	"one of the biggest scientific discoveries of " ..
-	"the century." ..
-	"\n\n" ..
-	"An agent of the Biology Group will visit to "..
-	"speak on specifics." .. 
-	"\n\nKENEDAR BIOLOGY GROUP"
+local INTRO_SCROLL_TEXT <const> = {
+	"From: KENEDAR BIOLOGY GROUP",
+	"",
+	"",
+	"To: Prof. ",
+	"",
+	"",
+	"Times are changing in Kenedar.",
+	"",
+	"",
+	"Blah blah blah."
+}
 
 local INTRO_MAX_SCROLL <const> = 750
 local INTRO_SCROLL_TO_SEE_FULL <const> = INTRO_MAX_SCROLL - 120
@@ -76,22 +68,24 @@ end
 
 function drawIntroScroll()
 	drawNiceRect(INTRO_SCROLL_START_X, INTRO_SCROLL_START_Y - introCrankScrollAmt, INTRO_SCROLL_WIDTH, INTRO_MAX_SCROLL)
-	gfx.drawTextInRect(INTRO_SCROLL_TEXT, INTRO_SCROLL_START_X + 5, INTRO_SCROLL_START_Y - introCrankScrollAmt + 5, INTRO_SCROLL_WIDTH - 10, INTRO_MAX_SCROLL - 10, 3)
+	for i, v in ipairs(INTRO_SCROLL_TEXT) do
+		gfx.drawText(v, INTRO_SCROLL_START_X + 5, INTRO_SCROLL_START_Y - introCrankScrollAmt + 5 + ((i-1) * 20))
+	end
 	if introCrankScrollAmt < 75 then
 		if keyboardShown then
-			gfx.drawText(playdate.keyboard.text, PLAYERNAME_X, 87 - introCrankScrollAmt)
+			gfx.drawText(playdate.keyboard.text, PLAYERNAME_X, 102 - introCrankScrollAmt)
 			gfx.setColor(gfx.kColorXOR)
-			gfx.fillRoundRect(PLAYERNAME_X - 5, 85 - introCrankScrollAmt, gfx.getTextSize(playdate.keyboard.text) + 25, 22, 2)
+			gfx.fillRoundRect(PLAYERNAME_X - 5, 100 - introCrankScrollAmt, gfx.getTextSize(playdate.keyboard.text) + 25, 22, 2)
 			gfx.setColor(gfx.kColorBlack)
 		else
-			gfx.drawText(playerName, PLAYERNAME_X, 87 - introCrankScrollAmt)
+			gfx.drawText(playerName, PLAYERNAME_X, 102 - introCrankScrollAmt)
 			gfx.setColor(gfx.kColorXOR)
-			gfx.fillRoundRect(PLAYERNAME_X - 5, 85 - introCrankScrollAmt, gfx.getTextSize(playerName) + 10, 22, 2)
+			gfx.fillRoundRect(PLAYERNAME_X - 5, 100 - introCrankScrollAmt, gfx.getTextSize(playerName) + 10, 22, 2)
 			gfx.setColor(gfx.kColorBlack)
-			INTRO_A_BTN_IMG:draw(PLAYERNAME_X + gfx.getTextSize(playerName) + 15, 75 - introCrankScrollAmt)
+			INTRO_A_BTN_IMG:draw(PLAYERNAME_X + gfx.getTextSize(playerName) + 15, 90 - introCrankScrollAmt)
 		end
 	else
-		gfx.drawText(playerName, PLAYERNAME_X, 87 - introCrankScrollAmt)
+		gfx.drawText(playerName, PLAYERNAME_X, 102 - introCrankScrollAmt)
 		if introCrankScrollAmt >= INTRO_SCROLL_TO_SEE_FULL - 75 then
 			INTRO_A_BTN_IMG:draw(350, INTRO_MAX_SCROLL - introCrankScrollAmt + 25)
 		end

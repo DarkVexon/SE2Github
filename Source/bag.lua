@@ -111,6 +111,8 @@ function updateBagViewScreen()
 		menuClicky()
 		local itemFound = getItemByName(keyAtIndex(bagMenuItems, bagMenuIdx))
 		if itemFound.canUseFromBag then
+			local popupOptions = {"Use", "Nvm"}
+			local popupResults = {function () itemFound:use() end}
 			itemFound:use()
 		end
 	end

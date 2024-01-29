@@ -16,7 +16,7 @@ end
 function Tablecube:onInteract()
 	if playerFlag == 2 then
 		playerFlag = 3
-		caughtMonster = randomEncounterMonster(randomSpecies(), {5, 5})
+		caughtMonster = randomEncounterMonster("Sootiwi", {5, 5})
 		-- TODO: First monster has special mark.
 		addScript(TextScript("A Capture Cube, containing a Kenemon. The KENEDAR BIOLOGY GROUP left it for you."))
 		addScript(TextScript("Looks like it contains " .. monsterInfo[caughtMonster.species].article .. " ... " .. caughtMonster.name .. ". Adorable!"))

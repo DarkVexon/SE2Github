@@ -59,13 +59,13 @@ function Trainer:onInteract()
 end
 
 function Trainer:onEndMove()
-	if not contains(playerBeatenTrainers, self.flagID) then
+	if not contains(playerBeatenTrainers, self.flagID) and math.abs(self.posX - playerX) <= 5 and math.abs(self.posY - playerY) <= 5 then
 		self:checkForEyeContact()
 	end
 end
 
 function Trainer:onPlayerEndMove()
-	if not contains(playerBeatenTrainers, self.flagID) then
+	if not contains(playerBeatenTrainers, self.flagID) and math.abs(self.posX - playerX) <= 5 and math.abs(self.posY - playerY) <= 5 then
 		self:checkForEyeContact()
 	end
 end

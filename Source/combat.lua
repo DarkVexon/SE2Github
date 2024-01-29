@@ -772,7 +772,7 @@ function exitBattleViaLoss()
 	clear(returnScripts)
 	addScript(TextScript("You lose the battle!"))
 	if isTrainerBattle and playerMoney > 0 then
-		local moneyPaid = playerMoney * 0.25
+		local moneyPaid = math.floor(playerMoney * 0.25)
 		addScript(TextScript("You pay out $" .. moneyPaid .. " to " .. curTrainerName .. "!"))
 		playerMoney -= moneyPaid
 	end

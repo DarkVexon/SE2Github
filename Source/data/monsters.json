@@ -26,7 +26,8 @@
     "grantedExp": 70,
     "catchDifficulty": 10,
     "learnset": {
-      "1": "Nibble"
+      "1": "Nibble",
+      "6": "Nom Nom Nom"
     },
     "article": "a ",
     "description": "Its heads have different brains, but they get along, so Dubldraker is never lonely.",
@@ -116,7 +117,7 @@
     "catchDifficulty": 35,
     "learnset": {
       "1": "Nibble",
-      "3": "Dine and Dash"
+      "7": "Dine and Dash"
     },
     "article": "a ",
     "description": "A highly aggressive plant. Even the lightest breeze causes Chompah to blindly attack.",
@@ -134,7 +135,7 @@
     "catchDifficulty": 30,
     "learnset": {
       "1": "Spark",
-      "4": "Mystery Box"
+      "7": "Mystery Box"
     },
     "article": "",
     "description": "Don't panic if Leafjawbs offers you a strange device - it's likely using you for product testing.",
@@ -151,7 +152,8 @@
     "grantedExp": 50,
     "catchDifficulty": 20,
     "learnset": {
-      "1": "Nibble"
+      "1": "Nibble",
+      "6": "Jumpscare"
     },
     "article": "a ",
     "description": "Web-weaver.",
@@ -168,7 +170,9 @@
     "grantedExp": 30,
     "catchDifficulty": 50,
     "learnset": {
-      "1": "Peck"
+      "1": "Peck",
+      "6": "Ember",
+      "8": "Purifying Flame"
     },
     "article": "a ",
     "description": "Sootiwi's wings are formed of flame. Youthful Sootiwi burn blue, while aged specimens enter ever-deeper reds.",
@@ -185,7 +189,8 @@
     "grantedExp": 25,
     "catchDifficulty": 25,
     "learnset": {
-      "1": "Nibble"
+      "1": "Nibble",
+      "7": "Warble"
     },
     "article": "a ",
     "description": "The stalks on Yunyuns’ backs are almost indistinguishable from blooming alliums. They like to burrow in shallow riverbanks and loamy soil. \n\nIf uprooted, a Yunyun wails inconsolably and emits irritating, sulfureous compounds.",
@@ -202,7 +207,8 @@
     "grantedExp": 22,
     "catchDifficulty": 22,
     "learnset": {
-      "1": "Nibble"
+      "1": "Nibble",
+      "8": "Mystery Box"
     },
     "article": "a ",
     "description": ".sehcuot ti gnihtyreve sesrever hcihw retsnom railucep A",
@@ -219,7 +225,8 @@
     "grantedExp": 53,
     "catchDifficulty": 99,
     "learnset": {
-      "1": "Nibble"
+      "1": "Nibble",
+      "8": "Nom Nom Nom"
     },
     "article": "a ",
     "description": "Peeping noises emanate from somewhere in the mass of hair and gristle. If meat is dangled above it, Hungwy will hop and shake feverishly. \n \nOnce you feed a begging Hungwy, it will always remember your scent.",
@@ -237,7 +244,7 @@
     "catchDifficulty": 40,
     "learnset": {
       "1": "Nibble",
-      "2": "Meditate"
+      "6": "Meditate"
     },
     "article": "a ",
     "description": "Protective of their wands.",
@@ -254,7 +261,8 @@
     "grantedExp": 50,
     "catchDifficulty": 30,
     "learnset": {
-      "1": "Water Gun"
+      "1": "Water Gun",
+      "6": "Hydraulics"
     },
     "article": "a ",
     "description": "A friendly whale.",
@@ -271,7 +279,8 @@
     "grantedExp": 60,
     "catchDifficulty": 15,
     "learnset": {
-      "1": "Slash"
+      "1": "Slash",
+      "6": "Prayer"
     },
     "article": "some ",
     "description": "???",
@@ -323,7 +332,8 @@
     "grantedExp": 40,
     "catchDifficulty": 33,
     "learnset": {
-      "1": "Nibble"
+      "1": "Nibble",
+      "6": "Scaleshield"
     },
     "article": "a ",
     "description": "???",
@@ -357,7 +367,8 @@
     "grantedExp": 30,
     "catchDifficulty": 60,
     "learnset": {
-      "1": "Nom Nom Nom"
+      "1": "Nom Nom Nom",
+      "6": "Rootslap"
     },
     "article": "",
     "description":"???",
