@@ -116,9 +116,12 @@ function Monster:init(data)
 		self.nature = data["nature"]
 	end
 	
-	self.mark = data["mark"]
-	self.item = data["item"]
-	self.curStatus = data["curStatus"]
+	if data["mark"] ~= nil then
+		self.mark = getMarkByName(data["mark"])
+	end
+	
+	--self.item = data["item"]
+	--self.curStatus = data["curStatus"]
 
 	self:loadSpeciesData()
 
@@ -155,6 +158,7 @@ function getStats(species, level, nature, mark)
 	end
 
 	if mark ~= nil then
+		printTable(mark)
 		mark:applyToStats(results)
 	end
 

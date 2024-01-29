@@ -125,24 +125,55 @@ function updateSingleMonsterViewMenu()
 		gfx.setDrawOffset(0, 0)
 		skipNextRender = true
 		if fromStorageView then
+			fromStorageView = false
+			scrollThroughPc = false
 			startFade(openStorageView)
 		else
 			startFade(openMonsterScreen)
 		end
-		
-		
 	end
-	-- if playdate.buttonJustPressed(playdate.kButtonLeft) then
-	-- 	monsterScreenSelectionIdx -= 1
-	-- 	if monsterScreenSelectionIdx < 1 then
-	-- 		monsterScreenSelectionIdx = #playerMonsters
-	-- 	end
-	-- 	singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
-	-- elseif playdate.buttonJustPressed(playdate.kButtonRight) then
-	-- 	monsterScreenSelectionIdx += 1
-	-- 	if monsterScreenSelectionIdx > #playerMonsters then
-	-- 		monsterScreenSelectionIdx = 1
-	-- 	end
-	-- 	singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
-	-- end
+
+	if playdate.buttonJustPressed(playdate.kButtonLeft) then
+		monsterScreenSelectionIdx -= 1
+		if monsterScreenSelectionIdx < 1 then
+			if fromStorageView and scrollThroughPc then
+				monsterScreenSelectionIdx = #playerMonsterStorage
+			else
+				monsterScreenSelectionIdx = #playerMonsters
+			end
+		end
+		if fromStorageView and scrollThroughPc then
+			singleViewMonster = playerMonsterStorage[monsterScreenSelectionIdx]
+		else
+			singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
+		end
+		if fromStorageView then
+			storageSelectionIdx = monsterScreenSelectionIdx
+			storagePrevSelectionIdx = storageSelectionIdx
+		else
+			monsterScreenSelectionIdx = monsterScreenSelectionIdx
+		end
+	elseif playdate.buttonJustPressed(playdate.kButtonRight) then
+		monsterScreenSelectionIdx += 1
+		if fromStorageView and scrollThroughPc then
+			if monsterScreenSelectionIdx > #playerMonsterStorage then
+				monsterScreenSelectionIdx = 1
+			end
+		else
+			if monsterScreenSelectionIdx > #playerMonsters then
+				monsterScreenSelectionIdx = 1
+			end
+		end
+		if fromStorageView and scrollThroughPc then
+			singleViewMonster = playerMonsterStorage[monsterScreenSelectionIdx]
+		else
+			singleViewMonster = playerMonsters[monsterScreenSelectionIdx]
+		end
+		if fromStorageView then
+			storageSelectionIdx = monsterScreenSelectionIdx
+			storagePrevSelectionIdx = storageSelectionIdx
+		else
+			monsterScreenSelectionIdx = monsterScreenSelectionIdx
+		end
+	end
 end

@@ -40,6 +40,7 @@ function CaptureCube:use()
 				addScript(TransitionScript(openPostCaptureScreen))
 			end
 		end
+		addScript(LambdaScript("unset is combat ending", function () isCombatEnding = false turnExecuting = false nextScript() end))
 	else
 		addScript(TextScript("Capture failed! Darn."))
 	end

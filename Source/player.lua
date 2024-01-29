@@ -17,6 +17,11 @@ function initializePlayer()
 
 
 	--addToParty(randomEncounterMonster("Smoochvine", {5, 5}))
+	for i = 1, 10 do
+		local monsterTarget = randomEncounterMonster(randomSpecies(), {10, 15})
+		glitch(monsterTarget)
+		table.insert(playerMonsterStorage, monsterTarget)
+	end
 end
 
 function getDexProgress(type)

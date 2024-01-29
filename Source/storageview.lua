@@ -149,8 +149,10 @@ function updateStorageView()
 					function ()
 						fromStorageView = true
 						if storageSelectionIdx < 0 then
+							scrollThroughPc = false
 							singleViewMonster = playerMonsters[storageSelectionIdx * -1]
 						else
+							scrollThroughPc = true
 							singleViewMonster = playerMonsterStorage[storageSelectionIdx]
 						end
 						startFade(openSingleMonsterView)

@@ -6,7 +6,7 @@ end
 
 function Rejuvenation:atEndOfTurn()
 	local debuffs = {}
-	for k, v in self.owner.statuses do
+	for k, v in pairs(self.owner.statuses) do
 		if v.type == 0 then
 			table.insert(debuffs, v)
 		end

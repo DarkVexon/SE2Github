@@ -6,6 +6,6 @@ function TrainerBattleScript:init(trainerBattleID)
 end
 
 function TrainerBattleScript:execute()
-	startFade(beginNextCombat)
+	startSpecificFade(beginNextCombat, 1)
 	curCombat = self.battleID
 end

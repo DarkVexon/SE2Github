@@ -7,7 +7,7 @@ function RandomEncounterScript:init(species, range)
 end
 
 function RandomEncounterScript:execute()
-	startFade(beginWildBattle)
+	startSpecificFade(beginWildBattle, 1)
 	wildSpecies = self.species
 	wildLevelRange = self.range
 end

@@ -15,10 +15,14 @@ function startFade(toCall)
 end
 
 function startSpecificFade(toCall, transitionType)
-	transitionTimer = transitionTimesIn[transitionType]
+	if transitionType == nil then
+		curFadeType = 2
+	else
+		curFadeType = transitionType
+	end
+	transitionTimer = transitionTimesIn[curFadeType]
 	fadeOutTimer = transitionTimer
 	fadeDest = toCall
-	curFadeType = transitionType
 end
 
 function updateFade()
