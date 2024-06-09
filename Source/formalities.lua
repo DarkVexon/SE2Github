@@ -12,7 +12,11 @@ function serializeMonster(monster)
 	monsterData["moves"] = monster:getMoveNames()
 	monsterData["exp"] = monster.exp
 	monsterData["nature"] = monster.nature
-	monsterData["mark"] = monster.mark.name
+	if monster.mark ~= nil then
+		monsterData["mark"] = monster.mark.name
+	else
+		monsterData["mark"] = nil
+	end
 	monsterData["item"] = monster.item
 	monsterData["curHp"] = monster.curHp
 	monsterData["curStatus"] = monster.curStatus
